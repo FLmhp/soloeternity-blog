@@ -23,18 +23,19 @@
     <% if (pv_texts.length >= 2) { %>
       <span id="busuanzi_container_site_pv" style="display: none">
         <%- pv_texts[0] %>
-        <span id="busuanzi_value_site_pv"></span>
+        <span id="busuanzi_site_pv"></span>
         <%- pv_texts[1] %>
       </span>
     <% } %>
     <% if (uv_texts.length >= 2) { %>
       <span id="busuanzi_container_site_uv" style="display: none">
         <%- uv_texts[0] %>
-        <span id="busuanzi_value_site_uv"></span>
+        <span id="busuanzi_site_uv"></span>
         <%- uv_texts[1] %>
       </span>
     <% } %>
-    <% import_js(theme.static_prefix.busuanzi, 'busuanzi.pure.mini.js', 'defer') %>
+    <% import_js(theme.static_prefix.busuanzi, 'busuanzi.min.js', 'defer') %>
+    <% import_js(theme.static_prefix.internal_js, 'busuanzi-compat.js', 'defer') %>
 
   <% } else if (theme.footer.statistics.source === 'umami') { %>
     <% if (pv_texts.length >= 2) { %>
