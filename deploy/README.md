@@ -82,6 +82,7 @@ Edit `/opt/waline/.env` before the first `docker compose up -d` and set:
 - `SITE_URL` to your real blog URL
 - `SERVER_URL` to your Waline URL
 - `AUTHOR_EMAIL` to your real email
+- `MAIL_SUBJECT`, `MAIL_TEMPLATE`, `MAIL_SUBJECT_ADMIN`, and `MAIL_TEMPLATE_ADMIN` if you want custom reply/admin notification mail layouts
 
 Current Waline documentation requires `SECURE_DOMAINS` to include both the blog domain and the Waline domain, so the example file uses both values.
 
@@ -92,6 +93,8 @@ After the container starts:
 - open `https://waline.soloeternity.me/ui`
 - finish the admin initialization
 - verify a blog post can load the comment widget
+
+If you enable SMTP, the bundled `.env.example` also includes ready-to-edit `MAIL_*` templates for both the site owner notification and the visitor reply notification. They use Waline's documented `self`, `parent`, and `site` variables, so they render without any additional server-side customization.
 
 ## 5. Push to GitHub and enable Actions
 
@@ -139,3 +142,28 @@ The script:
 - creates a timestamped SQLite backup before writing, unless `--no-backup` is passed
 
 The provided LeanCloud export does not include page view counters for `wl_Counter`, so the script intentionally leaves PV/UV style counters untouched.
+
+If you need to reset a self-hosted Waline instance back to the historical LeanCloud data set, use this sequence:
+
+```bash
+sudo cp /opt/waline/data/waline.sqlite /opt/waline/data/waline.pre-reset-$(date +%Y%m%d%H%M%S).sqlite
+sudo curl -L https://raw.githubusercontent.com/walinejs/waline/main/assets/waline.sqlite -o /opt/waline/data/waline.sqlite
+python tools/import_waline_leancloud.py \
+  --export-dir /path/to/leancloud-export \
+  --db /opt/waline/data/waline.sqlite
+cd /opt/waline
+docker compose up -d waline
+```
+
+Validate the reset with:
+
+```bash
+python - <<'PY'
+import sqlite3
+conn = sqlite3.connect('/opt/waline/data/waline.sqlite')
+cur = conn.cursor()
+print('users', cur.execute('SELECT COUNT(*) FROM wl_Users').fetchone()[0])
+print('comments', cur.execute('SELECT COUNT(*) FROM wl_Comment').fetchone()[0])
+print('counters', cur.execute('SELECT COUNT(*) FROM wl_Counter').fetchone()[0])
+PY
+```
