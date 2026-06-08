@@ -1,0 +1,41 @@
+/* 打字机效果渐变 -bynote.cn */
+
+#subtitle {
+    background: linear-gradient(-45deg, #ee7752, #ce3e75, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    -webkit-animation: Gradient 10s ease infinite;
+    -moz-animation: Gradient 10s ease infinite;
+    animation: Gradient 10s ease infinite;
+    -o-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+    -webkit-background-clip: text;
+    background-clip: text; /* 新增标准属性 */
+    -webkit-text-fill-color: transparent;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+#subtitle:before {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* 以下为对游标样式的修改 */
+.typed-cursor {
+    background: linear-gradient(-45deg, #ee7752, #ce3e75, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    -webkit-animation: Gradient 10s ease infinite;
+    -moz-animation: Gradient 10s ease infinite;
+    animation: Gradient 10s ease infinite;
+    -webkit-background-clip: text;
+    background-clip: text; /* 新增标准属性 */
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+    margin-left: 5px;
+    -webkit-user-select: none; /* 兼容 Safari */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; /* 标准写法 */
+}

@@ -1,0 +1,51 @@
+.navbar-title-container {
+  position: relative;
+  display: inline-block;
+}
+
+.navbar-title-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.svg-animated-text {
+  animation: navbarSvgDraw 16s ease-in-out 0s forwards, navbarSvgFade 2s 4s forwards;
+}
+
+@keyframes navbarSvgDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes navbarSvgFade {
+  to {
+    opacity: 0;
+  }
+}
+
+.navbar-brand .navbar-title {
+  position: relative;
+  z-index: 2;
+  opacity: 0;
+  outline: none;
+  --c: lightseagreen;
+  text-shadow: 0 0 10px var(--c),0 0 20px var(--c),0 0 40px var(--c),0 0 80px var(--c),0 0 160px var(--c);
+  animation: neoneffect 5s linear infinite;
+}
+
+@keyframes neoneffect{
+  to{
+      filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes navbarTextFadeIn {
+  to {
+    opacity: 1;
+  }
+}

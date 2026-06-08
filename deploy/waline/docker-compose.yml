@@ -1,0 +1,11 @@
+services:
+  waline:
+    container_name: waline
+    image: lizheming/waline:latest
+    restart: always
+    ports:
+      - "127.0.0.1:8360:8360"
+    env_file:
+      - .env
+    volumes:
+      - /opt/waline/data:/app/data
