@@ -26,6 +26,14 @@ waline.soloeternity.me {
 
 memos.soloeternity.me {
     encode zstd gzip
+    header {
+        Access-Control-Allow-Origin https://soloeternity.me
+        Access-Control-Allow-Methods "GET, OPTIONS"
+        Access-Control-Allow-Headers "Content-Type, Authorization"
+        Vary Origin
+    }
+    @cors_preflight method OPTIONS
+    respond @cors_preflight 204
     reverse_proxy memos:5230
 }
 
