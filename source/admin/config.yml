@@ -3,7 +3,7 @@ backend:
   repo: FLmhp/soloeternity-blog
   branch: main
   base_url: https://cms-auth.soloeternity.me
-  auth_endpoint: auth
+  auth_endpoint: /auth
 
 site_url: https://soloeternity.me
 display_url: https://soloeternity.me
