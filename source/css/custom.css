@@ -28,3 +28,8 @@
     background-position: 300% 0;
   }
 }
+
+#waifu,
+#waifu-toggle {
+  z-index: 100000000 !important;
+}

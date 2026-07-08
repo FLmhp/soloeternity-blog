@@ -12,4 +12,10 @@ Memos 用来保存更轻的日常记录。
   <a class="solo-button solo-button-secondary" href="/moments/">查看公开动态</a>
 </div>
 
+## 最近动态
+
+<div class="solo-memos-feed" data-memos-feed>
+  <p class="solo-muted">正在读取公开动态...</p>
+</div>
+
 <iframe class="solo-service-frame" src="https://memos.soloeternity.me/" title="Memos"></iframe>

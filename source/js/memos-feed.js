@@ -8,16 +8,30 @@
   }
 
   function contentOf(item) {
-    return item.content || item.memo || item.snippet || "";
+    return item.content || item.snippet || item.memo || "";
   }
 
   function dateOf(item) {
     return item.displayTime || item.createTime || item.createdTs || item.created_at || "";
   }
 
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
+  function hasTag(item, tag) {
+    if (Array.isArray(item.tags) && item.tags.indexOf(tag) !== -1) return true;
+    return new RegExp("(^|\\s)#" + tag + "(\\b|\\s|$)").test(contentOf(item));
+  }
+
   function render(container, items, tag) {
     var moments = items.filter(function (item) {
-      return contentOf(item).indexOf("#" + tag) !== -1;
+      return hasTag(item, tag);
     });
 
     if (!moments.length) {
@@ -26,7 +40,9 @@
     }
 
     container.innerHTML = moments.map(function (item) {
-      var content = contentOf(item).replace(/#\w+/g, '<span class="solo-tag">$&</span>');
+      var content = escapeHtml(contentOf(item))
+        .replace(/#([A-Za-z0-9_-]+)/g, '<span class="solo-tag">#$1</span>')
+        .replace(/\n/g, "<br>");
       var date = dateOf(item);
       return '<article class="solo-memo-item"><time>' + date + '</time><p>' + content + "</p></article>";
     }).join("");
@@ -40,7 +56,8 @@
     var base = (config.memosBase || "").replace(/\/$/, "");
     var tag = config.memosTag || "moment";
     var endpoints = [
-      base + "/api/v1/memos?filter=visibilities%3D%3D%5BPUBLIC%5D&pageSize=20",
+      base + '/api/v1/memos?filter=visibility%3D%3D%22PUBLIC%22&pageSize=20',
+      base + "/api/v1/memos?pageSize=20",
       base + "/api/v1/memo?rowStatus=NORMAL&limit=20"
     ];
 
