@@ -15,8 +15,6 @@ www.soloeternity.me {
 
 soloeternity.me {
     encode zstd gzip
-    @listing_pages path /archives* /categories* /tags*
-    header @listing_pages Cache-Control "no-cache"
     root * /var/www/blog/current
     file_server
 }
