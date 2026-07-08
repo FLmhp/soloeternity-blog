@@ -1187,7 +1187,7 @@ class L2DPartsParam {
 //============================================================
 class L2DTargetPoint {
   constructor() {
-    this.EPSILON = 0.01; // 変化の最小値（この値以下は無視される）
+    this.EPSILON = 0.01; // 変化の最小値（この値以下は无视される）
     this.faceTargetX = 0;
     this.faceTargetY = 0;
     this.faceX = 0;

@@ -11,3 +11,5 @@ deploy/waline/.env
 __pycache__/
 Users/
 .vscode/
+.codebase-memory/
+-C

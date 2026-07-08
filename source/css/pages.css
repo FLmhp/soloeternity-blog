@@ -1,0 +1,128 @@
+.solo-page-intro {
+  margin: 0 0 1.5rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.18));
+  backdrop-filter: blur(16px);
+}
+
+.solo-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0;
+}
+
+.solo-card,
+.solo-memo-item,
+.solo-hitokoto,
+.solo-quote-list blockquote {
+  display: block;
+  padding: 1.15rem;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.58);
+  box-shadow: 0 18px 45px rgba(31, 49, 68, 0.12);
+  color: inherit;
+  text-decoration: none;
+}
+
+.solo-card-kicker,
+.solo-muted,
+.solo-memo-item time {
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.solo-action-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin: 1rem 0 1.5rem;
+}
+
+.solo-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #22d3ee, #6366f1, #f97316);
+  color: #fff !important;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.solo-button-secondary {
+  background: linear-gradient(135deg, #94a3b8, #334155);
+}
+
+.solo-hitokoto {
+  margin: 1.25rem 0;
+  text-align: center;
+}
+
+.solo-hitokoto p {
+  margin: 0 0 0.75rem;
+  font-size: clamp(1.35rem, 4vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.solo-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.solo-gallery figure {
+  overflow: hidden;
+  margin: 0;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.solo-gallery img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.solo-gallery figcaption {
+  padding: 0.75rem 1rem;
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.solo-memos-feed {
+  display: grid;
+  gap: 1rem;
+}
+
+.solo-tag {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.solo-service-frame {
+  width: 100%;
+  min-height: 70vh;
+  border: 0;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+#solo-music-player {
+  margin: 1.5rem 0;
+}
+
+html[data-user-color-scheme="dark"] .solo-page-intro,
+html[data-user-color-scheme="dark"] .solo-card,
+html[data-user-color-scheme="dark"] .solo-memo-item,
+html[data-user-color-scheme="dark"] .solo-hitokoto,
+html[data-user-color-scheme="dark"] .solo-quote-list blockquote,
+html[data-user-color-scheme="dark"] .solo-gallery figure {
+  background: rgba(15, 23, 42, 0.58);
+}

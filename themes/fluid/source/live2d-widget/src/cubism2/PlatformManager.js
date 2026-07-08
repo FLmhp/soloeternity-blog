@@ -65,7 +65,7 @@ class PlatformManager {
       }
 
       if (model.isPremultipliedAlpha() == false) {
-        // 乗算済アルファテクスチャ以外の場合
+        // 乗算済アルファテクスチャ以外の场合
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, 1);
       }
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1);

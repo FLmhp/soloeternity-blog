@@ -1,11 +1,26 @@
 # Ubuntu Deployment
 
-This repository now assumes two public endpoints:
+This repository now assumes Caddy owns the public edge ports on the Ubuntu server.
+
+Current public endpoints include:
 
 - `soloeternity.me` serves the generated Hexo static files from `/var/www/blog/current`
 - `waline.soloeternity.me` reverse proxies the self-hosted Waline container on `127.0.0.1:8360`
+- `memos.soloeternity.me` reverse proxies the self-hosted Memos container
+- `chat.soloeternity.me` reverse proxies the existing LobeHub deployment
 
-Replace any remaining placeholders before first deployment.
+Current production checks were re-verified on `2026-07-08`:
+
+- `https://soloeternity.me` returns `HTTP 200`
+- `https://waline.soloeternity.me/ui` returns `HTTP 200`
+- the live Waline service reports `x-waline-version: 1.40.3`
+- the current static homepage file on the server is `/var/www/blog/current/index.html`
+- Caddy owns `80/tcp`, `443/tcp`, `443/udp`, and `7000/tcp`
+- Nginx is `inactive` and `disabled`
+- the latest successful GitHub Actions deployment run is `27130282506`
+- Waline SMTP is currently wired to `smtp.qq.com:465` with sender `SoloEternity <fl-mhp@qq.com>`
+
+This file is now a deployment template plus a production checklist. Some placeholders remain in the example files by design, but the repository itself is already under Git and the Actions workflow is active.
 
 ## 1. Update project placeholders
 
@@ -13,8 +28,8 @@ Before you push to GitHub, replace the placeholder values in:
 
 - `_config.yml`
 - `_config.fluid.yml`
-- `deploy/nginx/soloeternity.me.conf`
-- `deploy/nginx/waline.soloeternity.me.conf`
+- `deploy/caddy/Caddyfile`
+- `deploy/caddy/.env.example`
 - `deploy/waline/.env.example`
 
 ## 2. Prepare Ubuntu
@@ -24,14 +39,14 @@ Create these DNS records first:
 - `soloeternity.me` -> your server public IP
 - `waline.soloeternity.me` -> your server public IP
 
-Then copy and run the bootstrap script on the server:
+Then copy and run the bootstrap script on the server if this is a fresh machine:
 
 ```bash
 scp deploy/server/bootstrap.sh user@your-server:/tmp/bootstrap.sh
 ssh user@your-server 'bash /tmp/bootstrap.sh'
 ```
 
-The script installs `nginx`, `certbot`, `python3-certbot-nginx`, `rsync`, Docker and Docker Compose, then creates:
+The legacy bootstrap script installs `nginx`, `certbot`, `python3-certbot-nginx`, `rsync`, Docker and Docker Compose, then creates:
 
 - `/var/www/blog/current`
 - `/opt/waline`
@@ -39,23 +54,40 @@ The script installs `nginx`, `certbot`, `python3-certbot-nginx`, `rsync`, Docker
 
 If the script adds your user to the `docker` group, sign out and sign back in before running `docker compose`.
 
-## 3. Install Nginx configs and HTTPS
+## 3. Install Caddy as the public edge
 
-Copy the Nginx templates to the server, rename them to match your real domains if needed, then enable them:
+Caddy is the current production edge. It replaces both Nginx HTTPS server blocks and Certbot renewal for the public endpoints.
 
 ```bash
-scp deploy/nginx/*.conf user@your-server:/tmp/
+scp deploy/caddy/Caddyfile user@your-server:/tmp/Caddyfile
+scp deploy/caddy/docker-compose.yml user@your-server:/tmp/docker-compose.yml
+scp deploy/caddy/Dockerfile user@your-server:/tmp/Dockerfile
+scp deploy/caddy/.env.example user@your-server:/tmp/caddy.env
 ssh user@your-server <<'EOF'
-sudo cp /tmp/soloeternity.me.conf /etc/nginx/sites-available/soloeternity.me.conf
-sudo cp /tmp/waline.soloeternity.me.conf /etc/nginx/sites-available/waline.soloeternity.me.conf
-sudo ln -sf /etc/nginx/sites-available/soloeternity.me.conf /etc/nginx/sites-enabled/soloeternity.me.conf
-sudo ln -sf /etc/nginx/sites-available/waline.soloeternity.me.conf /etc/nginx/sites-enabled/waline.soloeternity.me.conf
-sudo nginx -t
-sudo systemctl reload nginx
-sudo certbot --nginx -d soloeternity.me -d waline.soloeternity.me
-sudo certbot renew --dry-run
+sudo mkdir -p /root/docker/caddy/conf
+sudo cp /tmp/Caddyfile /root/docker/caddy/conf/Caddyfile
+sudo cp /tmp/docker-compose.yml /root/docker/caddy/docker-compose.yml
+sudo cp /tmp/Dockerfile /root/docker/caddy/Dockerfile
+sudo cp /tmp/caddy.env /root/docker/caddy/.env
+sudo editor /root/docker/caddy/.env
+sudo systemctl stop nginx || true
+sudo systemctl disable nginx || true
+cd /root/docker/caddy
+docker compose run --rm --no-deps --entrypoint caddy caddy2 validate --config /etc/caddy/Caddyfile
+docker compose up -d --build
+docker ps --filter name=caddy
 EOF
 ```
+
+The current Caddy config also keeps FRP available:
+
+- `7000/tcp` is forwarded by Caddy layer4 to `frps:7000`
+- `www.yiharmony.top` and `*.yiharmony.top` are reverse proxied to `frps:8080`
+- `soloeternity.me`, Waline, Memos, and LobeHub are direct Docker-network reverse proxies, not FRP proxies
+
+Do not start Nginx while Caddy is running, because both services need `80/443`.
+
+The old Nginx templates under `deploy/nginx/` are retained only as historical reference and emergency rollback material.
 
 ## 4. Deploy Waline
 
@@ -96,16 +128,14 @@ After the container starts:
 
 If you enable SMTP, the bundled `.env.example` also includes ready-to-edit `MAIL_*` templates for both the site owner notification and the visitor reply notification. They use Waline's documented `self`, `parent`, and `site` variables, so they render without any additional server-side customization.
 
-## 5. Push to GitHub and enable Actions
+## 5. Push updates and use GitHub Actions
 
-This directory is not a Git repository yet, so GitHub Actions cannot run until you initialize and push it:
+The repository is already initialized and the workflow in `.github/workflows/deploy.yml` is active. For a fresh clone, the normal publish flow is:
 
 ```bash
-git init -b main
 git add .
-git commit -m "Prepare Ubuntu deployment"
-git remote add origin git@github.com:<your-account>/<your-repo>.git
-git push -u origin main
+git commit -m "Update blog content"
+git push origin main
 ```
 
 Then create these repository secrets:
@@ -121,7 +151,13 @@ The workflow in `.github/workflows/deploy.yml` will:
 - install dependencies with `pnpm --frozen-lockfile`
 - build the Hexo site
 - sync `public/` to `/var/www/blog/current` with `rsync --delete`
-- normalize remote file permissions without restarting Nginx
+- normalize remote file permissions without restarting Caddy
+
+Recent production reference:
+
+- latest successful run: `27130282506`
+- workflow finish time: `2026-06-08 18:07:18` (`Asia/Shanghai`)
+- latest deployed homepage mtime observed on the server: `2026-06-08 18:07:03` (`Asia/Shanghai`)
 
 ## 6. Import historical Waline data
 
@@ -167,3 +203,18 @@ print('comments', cur.execute('SELECT COUNT(*) FROM wl_Comment').fetchone()[0])
 print('counters', cur.execute('SELECT COUNT(*) FROM wl_Counter').fetchone()[0])
 PY
 ```
+
+The current live database state verified on `2026-07-08` is:
+
+- `wl_Users = 1`
+- `wl_Comment = 3`
+- `wl_Counter = 0`
+- current administrator row: `FLmhp / 2122283196@qq.com / administrator`
+
+The current live mail-notification settings verified on the server are:
+
+- `SMTP_HOST=smtp.qq.com`
+- `SMTP_PORT=465`
+- `SMTP_USER=fl-mhp@qq.com`
+- `SENDER_NAME=SoloEternity`
+- `AUTHOR_EMAIL=fl-mhp@qq.com`

@@ -1,0 +1,44 @@
+backend:
+  name: github
+  repo: FLmhp/soloeternity-blog
+  branch: main
+  base_url: https://cms-auth.soloeternity.me
+  auth_endpoint: auth
+
+site_url: https://soloeternity.me
+display_url: https://soloeternity.me
+logo_url: /img/logo.png
+locale: zh_Hans
+publish_mode: editorial_workflow
+
+media_folder: source/uploads
+public_folder: /uploads
+
+collections:
+  - name: posts
+    label: 文章
+    folder: source/_posts
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    extension: md
+    format: frontmatter
+    fields:
+      - { label: 标题, name: title, widget: string }
+      - { label: 发布时间, name: date, widget: datetime, format: "YYYY-MM-DD HH:mm:ss" }
+      - { label: 分类, name: categories, widget: list, required: false }
+      - { label: 标签, name: tags, widget: list, required: false }
+      - { label: 摘要, name: excerpt, widget: text, required: false }
+      - { label: 封面, name: index_img, widget: string, required: false, hint: "建议填 R2 URL，例如 https://assets.soloeternity.me/images/posts/example.jpg" }
+      - { label: 正文, name: body, widget: markdown }
+  - name: pages
+    label: 固定页面
+    files:
+      - label: 关于
+        name: about
+        file: source/about/index.md
+        fields:
+          - { label: 标题, name: title, widget: string }
+          - { label: 发布时间, name: date, widget: datetime, required: false }
+          - { label: 布局, name: layout, widget: hidden, default: about }
+          - { label: 评论, name: comments, widget: boolean, required: false, default: false }
+          - { label: 正文, name: body, widget: markdown }

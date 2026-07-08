@@ -1,0 +1,23 @@
+---
+title: 图片
+date: 2026-07-08 00:00:00
+layout: page
+subtitle: 把光影留给慢慢翻看的时候
+---
+
+照片和大图会逐步迁到 `assets.soloeternity.me`，这里先保留最近的图集入口。
+
+<div class="solo-gallery">
+  <figure>
+    <img src="/img/banner.png" alt="黄昏天空" loading="lazy">
+    <figcaption>黄昏</figcaption>
+  </figure>
+  <figure>
+    <img src="/img/about_banner.png" alt="夜色" loading="lazy">
+    <figcaption>夜色</figcaption>
+  </figure>
+  <figure>
+    <img src="/img/default.png" alt="旅途" loading="lazy">
+    <figcaption>路上</figcaption>
+  </figure>
+</div>

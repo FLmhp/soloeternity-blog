@@ -1,0 +1,46 @@
+services:
+  caddy2:
+    build: .
+    image: caddy2-custom
+    container_name: caddy
+    restart: unless-stopped
+    env_file: .env
+    cap_add:
+      - NET_ADMIN
+    networks:
+      - seaweedfs
+      - openlist
+      - lobehub
+      - waline_default
+      - memos_default
+      - frps
+    ports:
+      - 80:80
+      - 443:443
+      - 443:443/udp
+      - 7000:7000
+    volumes:
+      - ./conf:/etc/caddy
+      - /var/www:/var/www
+      - data:/data
+      - config:/config
+
+networks:
+  seaweedfs:
+    external: true
+  openlist:
+    external: true
+  lobehub:
+    external: true
+  waline_default:
+    external: true
+  memos_default:
+    external: true
+  frps:
+    external: true
+
+volumes:
+  data:
+    name: caddy-data
+  config:
+    name: caddy-config

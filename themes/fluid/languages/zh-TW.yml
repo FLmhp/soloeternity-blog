@@ -1,70 +1,70 @@
-name: '正體中文'
+name: '正体中文'
 
 home:
-  menu: '首頁'
-  title: '首頁'
+  menu: '首页'
+  title: '首页'
 
 archive:
-  menu: '歸檔'
-  title: '歸檔'
-  subtitle: '歸檔'
+  menu: '归档'
+  title: '归档'
+  subtitle: '归档'
   post_total: '共有 %d 篇文章'
 
 category:
-  menu: '分類'
-  title: '分類'
-  subtitle: '分類'
+  menu: '分类'
+  title: '分类'
+  subtitle: '分类'
   post_total: '共有 %d 篇文章'
   more: 'More...'
 
 tag:
-  menu: '標籤'
-  title: '標籤'
-  subtitle: '標籤'
+  menu: '标签'
+  title: '标签'
+  subtitle: '标签'
   post_total: '共有 %d 篇文章'
 
 about:
-  menu: '關於'
-  title: '關於'
-  subtitle: '關於'
+  menu: '关于'
+  title: '关于'
+  subtitle: '关于'
 
 links:
-  menu: '連結'
-  title: '交換連結'
-  subtitle: '交換連結'
+  menu: '连结'
+  title: '交换连结'
+  subtitle: '交换连结'
 
 page404:
-  menu: '頁面不存在'
-  title: '頁面不存在'
-  subtitle: '頁面不存在'
+  menu: '页面不存在'
+  title: '页面不存在'
+  subtitle: '页面不存在'
 
 post:
-  toc: '目錄'
+  toc: '目录'
   prev_post: '上一篇'
   next_post: '下一篇'
-  updated: '本文最後更新於：%s'
+  updated: '本文最后更新于：%s'
   meta:
     wordcount: '%s 字'
-    min2read: '%s 分鐘'
+    min2read: '%s 分钟'
     views: '{} 次'
   copyright:
     author: '作者'
-    posted: '發布於'
-    updated: '更新於'
-    licensed: '許可協議'
-    CC: 'CC - 知識共享許可協議'
+    posted: '发布于'
+    updated: '更新于'
+    licensed: '许可协议'
+    CC: 'CC - 知识共享许可协议'
     BY: 'BY - 署名'
     SA: 'SA - 相同方式共享'
-    NC: 'NC - 非商業性使用'
-    ND: 'ND - 禁止演繹'
-    ZERO: 'CC0 - 無著作權'
+    NC: 'NC - 非商业性使用'
+    ND: 'ND - 禁止演绎'
+    ZERO: 'CC0 - 无著作权'
 
 footer:
-  pv: '總訪問量 {} 次'
-  uv: '總訪客數 {} 人'
+  pv: '总访问量 {} 次'
+  uv: '总访客数 {} 人'
 
 search:
-  title: '搜尋'
-  keyword: '關鍵字'
+  title: '搜寻'
+  keyword: '关键字'
 
-noscript_warning: '博客在允許 JavaScript 運行的環境下瀏覽效果更佳'
+noscript_warning: '博客在允许 JavaScript 运行的环境下浏览效果更佳'

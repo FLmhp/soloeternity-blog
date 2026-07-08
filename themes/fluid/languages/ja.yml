@@ -1,4 +1,4 @@
-name: '日本語'
+name: '日本语'
 
 home:
   menu: 'ホーム'
@@ -34,19 +34,19 @@ links:
   subtitle: 'リンク'
 
 page404:
-  menu: 'ページが見つかりませんでした'
-  title: 'ページが見つかりませんでした'
-  subtitle: 'ページが見つかりませんでした'
+  menu: 'ページが见つかりませんでした'
+  title: 'ページが见つかりませんでした'
+  subtitle: 'ページが见つかりませんでした'
 
 post:
-  toc: '見出し'
-  prev_post: '前の記事'
-  next_post: '次の記事'
-  updated: '最終更新日：%s'
+  toc: '见出し'
+  prev_post: '前の记事'
+  next_post: '次の记事'
+  updated: '最终更新日：%s'
   meta:
-    wordcount: '%s 単語'
+    wordcount: '%s 単语'
     min2read: '%s 分'
-    views: '{} 閲覧'
+    views: '{} 阅覧'
   copyright:
     author: '著者'
     posted: '作成日'
@@ -60,11 +60,11 @@ post:
     ZERO: 'CC0 - No Copyright'
 
 footer:
-  pv: '閲覧合計数: {}'
-  uv: '合計閲覧者数: {}'
+  pv: '阅覧合计数: {}'
+  uv: '合计阅覧者数: {}'
 
 search:
   title: '検索'
   keyword: 'キーワード'
 
-noscript_warning: 'ブログは JavaScript を有効にすると最適に機能します'
+noscript_warning: 'ブログは JavaScript を有効にすると最适に机能します'

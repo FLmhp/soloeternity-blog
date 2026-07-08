@@ -1,0 +1,30 @@
+#nprogress .bar {
+  height: 4px !important;
+  background: linear-gradient(
+    90deg,
+    #30a9de,
+    #23d5ab,
+    #ffd12b,
+    #f94a70,
+    #7c4dff,
+    #30a9de
+  ) !important;
+  background-size: 300% 100% !important;
+  animation: nprogress-rainbow 1.6s linear infinite;
+}
+
+#nprogress .peg {
+  box-shadow:
+    0 0 12px rgba(48, 169, 222, 0.75),
+    0 0 24px rgba(249, 74, 112, 0.55) !important;
+}
+
+@keyframes nprogress-rainbow {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 300% 0;
+  }
+}

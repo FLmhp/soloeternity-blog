@@ -1,0 +1,66 @@
+{
+    acme_dns cloudflare {env.CF_API_TOKEN}
+    layer4 {
+        :7000 {
+            route {
+                proxy frps:7000
+            }
+        }
+    }
+}
+
+www.soloeternity.me {
+    redir https://soloeternity.me{uri} permanent
+}
+
+soloeternity.me {
+    encode zstd gzip
+    root * /var/www/blog/current
+    file_server
+}
+
+waline.soloeternity.me {
+    encode zstd gzip
+    reverse_proxy waline:8360
+}
+
+memos.soloeternity.me {
+    encode zstd gzip
+    reverse_proxy memos:5230
+}
+
+chat.soloeternity.me {
+    encode zstd gzip
+    reverse_proxy lobehub:3210
+}
+
+s3.soloeternity.me {
+    reverse_proxy seaweedfs-s3:8333
+}
+
+openlist.soloeternity.me {
+    encode zstd gzip
+    reverse_proxy openlist:5244
+}
+
+assets.soloeternity.me {
+    respond "assets.soloeternity.me should be bound to Cloudflare R2, not this server." 404
+}
+
+cms-auth.soloeternity.me {
+    respond "cms-auth.soloeternity.me is reserved for Decap CMS OAuth." 404
+}
+
+yiharmony.top {
+    redir https://www.yiharmony.top{uri} permanent
+}
+
+www.yiharmony.top {
+    encode zstd gzip
+    reverse_proxy frps:8080
+}
+
+*.yiharmony.top {
+    encode zstd gzip
+    reverse_proxy frps:8080
+}
