@@ -12,15 +12,22 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    var container = document.getElementById("solo-music-player");
-    if (!container) return;
-
     var config = window.SoloEternity || {};
     var audio = config.music || [];
-    if (!audio.length) {
-      container.innerHTML = '<p class="solo-muted">尚未配置音乐文件。</p>';
-      return;
-    }
+    if (!audio.length) return;
+
+    var dock = document.createElement("div");
+    dock.id = "solo-music-dock";
+    dock.innerHTML = '<button class="solo-music-toggle" type="button" aria-label="隐藏音乐播放器">♪</button><div class="solo-music-body" id="solo-music-player"></div>';
+    document.body.appendChild(dock);
+
+    var container = document.getElementById("solo-music-player");
+    var toggle = dock.querySelector(".solo-music-toggle");
+    if (localStorage.getItem("solo-music-hidden") === "1") dock.classList.add("solo-music-hidden");
+    toggle.addEventListener("click", function () {
+      dock.classList.toggle("solo-music-hidden");
+      localStorage.setItem("solo-music-hidden", dock.classList.contains("solo-music-hidden") ? "1" : "0");
+    });
 
     Promise.all([
       loadAsset("link", { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" }),

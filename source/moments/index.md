@@ -5,10 +5,4 @@ layout: page
 subtitle: 一些短暂发光的日常
 ---
 
-这里同步 Memos 中带有 `#moment` 的公开内容。
-
-[打开 Memos](https://memos.soloeternity.me/)
-
-<div class="solo-memos-feed" data-memos-feed>
-  <p class="solo-muted">正在读取公开动态...</p>
-</div>
+<div class="solo-memos-feed" data-memos-feed data-memos-tag="moment"></div>

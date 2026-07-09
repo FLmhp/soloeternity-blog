@@ -7,24 +7,27 @@ comments: false
 
 ## 我是谁
 
-你好，这里是 SoloEternity。这个博客用 Hexo 生成静态页面，用 GitHub Actions 发布到自己的 Ubuntu 服务器，再由 Caddy 对外托管。
+你好，这里是 SoloEternity，目前是电子科技大学软件工程专业的大二学生。
 
-我偏爱把长内容留在可版本化的 Markdown 里，把评论、动态与备忘录交给独立的自托管服务。这样主站足够安静，动态能力也不会绑死在某个外部平台。
+我喜欢把想法落到真正能运行的东西里：一个浏览器扩展、一个自动化脚本、一个桌面工具、一套自托管服务，或者只是这座可以长期维护的个人博客。兴趣也比较杂，锻炼、追番、写代码都会占掉不少时间。
 
-## 技术栈
+## 现在在折腾什么
 
-- 静态站：Hexo、Fluid、GitHub Actions、Caddy
-- 评论：Waline、SQLite、Docker Compose
-- 动态与备忘录：Memos / SMemos
-- 媒体资源：Cloudflare R2、自定义资源域名
-- 日常工具：Git、Markdown、VS Code Remote SSH
+- 个人博客：Hexo、Fluid、GitHub Actions、Caddy、Waline、Memos、Cloudflare R2
+- 浏览器扩展：TransFlow，一个面向网页、PDF、视频字幕的沉浸式双语翻译扩展
+- 自动化工具：RPA、NetAcad 自动化辅助、英语词汇测试辅助等
+- 桌面与图形工具：RePKG_GUI、PBLF_GUI、SmartLogisticsTracker
+- 系统与语言实践：Rust、Python、TypeScript、C#、C++ 都在不同项目里摸过
 
 ## GitHub
 
-主要代码与博客源文件会逐步整理到 GitHub：
+我的 GitHub 会放一些课程之外的工具项目、自动化尝试和博客源码：
 
 - GitHub：<https://github.com/FLmhp>
 - 博客源码：<https://github.com/FLmhp/soloeternity-blog>
+- TransFlow：<https://github.com/FLmhp/TransFlow>
+- SmartLogisticsTracker：<https://github.com/FLmhp/SmartLogisticsTracker>
+- RPA：<https://github.com/FLmhp/RPA>
 
 ## 联络方式
 

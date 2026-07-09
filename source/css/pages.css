@@ -65,6 +65,31 @@
 .solo-hitokoto {
   margin: 1.25rem 0;
   text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.solo-hitokoto:hover {
+  transform: translateY(-2px);
+  border-color: rgba(34, 211, 238, 0.55);
+}
+
+.solo-hitokoto-loading::after {
+  display: inline-block;
+  width: 1.4rem;
+  height: 1.4rem;
+  margin-top: 0.8rem;
+  border: 3px solid rgba(34, 211, 238, 0.25);
+  border-top-color: #22d3ee;
+  border-radius: 999px;
+  content: "";
+  animation: solo-spin 0.8s linear infinite;
+}
+
+@keyframes solo-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .solo-hitokoto p {
@@ -123,8 +148,44 @@
   backdrop-filter: blur(16px);
 }
 
-#solo-music-player {
-  margin: 1.5rem 0;
+#solo-music-dock {
+  position: fixed;
+  left: 1rem;
+  bottom: 1rem;
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+  max-width: min(360px, calc(100vw - 2rem));
+}
+
+.solo-music-toggle {
+  flex: 0 0 auto;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.68);
+  color: #fff;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+}
+
+.solo-music-body {
+  width: min(300px, calc(100vw - 5rem));
+}
+
+.solo-music-hidden .solo-music-body {
+  display: none;
+}
+
+#solo-music-player .aplayer {
+  margin: 0;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
 }
 
 html[data-user-color-scheme="dark"] .solo-page-intro,

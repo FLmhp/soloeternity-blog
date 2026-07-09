@@ -35,7 +35,7 @@
     });
 
     if (!moments.length) {
-      container.innerHTML = '<p class="solo-muted">暂无公开动态。请在 Memos 发布带 #' + tag + " 的公开内容。</p>";
+      container.innerHTML = '<p class="solo-muted">暂无内容。</p>';
       return;
     }
 
@@ -54,7 +54,7 @@
 
     var config = window.SoloEternity || {};
     var base = (config.memosBase || "").replace(/\/$/, "");
-    var tag = config.memosTag || "moment";
+    var tag = container.getAttribute("data-memos-tag") || config.memosTag || "moment";
     var endpoints = [
       base + '/api/v1/memos?filter=visibility%3D%3D%22PUBLIC%22&pageSize=20',
       base + "/api/v1/memos?pageSize=20",
@@ -63,7 +63,7 @@
 
     function tryEndpoint(index) {
       if (!endpoints[index]) {
-        container.innerHTML = '<p class="solo-muted">暂时无法读取 Memos。可先前往 <a href="' + base + '" target="_blank" rel="noopener">Memos</a> 查看。</p>';
+        container.innerHTML = '<p class="solo-muted">暂时无法读取 Memos。</p>';
         return;
       }
 
