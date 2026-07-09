@@ -63,6 +63,46 @@ rclone copy ./music r2:soloeternity-assets/music --progress
 
 v1 不做博客内上传后台；先使用 Cloudflare Dashboard、rclone 或 S3 客户端管理文件。
 
+## 更方便的管理方式
+
+Cloudflare 控制面板适合偶尔看一眼，不适合批量管理。日常建议用 S3 兼容客户端：
+
+- `rclone`：最适合批量同步、脚本化上传、从本地目录镜像到 R2。
+- WinSCP：Windows 图形界面，选择 `Amazon S3` 协议，填 R2 endpoint、Access Key、Secret Key。
+- Cyberduck：图形界面也比较省心，适合拖拽上传和预览目录。
+- S3 Browser：偏传统 Windows 客户端，适合只想管理 bucket 文件的人。
+
+### rclone 配置
+
+1. 在 Cloudflare R2 创建 API Token，权限至少需要目标 bucket 的对象读写。
+2. 执行：
+
+```bash
+rclone config
+```
+
+3. 新建 remote，类型选择 `s3`，provider 选择 `Cloudflare`，endpoint 填：
+
+```text
+https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+```
+
+4. 常用命令：
+
+```bash
+# 查看目录
+rclone lsd r2:soloeternity-assets
+
+# 上传单个文件
+rclone copy ./cover.jpg r2:soloeternity-assets/images/posts/2026/example/ --progress
+
+# 本地目录同步到 R2，R2 多余文件会被删除，谨慎使用
+rclone sync ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
+
+# 只复制新增和变更，不删除远端
+rclone copy ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
+```
+
 ## 适合迁移到 R2 的文件
 
 优先迁移体积大、变化少、无需参与 Hexo 构建的资源：

@@ -75,6 +75,11 @@
   border-color: rgba(34, 211, 238, 0.55);
 }
 
+.solo-hitokoto-cooldown {
+  cursor: not-allowed;
+  opacity: 0.88;
+}
+
 .solo-hitokoto-loading::after {
   display: inline-block;
   width: 1.4rem;
@@ -137,6 +142,37 @@
 .solo-tag {
   color: #2563eb;
   font-weight: 700;
+}
+
+.solo-memo-attachments {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 0.9rem;
+}
+
+.solo-memo-attachments figure {
+  overflow: hidden;
+  margin: 0;
+  border-radius: 14px;
+}
+
+.solo-memo-attachments img {
+  display: block;
+  width: 100%;
+  max-height: 420px;
+  object-fit: cover;
+}
+
+.solo-memo-attachments figcaption,
+.solo-memo-meta {
+  margin-top: 0.55rem;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.solo-memo-file {
+  color: inherit;
+  text-decoration: underline;
 }
 
 .solo-service-frame {

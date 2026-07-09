@@ -37,22 +37,20 @@
     var config = window.SoloEternity || {};
     var box = document.querySelector(".solo-hitokoto");
     var loading = false;
-    var queued = false;
+    var cooldownUntil = 0;
     if (!box || !document.getElementById("hitokoto-text")) return;
 
     function requestQuote() {
-      if (loading) {
-        queued = true;
-        return;
-      }
+      if (loading || Date.now() < cooldownUntil) return;
 
       loading = true;
       loadQuote(config).finally(function () {
         loading = false;
-        if (queued) {
-          queued = false;
-          requestQuote();
-        }
+        cooldownUntil = Date.now() + 3000;
+        box.classList.add("solo-hitokoto-cooldown");
+        setTimeout(function () {
+          box.classList.remove("solo-hitokoto-cooldown");
+        }, 3000);
       });
     }
 
