@@ -414,8 +414,7 @@ navbar:
         submenu: [
           { key: "archive", name: "Archives", link: "/archives/", icon: "iconfont icon-archive-fill" },
           { key: "category", name: "Categories", link: "/categories/", icon: "iconfont icon-category-fill" },
-          { key: "tag", name: "Tags", link: "/tags/", icon: "iconfont icon-tags-fill" },
-          { key: "essays", name: "Essays", link: "/essays/", icon: "fa-solid fa-pen-nib" }
+          { key: "tag", name: "Tags", link: "/tags/", icon: "iconfont icon-tags-fill" }
         ]
     }
     - {
@@ -423,23 +422,14 @@ navbar:
         name: "Life",
         icon: "fa-solid fa-compass",
         submenu: [
+          { key: "essays", name: "Essays", link: "/essays/", icon: "fa-solid fa-pen-nib" },
           { key: "moments", name: "Moments", link: "/moments/", icon: "fa-solid fa-bolt" },
           { key: "quotes", name: "Quotes", link: "/quotes/", icon: "fa-solid fa-quote-left" },
-          { key: "gallery", name: "Gallery", link: "/gallery/", icon: "fa-solid fa-images" },
-          { key: "links", name: "Friends", link: "/links/", icon: "iconfont icon-link-fill" },
-          { key: "message", name: "Message", link: "/message/", icon: "fa-solid fa-comment-dots" }
+          { key: "gallery", name: "Gallery", link: "/gallery/", icon: "fa-solid fa-images" }
         ]
     }
-    - {
-        key: "tools",
-        name: "Tools",
-        icon: "fa-solid fa-screwdriver-wrench",
-        submenu: [
-          { key: "memos", name: "Memos", link: "/memos/", icon: "fa-solid fa-note-sticky" },
-          { key: "write", name: "Write", link: "/write/", icon: "fa-solid fa-pen-to-square" },
-          { key: "admin", name: "Admin", link: "/admin/", icon: "fa-solid fa-user-gear" }
-        ]
-    }
+    - { key: "links", name: "Friends", link: "/links/", icon: "iconfont icon-link-fill" }
+    - { key: "message", name: "Message", link: "/message/", icon: "fa-solid fa-comment-dots" }
     - { key: "about", name: "About", link: "/about/", icon: "iconfont icon-user-fill" }
 
 # 搜索功能，基于 hexo-generator-search 插件，若已安装其他搜索插件请关闭此功能，以避免生成多余的索引文件
