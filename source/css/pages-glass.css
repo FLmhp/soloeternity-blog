@@ -18,6 +18,7 @@
 .solo-memo-item,
 .solo-hitokoto,
 .solo-quote-list blockquote,
+.solo-memos-feed,
 .links .card-body {
   display: block;
   padding: 1.15rem;
@@ -131,6 +132,7 @@
 .solo-memos-feed {
   display: grid;
   gap: 1rem;
+  min-height: 5rem;
 }
 
 .solo-tag {
@@ -191,6 +193,7 @@
 html[data-user-color-scheme="dark"] .solo-page-intro,
 html[data-user-color-scheme="dark"] .solo-card,
 html[data-user-color-scheme="dark"] .solo-memo-item,
+html[data-user-color-scheme="dark"] .solo-memos-feed,
 html[data-user-color-scheme="dark"] .solo-hitokoto,
 html[data-user-color-scheme="dark"] .solo-quote-list blockquote,
 html[data-user-color-scheme="dark"] .solo-gallery figure,

@@ -1,10 +1,8 @@
 (function () {
-  function loadAsset(tag, attrs) {
+  function loadScript(src) {
     return new Promise(function (resolve, reject) {
-      var el = document.createElement(tag);
-      Object.keys(attrs).forEach(function (key) {
-        el[key] = attrs[key];
-      });
+      var el = document.createElement("script");
+      el.src = src;
       el.onload = resolve;
       el.onerror = reject;
       document.head.appendChild(el);
@@ -15,6 +13,7 @@
     var config = window.SoloEternity || {};
     var audio = config.music || [];
     if (!audio.length) return;
+    if (document.getElementById("solo-music-dock")) return;
 
     var dock = document.createElement("div");
     dock.id = "solo-music-dock";
@@ -29,10 +28,12 @@
       localStorage.setItem("solo-music-hidden", dock.classList.contains("solo-music-hidden") ? "1" : "0");
     });
 
-    Promise.all([
-      loadAsset("link", { rel: "stylesheet", href: "https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css" }),
-      loadAsset("script", { src: "https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js" })
-    ]).then(function () {
+    var css = document.createElement("link");
+    css.rel = "stylesheet";
+    css.href = "https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.css";
+    document.head.appendChild(css);
+
+    loadScript("https://cdn.jsdelivr.net/npm/aplayer@1.10.1/dist/APlayer.min.js").then(function () {
       new window.APlayer({
         container: container,
         fixed: false,

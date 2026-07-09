@@ -247,16 +247,16 @@ custom_js:
   - /js/stars.js
   - /js/title.js
   - /js/typing-effect.js
-  - /js/hitokoto.js
-  - /js/memos-feed.js
-  - /js/music-player.js
+  - /js/hitokoto-interactive.js
+  - /js/memos-feed-v2.js
+  - /js/music-dock.js
   # - /js/live2d.js
 
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages.css
+  - /css/pages-glass.css
   - /css/fish.css
   - /css/glassbackground.css
   - /css/gradient.css
@@ -1054,12 +1054,12 @@ about:
   # More icons can be found from https://hexo.fluid-dev.com/docs/en/icon/  `class` is the css class of the icon. If adding `qrcode`, the icon is no longer a link, but a hovering QR code
   icons:
     - { class: "fa-solid fa-envelope", link: "mailto:fl-mhp@qq.com", tip: "Email" }
-    - { class: "fa-brands fa-qq", link: "https://im.qq.com/", tip: "QQ: 2122283196" }
-    - { class: "fa-brands fa-bilibili", link: "https://space.bilibili.com/", tip: "Bilibili" }
-    - { class: "fa-solid fa-camera-retro", link: "https://500px.com/", tip: "500px" }
-    - { class: "fa-brands fa-linkedin", link: "https://www.linkedin.com/in/", tip: "LinkedIn" }
-    - { class: "fa-brands fa-facebook", link: "https://www.facebook.com/", tip: "Facebook" }
-    - { class: "fa-brands fa-x-twitter", link: "https://x.com/", tip: "X" }
+    - { class: "fa-brands fa-qq", qrcode: "/img/qq.png", tip: "QQ: 2122283196" }
+    - { class: "fa-brands fa-bilibili", link: "https://space.bilibili.com/678948626?spm_id_from=333.1007.0.0", tip: "Bilibili" }
+    - { class: "fa-solid fa-camera-retro", link: "https://500px.com.cn/soloeternity", tip: "500px" }
+    - { class: "fa-brands fa-linkedin", link: "https://www.linkedin.com/in/mike-lima-25572340b/", tip: "LinkedIn" }
+    - { class: "fa-brands fa-facebook", link: "https://www.facebook.com/profile.php?id=61579115608623", tip: "Facebook" }
+    - { class: "fa-brands fa-x-twitter", link: "https://x.com/flmhp_x", tip: "X" }
     - { class: "iconfont icon-github-fill", link: "https://github.com/FLmhp", tip: "GitHub" }
     - { class: "iconfont icon-wechat-fill", qrcode: "/img/wechat.png" }
 

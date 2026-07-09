@@ -9,15 +9,16 @@ comments: false
 
 你好，这里是 SoloEternity，目前是电子科技大学软件工程专业的大二学生。
 
-我喜欢把想法落到真正能运行的东西里：一个浏览器扩展、一个自动化脚本、一个桌面工具、一套自托管服务，或者只是这座可以长期维护的个人博客。兴趣也比较杂，锻炼、追番、写代码都会占掉不少时间。
+我喜欢把想法落到真正能运行的东西里：浏览器扩展、自动化脚本、桌面工具、移动端应用、自托管服务，或者只是这座可以长期维护的个人博客。兴趣也比较杂，锻炼、追番、写代码都会占掉不少时间。
 
 ## 现在在折腾什么
 
 - 个人博客：Hexo、Fluid、GitHub Actions、Caddy、Waline、Memos、Cloudflare R2
-- 浏览器扩展：TransFlow，一个面向网页、PDF、视频字幕的沉浸式双语翻译扩展
-- 自动化工具：RPA、NetAcad 自动化辅助、英语词汇测试辅助等
-- 桌面与图形工具：RePKG_GUI、PBLF_GUI、SmartLogisticsTracker
-- 系统与语言实践：Rust、Python、TypeScript、C#、C++ 都在不同项目里摸过
+- 浏览器扩展：TransFlow，面向网页、PDF 与视频字幕的沉浸式双语翻译扩展
+- 桌面应用：VaporGit、SkillNexus、EchoText，主要用 Tauri、Rust、SolidJS、Python 等技术做跨端工具
+- 自动化工具：RPA、NetAcad Autopilot、英语词汇测试辅助，偏向把重复流程变成可维护的脚本或插件
+- 业务系统练习：SmartLogisticsTracker、Xiaoban、银龄通，覆盖后端 API、移动端、小程序、遥测、告警和健康陪护场景
+- AI 与视觉方向：better-mvdust3r、Pulse 等项目里尝试过低显存推理、事件简报和工程化封装
 
 ## GitHub
 
@@ -28,9 +29,15 @@ comments: false
 - TransFlow：<https://github.com/FLmhp/TransFlow>
 - SmartLogisticsTracker：<https://github.com/FLmhp/SmartLogisticsTracker>
 - RPA：<https://github.com/FLmhp/RPA>
+- NetAcad Autopilot：<https://github.com/FLmhp/netacad-autopilot>
+- EchoText：<https://github.com/FLmhp/EchoText>
 
 ## 联络方式
 
 - Email：<fl-mhp@qq.com>
-- QQ：2122283196
-- Bilibili / 500px / LinkedIn / Facebook / X：已在页面顶部社交图标预留入口，补齐个人主页地址后即可正式启用。
+- QQ：2122283196（页面顶部 QQ 图标悬浮显示二维码）
+- Bilibili：<https://space.bilibili.com/678948626?spm_id_from=333.1007.0.0>
+- 500px：<https://500px.com.cn/soloeternity>
+- LinkedIn：<https://www.linkedin.com/in/mike-lima-25572340b/>
+- Facebook：<https://www.facebook.com/profile.php?id=61579115608623>
+- X：<https://x.com/flmhp_x>
