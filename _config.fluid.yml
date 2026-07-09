@@ -422,7 +422,7 @@ navbar:
         name: "Life",
         icon: "fa-solid fa-compass",
         submenu: [
-          { key: "essays", name: "Essays", link: "/essays/", icon: "fa-solid fa-pen-nib" },
+          { key: "essays", name: "Essays", link: "/categories/essays/", icon: "fa-solid fa-pen-nib" },
           { key: "moments", name: "Moments", link: "/moments/", icon: "fa-solid fa-bolt" },
           { key: "quotes", name: "Quotes", link: "/quotes/", icon: "fa-solid fa-quote-left" },
           { key: "gallery", name: "Gallery", link: "/gallery/", icon: "fa-solid fa-images" }
