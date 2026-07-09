@@ -247,8 +247,8 @@ custom_js:
   - /js/stars.js
   - /js/title.js
   - /js/typing-effect.js
-  - /js/hitokoto-interactive.js
-  - /js/memos-feed-v2.js
+  - /js/hitokoto-refresh.js
+  - /js/memos-feed-v3.js
   - /js/music-dock.js
   # - /js/live2d.js
 
@@ -256,7 +256,7 @@ custom_js:
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass.css
+  - /css/pages-glass-v2.css
   - /css/fish.css
   - /css/glassbackground.css
   - /css/gradient.css

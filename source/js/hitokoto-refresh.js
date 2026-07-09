@@ -36,14 +36,35 @@
   document.addEventListener("DOMContentLoaded", function () {
     var config = window.SoloEternity || {};
     var box = document.querySelector(".solo-hitokoto");
+    var loading = false;
+    var queued = false;
     if (!box || !document.getElementById("hitokoto-text")) return;
+
+    function requestQuote() {
+      if (loading) {
+        queued = true;
+        return;
+      }
+
+      loading = true;
+      loadQuote(config).finally(function () {
+        loading = false;
+        if (queued) {
+          queued = false;
+          requestQuote();
+        }
+      });
+    }
 
     box.setAttribute("role", "button");
     box.setAttribute("tabindex", "0");
-    box.addEventListener("click", function () { loadQuote(config); });
+    box.addEventListener("click", requestQuote);
     box.addEventListener("keydown", function (event) {
-      if (event.key === "Enter" || event.key === " ") loadQuote(config);
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        requestQuote();
+      }
     });
-    loadQuote(config);
+    requestQuote();
   });
 })();
