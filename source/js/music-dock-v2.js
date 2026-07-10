@@ -38,6 +38,7 @@
         container: container,
         fixed: false,
         autoplay: false,
+        lrcType: 3,
         audio: audio
       });
     }).catch(function () {

@@ -55,6 +55,14 @@
     return new RegExp("(^|\\s)#" + escapeRegExp(tag) + "(\\b|\\s|$)", "i").test(contentOf(item));
   }
 
+  function memoId(name) {
+    return String(name || "").replace(/^memos\//, "");
+  }
+
+  function snippet(item) {
+    return contentOf(item).replace(/\s+/g, " ").trim();
+  }
+
   function attachmentUrl(base, attachment) {
     if (attachment.externalLink) return attachment.externalLink;
     if (!attachment.name || !attachment.filename) return "";
@@ -70,22 +78,28 @@
       var filename = escapeHtml(attachment.filename || attachment.name || "附件");
       if (!url) return "";
       if ((attachment.type || "").indexOf("image/") === 0) {
-        return '<figure><img loading="lazy" src="' + url + '" alt="' + filename + '"><figcaption>' + filename + "</figcaption></figure>";
+        return '<figure><img loading="lazy" src="' + url + '" alt="' + filename + '"></figure>';
       }
-      return '<a class="solo-memo-file" href="' + url + '" target="_blank" rel="noopener">' + filename + "</a>";
+      return '<a class="solo-memo-file" href="' + url + '" target="_blank" rel="noopener">打开附件</a>';
     }).join("") + "</div>";
   }
 
-  function renderRelations(item) {
+  function renderRelations(item, byName, base) {
     var relations = item.relations || [];
-    var refs = relations.map(function (relation) {
-      var memo = relation.relatedMemo || relation.memo || {};
-      if (memo.name === item.name) memo = relation.memo || {};
-      var label = memo.snippet || memo.name || "";
-      return label ? escapeHtml(label.replace(/^memos\//, "")) : "";
-    }).filter(Boolean);
-    if (!refs.length) return "";
-    return '<div class="solo-memo-meta">引用：' + refs.join("、") + "</div>";
+    var groups = { "引用": [], "被引用": [] };
+    relations.forEach(function (relation) {
+      var type = relation.memo && relation.memo.name === item.name ? "引用" : "被引用";
+      var memo = type === "引用" ? relation.relatedMemo : relation.memo;
+      if (!memo || !memo.name) return;
+      var full = byName[memo && memo.name] || memo || {};
+      var text = snippet(full) || memoId(full.name);
+      if (text) groups[type].push('<a href="' + base + "/m/" + memoId(full.name) + '" target="_blank" rel="noopener">' + escapeHtml(text) + "</a>");
+    });
+
+    return Object.keys(groups).map(function (title) {
+      if (!groups[title].length) return "";
+      return '<div class="solo-memo-relation"><div>' + title + "(" + groups[title].length + ")</div>" + groups[title].join("") + "</div>";
+    }).join("");
   }
 
   function renderLocation(item) {
@@ -95,6 +109,10 @@
   }
 
   function render(container, items, tag, base) {
+    var byName = items.reduce(function (result, item) {
+      if (item.name) result[item.name] = item;
+      return result;
+    }, {});
     var moments = items.filter(function (item) {
       return hasTag(item, tag);
     });
@@ -110,7 +128,7 @@
         .replace(/#([A-Za-z0-9_-]+)/g, '<span class="solo-tag">#$1</span>');
       var date = formatDate(dateOf(item));
       return '<article class="solo-memo-item"><time>' + date + '</time><p>' + content + "</p>" +
-        renderAttachments(base, item) + renderRelations(item) + renderLocation(item) + "</article>";
+        renderAttachments(base, item) + renderRelations(item, byName, base) + renderLocation(item) + "</article>";
     }).join("");
   }
 

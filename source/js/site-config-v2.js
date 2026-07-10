@@ -11,10 +11,20 @@
     ],
     music: [
       {
-        name: "夜航占位曲目",
-        artist: "SoloEternity",
-        url: "https://assets.soloeternity.me/music/night-voyage.mp3",
-        cover: "https://assets.soloeternity.me/images/gallery/cover.jpg"
+        name: "Merry Christmas Mr. Lawrence",
+        artist: "坂本龍一",
+        url: "https://assets.soloeternity.me/music/merry-christmas-mr-lawrence.mp3",
+        lrc: "https://assets.soloeternity.me/music/merry-christmas-mr-lawrence.lrc"
+      },
+      {
+        name: "打上花火",
+        artist: "Daoko / 米津玄師",
+        url: "https://assets.soloeternity.me/music/uchiage-hanabi.mp3"
+      },
+      {
+        name: "The last rain",
+        artist: "Uru",
+        url: "https://assets.soloeternity.me/music/the-last-rain.mp3"
       }
     ]
   });

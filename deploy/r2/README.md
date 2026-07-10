@@ -51,7 +51,7 @@ music: [
 Cloudflare R2 S3 API endpoint 格式：
 
 ```text
-https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+https://edc50ca92af82eb445c6be9cfc2253ff.r2.cloudflarestorage.com
 ```
 
 上传示例：
@@ -84,7 +84,7 @@ rclone config
 3. 新建 remote，类型选择 `s3`，provider 选择 `Cloudflare`，endpoint 填：
 
 ```text
-https://<ACCOUNT_ID>.r2.cloudflarestorage.com
+https://edc50ca92af82eb445c6be9cfc2253ff.r2.cloudflarestorage.com
 ```
 
 4. 常用命令：
@@ -101,6 +101,24 @@ rclone sync ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
 
 # 只复制新增和变更，不删除远端
 rclone copy ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
+```
+
+## 当前站点使用的上传命令
+
+当前博客配置引用 `https://assets.soloeternity.me/img/` 和 `https://assets.soloeternity.me/music/`，所以本地目录直接同步到同名 R2 目录：
+
+```bash
+rclone copy ./source/img r2:soloeternity-assets/img --progress
+rclone copy ./source/music r2:soloeternity-assets/music --include "*.mp3" --include "*.lrc" --progress
+```
+
+本地已为网页播放生成这些 MP3 上传版：
+
+```text
+source/music/uchiage-hanabi.mp3
+source/music/the-last-rain.mp3
+source/music/merry-christmas-mr-lawrence.mp3
+source/music/merry-christmas-mr-lawrence.lrc
 ```
 
 ## 适合迁移到 R2 的文件
