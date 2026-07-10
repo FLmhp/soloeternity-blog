@@ -2,8 +2,8 @@
 title: Java开发环境配置
 tags: [Java]
 categories: [Java]
-index_img: /img/cover/java.png
-banner_img: /img/post_banner.png
+index_img: https://assets.soloeternity.me/images/posts/covers/java.png
+banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.png
 date: 2022-07-21 18:50:40
 ---
 

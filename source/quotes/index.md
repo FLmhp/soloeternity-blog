@@ -3,7 +3,7 @@ title: 语录
 date: 2026-07-08 00:00:00
 layout: page
 subtitle: 摘下一句刚好路过的话
-banner_img: https://assets.soloeternity.me/img/quote_banner.png
+banner_img: https://assets.soloeternity.me/images/backgrounds/quote_banner.png
 ---
 
 <section class="solo-hitokoto">

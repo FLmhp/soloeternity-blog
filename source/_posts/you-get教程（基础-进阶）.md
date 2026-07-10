@@ -2,8 +2,8 @@
 title: you-get教程（基础+进阶）
 tags: [Python, you-get]
 categories: [Python]
-index_img: /img/cover/python.png
-banner_img: /img/post_banner.png
+index_img: https://assets.soloeternity.me/images/posts/covers/python.png
+banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.png
 date: 2022-09-10 21:05:20
 ---
 

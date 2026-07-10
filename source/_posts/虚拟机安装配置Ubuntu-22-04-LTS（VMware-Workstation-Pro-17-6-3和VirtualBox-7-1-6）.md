@@ -2,8 +2,8 @@
 title: 虚拟机安装配置Ubuntu 22.04 LTS（VMware Workstation Pro 17.6.3和VirtualBox 7.1.6）
 tags: [Ubuntu, VirtualBox, VMware]
 categories: [虚拟机, Linux]
-index_img: /img/cover/ubuntu.png
-banner_img: /img/post_banner.png
+index_img: https://assets.soloeternity.me/images/posts/covers/ubuntu.png
+banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.png
 date: 2025-03-16 21:47:58
 ---
 

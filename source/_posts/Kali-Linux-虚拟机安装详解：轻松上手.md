@@ -2,8 +2,8 @@
 title: Kali Linux 虚拟机安装详解：轻松上手
 tags: [Kali Linux, VMware]
 categories: [虚拟机, Linux]
-index_img: /img/cover/kali.png
-banner_img: /img/post_banner.png
+index_img: https://assets.soloeternity.me/images/posts/covers/kali.png
+banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.png
 date: 2023-09-24 12:41:44
 ---
 
