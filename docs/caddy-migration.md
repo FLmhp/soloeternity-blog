@@ -18,8 +18,10 @@
 | `soloeternity.me` | 静态文件服务 | `/var/www/blog/current` |
 | `www.soloeternity.me` | 301 跳转 | `https://soloeternity.me{uri}` |
 | `waline.soloeternity.me` | HTTPS 反向代理 | `waline:8360` |
+| `umami.soloeternity.me` | HTTPS 反向代理 | `umami:3000` |
 | `memos.soloeternity.me` | HTTPS 反向代理 | `memos:5230` |
 | `chat.soloeternity.me` | HTTPS 反向代理 | `lobehub:3210` |
+| `gallery.soloeternity.me` | HTTPS 反向代理 | `chevereto:8080` |
 | `openlist.soloeternity.me` | HTTPS 反向代理 | `openlist:5244` |
 | `s3.soloeternity.me` | HTTPS 反向代理 | `seaweedfs-s3:8333` |
 | `assets.soloeternity.me` | 占位 404 | 应绑定 Cloudflare R2，不应走服务器 |
@@ -35,6 +37,7 @@
 - `/root/docker/caddy/conf/Caddyfile`
 - `/root/docker/caddy/Dockerfile`
 - `/root/docker/caddy/.env`
+- `/opt/chevereto/docker-compose.yml`
 
 服务器备份：
 
@@ -47,6 +50,8 @@
 - `deploy/caddy/Caddyfile`
 - `deploy/caddy/Dockerfile`
 - `deploy/caddy/.env.example`
+- `deploy/chevereto/docker-compose.yml`
+- `deploy/chevereto/.env.example`
 
 ## 日常维护命令
 
@@ -87,6 +92,8 @@ curl -I https://soloeternity.me/
 curl -I https://waline.soloeternity.me/
 curl -I https://memos.soloeternity.me/
 curl -I https://chat.soloeternity.me/
+curl -I https://gallery.soloeternity.me/
+curl -I https://umami.soloeternity.me/
 ```
 
 Windows 如果遇到证书吊销检查离线，可临时使用：
@@ -125,7 +132,7 @@ curl -I https://waline.soloeternity.me/
 
 ## 后续人工操作流程
 
-1. 在 Cloudflare DNS 中确认 `soloeternity.me`、`waline.soloeternity.me`、`memos.soloeternity.me`、`chat.soloeternity.me` 都指向 `107.151.246.42`，或由 `*.soloeternity.me` 覆盖。
+1. 在 Cloudflare DNS 中确认 `soloeternity.me`、`waline.soloeternity.me`、`memos.soloeternity.me`、`chat.soloeternity.me`、`gallery.soloeternity.me`、`umami.soloeternity.me` 都指向 `107.151.246.42`，或由 `*.soloeternity.me` 覆盖。
 2. 如需开启 Cloudflare CDN，将主站、Waline、Memos、Chat 记录切为橙云代理，SSL/TLS 模式使用 `Full (strict)`。
 3. 在 Cloudflare 创建 R2 bucket 后，把 `assets.soloeternity.me` 绑定为 R2 自定义域名；完成后它不应再命中服务器上的 Caddy 404 占位。
 4. 部署 Decap CMS OAuth Worker 或独立 OAuth 服务后，把 `cms-auth.soloeternity.me` 指向该服务；完成后删除或覆盖 Caddy 中的 404 占位。
@@ -135,3 +142,4 @@ curl -I https://waline.soloeternity.me/
 8. 修改 Caddy 配置时，先在服务器执行 `caddy validate`，再 `docker compose up -d --build`。
 9. 每次改 DNS 或 CDN 后，分别用本机和服务器 `curl -I` 验证，避免本地代理 DNS 缓存误判。
 10. Cloudflare CDN 开启后，如果页面资源没有更新，先清理 Cloudflare Cache，再重新访问。
+11. 首次打开 `https://gallery.soloeternity.me/install`，按页面提示创建 Chevereto 管理员账号。

@@ -203,7 +203,7 @@
 #solo-music-dock {
   position: fixed;
   left: 1rem;
-  bottom: 1rem;
+  bottom: 4.25rem;
   z-index: 9999;
   display: flex;
   align-items: flex-end;
@@ -225,7 +225,7 @@
 }
 
 .solo-music-body {
-  width: min(300px, calc(100vw - 5rem));
+  width: min(280px, calc(100vw - 5rem));
 }
 
 .solo-music-hidden .solo-music-body {
@@ -241,7 +241,7 @@
 }
 
 #solo-music-player .aplayer-lrc {
-  height: 74px;
+  height: 64px;
   margin: 0.35rem 0;
 }
 

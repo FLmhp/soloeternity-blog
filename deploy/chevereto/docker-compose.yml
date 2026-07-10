@@ -1,0 +1,38 @@
+services:
+  chevereto:
+    image: ghcr.io/chevereto/chevereto:latest
+    container_name: chevereto
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    env_file: .env
+    environment:
+      CHEVERETO_DB_HOST: mariadb
+      CHEVERETO_DB_PORT: 3306
+      CHEVERETO_DB_NAME: chevereto
+      CHEVERETO_DB_USER: chevereto
+      CHEVERETO_DB_PASS: ${MYSQL_PASSWORD}
+      CHEVERETO_HOSTNAME: gallery.soloeternity.me
+      CHEVERETO_HTTPS: "true"
+      CHEVERETO_HEADER_CLIENT_IP: X-Forwarded-For
+      CHEVERETO_ASSET_STORAGE_TYPE: local
+      CHEVERETO_ASSET_STORAGE_URL: /images/_assets
+      CHEVERETO_ASSET_STORAGE_BUCKET: /var/www/html/images/_assets
+    volumes:
+      - ./images:/var/www/html/images
+    networks:
+      - default
+
+  mariadb:
+    image: mariadb:11.4
+    container_name: chevereto-db
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./database:/var/lib/mysql
+    networks:
+      - default
+
+networks:
+  default:
+    name: chevereto_default

@@ -24,6 +24,11 @@ waline.soloeternity.me {
     reverse_proxy waline:8360
 }
 
+umami.soloeternity.me {
+    encode zstd gzip
+    reverse_proxy umami:3000
+}
+
 memos.soloeternity.me {
     encode zstd gzip
     header {
@@ -49,6 +54,11 @@ s3.soloeternity.me {
 openlist.soloeternity.me {
     encode zstd gzip
     reverse_proxy openlist:5244
+}
+
+gallery.soloeternity.me {
+    encode zstd gzip
+    reverse_proxy chevereto:8080
 }
 
 assets.soloeternity.me {

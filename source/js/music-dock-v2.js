@@ -39,6 +39,7 @@
         fixed: false,
         autoplay: false,
         lrcType: 3,
+        listFolded: true,
         audio: audio
       });
     }).catch(function () {

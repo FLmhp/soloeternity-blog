@@ -6,19 +6,6 @@ subtitle: 把光影留给慢慢翻看的时候
 banner_img: https://assets.soloeternity.me/images/backgrounds/gallery_banner.png
 ---
 
-照片和大图会逐步迁到 `assets.soloeternity.me`，这里先保留最近的图集入口。
+图片上传和相册管理已经迁到独立图床，博客这里只保留入口。
 
-<div class="solo-gallery">
-  <figure>
-    <img src="https://assets.soloeternity.me/images/backgrounds/banner.png" alt="黄昏天空" loading="lazy">
-    <figcaption>黄昏</figcaption>
-  </figure>
-  <figure>
-    <img src="https://assets.soloeternity.me/images/backgrounds/about_banner.png" alt="夜色" loading="lazy">
-    <figcaption>夜色</figcaption>
-  </figure>
-  <figure>
-    <img src="https://assets.soloeternity.me/images/backgrounds/post_banner.png" alt="旅途" loading="lazy">
-    <figcaption>路上</figcaption>
-  </figure>
-</div>
+<p><a class="solo-button" href="https://gallery.soloeternity.me" target="_blank" rel="noopener">打开图床</a></p>

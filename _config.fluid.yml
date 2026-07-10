@@ -1106,28 +1106,22 @@ links:
   # Member item of page
   items:
     - {
-      title: "SoloEternity",
-      intro: "当前博客主站",
-      link: "https://soloeternity.me/",
-      avatar: "/img/favicon.png"
+      title: "澪依",
+      intro: "全能开发者 & 电子科技大学在读学生（能力碾压同龄人的佬！）",
+      link: "https://www.mioyi.net/zh-cn/",
+      avatar: "https://assets.soloeternity.me/avatars/mioyi.webp"
     }
     - {
-      title: "Fluid Docs",
-      intro: "Hexo Fluid 主题文档",
-      link: "https://hexo.fluid-dev.com/docs/",
-      avatar: "/img/favicon.png"
+      title: "Loch",
+      intro: "一名开发者、写作者和终身学习者。（硬件之神）",
+      link: "https://www.blog.locx-loch.top/zh",
+      avatar: "https://assets.soloeternity.me/avatars/loch.jpg"
     }
     - {
-      title: "Waline",
-      intro: "自托管评论系统",
-      link: "https://waline.js.org/",
-      avatar: "/img/favicon.png"
-    }
-    - {
-      title: "Memos",
-      intro: "自托管动态与备忘录",
-      link: "https://usememos.com/",
-      avatar: "/img/favicon.png"
+      title: "OrbisLumen",
+      intro: "一名软件工程在读本科生（把前浪拍死在沙滩上的后浪）",
+      link: "https://orbislumen.pages.dev/",
+      avatar: "https://assets.soloeternity.me/avatars/orbislumen.webp"
     }
 
   # 当成员头像加载失败时，替换为指定图片

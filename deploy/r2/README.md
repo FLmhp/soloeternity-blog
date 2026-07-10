@@ -13,11 +13,12 @@ images/
   posts/YYYY/slug/
   gallery/YYYY/
   backgrounds/
-  avatars/
   social/
+avatars/
 music/
   tracks/
   covers/
+  lyrics/
 downloads/
   docs/
   packages/
@@ -105,20 +106,51 @@ rclone copy ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
 
 ## 当前站点使用的上传命令
 
-当前博客配置引用 `https://assets.soloeternity.me/img/` 和 `https://assets.soloeternity.me/music/`，所以本地目录直接同步到同名 R2 目录：
+当前博客配置使用新结构，不再保留旧 `img/` 兼容目录：
+
+- 背景图：`images/backgrounds/`
+- 友链头像：`avatars/`
+- 社交图标：`images/social/`
+- 音乐文件：`music/tracks/`
+- 音乐封面：`music/covers/`
+- 歌词文件：`music/lyrics/`
 
 ```bash
-rclone copy ./source/img r2:soloeternity-assets/img --progress
-rclone copy ./source/music r2:soloeternity-assets/music --include "*.mp3" --include "*.lrc" --progress
+rclone copy ./source/img r2:soloeternity-assets/images/backgrounds --include "*_banner.*" --include "banner.png" --include "post_banner.png" --progress
+rclone copy ./source/img/mioyi.webp r2:soloeternity-assets/avatars --progress
+rclone copy ./source/img/loch.jpg r2:soloeternity-assets/avatars --progress
+rclone copy ./source/img/orbislumen.webp r2:soloeternity-assets/avatars --progress
+rclone copy ./source/music r2:soloeternity-assets/music/tracks --include "*.mp3" --exclude "*" --progress
+rclone copy ./deploy/r2/music r2:soloeternity-assets/music --progress
 ```
 
-本地已为网页播放生成这些 MP3 上传版：
+本地已为网页播放整理这些 R2 上传文件：
 
 ```text
-source/music/uchiage-hanabi.mp3
-source/music/the-last-rain.mp3
-source/music/merry-christmas-mr-lawrence.mp3
-source/music/merry-christmas-mr-lawrence.lrc
+source/music/uchiage-hanabi.mp3 -> music/tracks/uchiage-hanabi.mp3
+source/music/the-last-rain.mp3 -> music/tracks/the-last-rain.mp3
+source/music/merry-christmas-mr-lawrence.mp3 -> music/tracks/merry-christmas-mr-lawrence.mp3
+deploy/r2/music/covers/uchiage-hanabi.jpg
+deploy/r2/music/covers/the-last-rain.jpg
+deploy/r2/music/covers/merry-christmas-mr-lawrence.png
+deploy/r2/music/lyrics/uchiage-hanabi.lrc
+deploy/r2/music/lyrics/the-last-rain.lrc
+deploy/r2/music/lyrics/merry-christmas-mr-lawrence.lrc
+```
+
+音频文件体积较大，只作为本地上传源，不提交进 Git。
+
+旧目录清理命令：
+
+```bash
+rclone purge r2:soloeternity-assets/img
+rclone deletefile "r2:soloeternity-assets/music/merry-christmas-mr-lawrence.mp3"
+rclone deletefile "r2:soloeternity-assets/music/merry-christmas-mr-lawrence.lrc"
+rclone deletefile "r2:soloeternity-assets/music/the-last-rain.mp3"
+rclone deletefile "r2:soloeternity-assets/music/uchiage-hanabi.mp3"
+rclone deletefile "r2:soloeternity-assets/music/坂本龍一 - Merry Christmas Mr. Lawrence.mp3"
+rclone deletefile "r2:soloeternity-assets/music/坂本龍一 - Merry Christmas Mr. Lawrence.lrc"
+rclone deletefile "r2:soloeternity-assets/music/lyrics/坂本龍一 - Merry Christmas Mr. Lawrence.lrc"
 ```
 
 ## 适合迁移到 R2 的文件
@@ -128,8 +160,8 @@ source/music/merry-christmas-mr-lawrence.lrc
 - 文章封面和正文大图：`source/_posts/**` 中引用的图片，以及 Decap CMS 的 `index_img`。
 - 图集资源：`source/gallery/` 页面展示的图片，目标目录为 `images/gallery/YYYY/`。
 - 全站背景和 banner：如首页、归档、分类、标签、页面 banner 等大图，目标目录为 `images/backgrounds/`。
-- 音乐播放器文件：`music/tracks/` 放音频，`music/covers/` 放封面。
-- 头像、社交二维码和展示图：`images/avatars/`、`images/social/`。
+- 音乐播放器文件：`music/tracks/` 放音频，`music/covers/` 放封面，`music/lyrics/` 放歌词。
+- 头像、社交二维码和展示图：`avatars/`、`images/social/`。
 - Live2D 模型贴图：模型体积变大后可迁到 `live2d/models/`，但要同步修改模型 JSON 内的相对资源路径。
 - 可下载附件：PDF、压缩包、演示文件等放到 `downloads/`。
 

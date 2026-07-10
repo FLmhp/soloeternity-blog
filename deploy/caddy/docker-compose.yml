@@ -14,6 +14,8 @@ services:
       - waline_default
       - memos_default
       - frps
+      - umami_default
+      - chevereto_default
     ports:
       - 80:80
       - 443:443
@@ -37,6 +39,10 @@ networks:
   memos_default:
     external: true
   frps:
+    external: true
+  umami_default:
+    external: true
+  chevereto_default:
     external: true
 
 volumes:
