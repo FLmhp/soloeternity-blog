@@ -12,8 +12,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     var config = window.SoloEternity || {};
     var audio = config.music || [];
-    if (!audio.length) return;
-    if (document.getElementById("solo-music-dock")) return;
+    if (!audio.length || document.getElementById("solo-music-dock")) return;
 
     var dock = document.createElement("div");
     dock.id = "solo-music-dock";

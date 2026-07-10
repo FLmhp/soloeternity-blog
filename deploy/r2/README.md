@@ -116,29 +116,25 @@ rclone copy ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
 - 歌词文件：`music/lyrics/`
 
 ```bash
-rclone copy ./source/img r2:soloeternity-assets/images/backgrounds --include "*_banner.*" --include "banner.png" --include "post_banner.png" --progress
-rclone copy ./source/img/mioyi.webp r2:soloeternity-assets/avatars --progress
-rclone copy ./source/img/loch.jpg r2:soloeternity-assets/avatars --progress
-rclone copy ./source/img/orbislumen.webp r2:soloeternity-assets/avatars --progress
-rclone copy ./source/music r2:soloeternity-assets/music/tracks --include "*.mp3" --exclude "*" --progress
 rclone copy ./deploy/r2/music r2:soloeternity-assets/music --progress
+rclone copy ./music-upload r2:soloeternity-assets/music/tracks --include "*.mp3" --exclude "*" --progress
 ```
 
 本地已为网页播放整理这些 R2 上传文件：
 
 ```text
-source/music/uchiage-hanabi.mp3 -> music/tracks/uchiage-hanabi.mp3
-source/music/the-last-rain.mp3 -> music/tracks/the-last-rain.mp3
-source/music/merry-christmas-mr-lawrence.mp3 -> music/tracks/merry-christmas-mr-lawrence.mp3
-deploy/r2/music/covers/uchiage-hanabi.jpg
-deploy/r2/music/covers/the-last-rain.jpg
-deploy/r2/music/covers/merry-christmas-mr-lawrence.png
+music-upload/uchiage-hanabi.mp3 -> music/tracks/uchiage-hanabi.mp3
+music-upload/the-last-rain.mp3 -> music/tracks/the-last-rain.mp3
+music-upload/merry-christmas-mr-lawrence.mp3 -> music/tracks/merry-christmas-mr-lawrence.mp3
+deploy/r2/music/covers/uchiage-hanabi.webp
+deploy/r2/music/covers/the-last-rain.webp
+deploy/r2/music/covers/merry-christmas-mr-lawrence.webp
 deploy/r2/music/lyrics/uchiage-hanabi.lrc
 deploy/r2/music/lyrics/the-last-rain.lrc
 deploy/r2/music/lyrics/merry-christmas-mr-lawrence.lrc
 ```
 
-音频文件体积较大，只作为本地上传源，不提交进 Git。
+音频源文件和转码后的 MP3 体积较大，只作为临时上传源，不放入 `source/`，也不提交进 Git。歌词由 Hexo 同源提供，R2 中保留一份备份。
 
 旧目录清理命令：
 

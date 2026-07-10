@@ -245,6 +245,18 @@
   margin: 0.35rem 0;
 }
 
+.links .card-content {
+  height: auto;
+  min-height: 3.5rem;
+}
+
+.links .link-intro {
+  display: block;
+  max-height: none;
+  overflow: visible;
+  -webkit-line-clamp: unset;
+}
+
 html[data-user-color-scheme="dark"] .solo-page-intro,
 html[data-user-color-scheme="dark"] .solo-card,
 html[data-user-color-scheme="dark"] .solo-memo-item,

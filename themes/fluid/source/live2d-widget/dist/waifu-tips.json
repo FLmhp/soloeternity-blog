@@ -259,5 +259,17 @@
     "name": "IceGirl",
     "paths": ["/live2d-models/icegirl/IceGirl.model3.json"],
     "message": "IceGirl 已上线。"
+  }, {
+    "name": "Frieren",
+    "paths": ["/live2d-models/frieren/Frieren.model3.json"],
+    "message": "芙莉莲已上线。"
+  }, {
+    "name": "Fern",
+    "paths": ["/live2d-models/fern/fern.model3.json"],
+    "message": "菲伦已上线。"
+  }, {
+    "name": "Lolita",
+    "paths": ["/live2d-models/lolita/lolita.model3.json"],
+    "message": "Lolita 已上线。"
   }]
 }

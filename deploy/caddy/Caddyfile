@@ -16,6 +16,8 @@ www.soloeternity.me {
 soloeternity.me {
     encode zstd gzip
     root * /var/www/blog/current
+    @static path *.css *.js *.mjs *.png *.jpg *.jpeg *.gif *.webp *.svg *.ico *.woff *.woff2 *.ttf *.json *.moc3 *.lrc *.xml
+    header @static Cache-Control "public, max-age=3600, s-maxage=604800, stale-while-revalidate=86400"
     file_server
 }
 

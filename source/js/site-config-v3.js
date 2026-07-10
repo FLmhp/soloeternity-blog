@@ -12,23 +12,23 @@
     music: [
       {
         name: "Merry Christmas Mr. Lawrence",
-        artist: "坂本龍一",
+        artist: "坂本龙一",
         url: "https://assets.soloeternity.me/music/tracks/merry-christmas-mr-lawrence.mp3",
-        cover: "https://assets.soloeternity.me/music/covers/merry-christmas-mr-lawrence.png",
+        cover: "https://assets.soloeternity.me/music/covers/merry-christmas-mr-lawrence.webp",
         lrc: "/music/lyrics/merry-christmas-mr-lawrence.lrc"
       },
       {
         name: "打上花火",
-        artist: "Daoko / 米津玄師",
+        artist: "Daoko / 米津玄师",
         url: "https://assets.soloeternity.me/music/tracks/uchiage-hanabi.mp3",
-        cover: "https://assets.soloeternity.me/music/covers/uchiage-hanabi.jpg",
+        cover: "https://assets.soloeternity.me/music/covers/uchiage-hanabi.webp",
         lrc: "/music/lyrics/uchiage-hanabi.lrc"
       },
       {
         name: "The last rain",
         artist: "Uru",
         url: "https://assets.soloeternity.me/music/tracks/the-last-rain.mp3",
-        cover: "https://assets.soloeternity.me/music/covers/the-last-rain.jpg",
+        cover: "https://assets.soloeternity.me/music/covers/the-last-rain.webp",
         lrc: "/music/lyrics/the-last-rain.lrc"
       }
     ]
