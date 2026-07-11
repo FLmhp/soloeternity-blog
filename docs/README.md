@@ -7,11 +7,11 @@
 - [美化文档](./beautification.md)
 - [Caddy 边缘入口迁移手册](./caddy-migration.md)
 
-最新核验时间：`2026-07-08`（`Asia/Shanghai`）
+最新核验时间：`2026-07-11`（`Asia/Shanghai`）
 
 本次核验覆盖了：
 
-- 线上主站与 Waline 的真实 HTTP 状态
+- 线上主站、Waline、Chevereto、Bangumi 与 R2 的真实状态
 - Ubuntu / Caddy / Docker / SQLite 当前运行状态
 - GitHub Actions 最近成功部署记录
 - 当前仓库中的使用与美化入口是否仍和线上行为一致
@@ -29,4 +29,7 @@
 - 边缘入口：Caddy，占用 `80/443/7000`
 - 静态文件目录：`/var/www/blog/current`
 - Waline 数据目录：`/opt/waline/data`
+- Waline 版本：`@waline/vercel 1.41.3`
+- 媒体域名：`https://assets.soloeternity.me`
+- 相册服务：`https://gallery.soloeternity.me`
 - 自动部署入口：`.github/workflows/deploy.yml`

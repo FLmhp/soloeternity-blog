@@ -60,6 +60,10 @@ openlist.soloeternity.me {
 
 gallery.soloeternity.me {
     encode zstd gzip
+    header {
+        Access-Control-Allow-Origin https://soloeternity.me
+        Vary Origin
+    }
     reverse_proxy chevereto:8080
 }
 

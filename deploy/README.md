@@ -13,7 +13,7 @@ Current production checks were re-verified on `2026-07-08`:
 
 - `https://soloeternity.me` returns `HTTP 200`
 - `https://waline.soloeternity.me/ui` returns `HTTP 200`
-- the live Waline service reports `x-waline-version: 1.40.3`
+- the live Waline service reports `x-waline-version: 1.41.3`
 - the current static homepage file on the server is `/var/www/blog/current/index.html`
 - Caddy owns `80/tcp`, `443/tcp`, `443/udp`, and `7000/tcp`
 - Nginx is `inactive` and `disabled`
@@ -204,7 +204,7 @@ print('counters', cur.execute('SELECT COUNT(*) FROM wl_Counter').fetchone()[0])
 PY
 ```
 
-The current live database state verified on `2026-07-08` is:
+The current live database state was preserved during the `2026-07-11` upgrade to Waline `1.41.3`:
 
 - `wl_Users = 1`
 - `wl_Comment = 3`

@@ -10,11 +10,17 @@
 
 ```text
 images/
-  posts/YYYY/slug/
-  gallery/YYYY/
   backgrounds/
+  branding/
+  avatars/
+  avatas/
+  posts/
+    covers/
+    java-environment/
+    kali-linux-vm/
+    ubuntu-vm/
+    you-get/
   social/
-avatars/
 music/
   tracks/
   covers/
@@ -28,21 +34,23 @@ memos/
   attachments/YYYY/MM/
 ```
 
+其中 `images/avatas/` 按现有站点约定保存友链头像；`images/avatars/` 保存站长头像。相册原图继续由 Chevereto 管理，不在 R2 中重复保存。
+
 文章中直接引用：
 
 ```md
-![示例图](https://assets.soloeternity.me/images/posts/example.jpg)
+![示例图](https://assets.soloeternity.me/images/posts/example/image.webp)
 ```
 
-音乐播放器配置在 `source/js/site-config.js`：
+音乐播放器配置在 `source/js/site-config-v3.js`：
 
 ```js
 music: [
   {
     name: "歌曲名",
     artist: "作者",
-    url: "https://assets.soloeternity.me/music/song.mp3",
-    cover: "https://assets.soloeternity.me/images/gallery/cover.jpg"
+    url: "https://assets.soloeternity.me/music/tracks/song.mp3",
+    cover: "https://assets.soloeternity.me/music/covers/song.webp"
   }
 ]
 ```
@@ -109,7 +117,7 @@ rclone copy ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
 当前博客配置使用新结构，不再保留旧 `img/` 兼容目录：
 
 - 背景图：`images/backgrounds/`
-- 友链头像：`avatars/`
+- 友链头像：`images/avatas/`
 - 社交图标：`images/social/`
 - 音乐文件：`music/tracks/`
 - 音乐封面：`music/covers/`
@@ -158,7 +166,7 @@ rclone deletefile "r2:soloeternity-assets/music/lyrics/坂本龍一 - Merry Chri
 - 全站背景和 banner：如首页、归档、分类、标签、页面 banner 等大图，目标目录为 `images/backgrounds/`。
 - 音乐播放器文件：`music/tracks/` 放音频，`music/covers/` 放封面，`music/lyrics/` 放歌词。
 - 头像、社交二维码和展示图：`avatars/`、`images/social/`。
-- Live2D 模型贴图：模型体积变大后可迁到 `live2d/models/`，但要同步修改模型 JSON 内的相对资源路径。
+- Live2D 模型和贴图：完整备份到 `live2d/models/`。站点仍使用同源 `/live2d-models/` 加载，避免跨域 WebGL 兼容问题。
 - 可下载附件：PDF、压缩包、演示文件等放到 `downloads/`。
 
 ## 暂时保留在 Git 仓库的文件
@@ -175,6 +183,6 @@ Memos 中上传的图片默认由 Memos 服务管理。若要把 Memos 附件也
 
 ## 推荐迁移顺序
 
-1. 先迁音乐和图集图片，改 `source/js/site-config.js` 与 `source/gallery/index.md`。
+1. 先迁音乐，改 `source/js/site-config-v3.js`；图集原图由 Chevereto 管理。
 2. 再迁文章封面，把 Decap CMS 的封面字段统一填 `https://assets.soloeternity.me/images/posts/...`。
 3. 最后迁全站背景和 Live2D 资源；这些资源影响页面观感，迁移后要完整跑一次 `npx hexo generate` 并线上检查首屏。

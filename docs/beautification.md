@@ -711,3 +711,12 @@ pnpm server
 2. 文案类调整尽量集中到单个脚本，例如 `duration.js`、`title.js`。
 3. 涉及中文字符串的环境变量文件优先用 `UTF-8` 保存。
 4. 视觉增强脚本尽量避免重复操作 DOM，优先按页面作用域注入。
+
+---
+
+## 22. 新增页面视觉规范
+
+- 自定义页面统一使用 Fluid 的 `layout: page` 和 80% Banner 高度，正文板块起始位置与归档页一致。
+- Glass 卡片统一由 `source/css/pages-glass-v6.css` 提供半透明背景、描边、阴影和 `backdrop-filter`。
+- Gallery 相册和 Anime 条目沿用同一套圆角、毛玻璃和深色模式规则，不创建独立主题。
+- 页面背景统一从 R2 的 `images/backgrounds/*.webp` 读取，本地镜像保存在 `source/img/backgrounds/`。

@@ -2,8 +2,8 @@
 title: you-get教程（基础+进阶）
 tags: [Python, you-get]
 categories: [Python]
-index_img: https://assets.soloeternity.me/images/posts/covers/python.png
-banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.png
+index_img: https://assets.soloeternity.me/images/posts/covers/python.webp
+banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.webp
 date: 2022-09-10 21:05:20
 ---
 
@@ -21,23 +21,23 @@ you-get是一个小巧的网页媒体下载工具，可以从网页上下载视�
 
 下载地址：[https://www.python.org/downloads/](https://www.python.org/downloads/)
 
-![](682aad7563074b828bcb4725c887a40a.png)
+![](https://assets.soloeternity.me/images/posts/you-get/682aad7563074b828bcb4725c887a40a.webp)
 
 也可以直接使用以下链接获取3.10.6安装包:
 [https://www.aliyundrive.com/s/uc8zJhiCs3S](https://www.aliyundrive.com/s/uc8zJhiCs3S)
 
 下载完成后双击打开安装包：
-![](5bcabe0677e46badcd5ff4bdee2603f4.png)
+![](https://assets.soloeternity.me/images/posts/you-get/5bcabe0677e46badcd5ff4bdee2603f4.webp)
 
 直接点击**Next**：
-![](ab63afad6162a97249ef31c51d13a438.png)
-![](37e011370c5146feba562bc512148749.png)
+![](https://assets.soloeternity.me/images/posts/you-get/ab63afad6162a97249ef31c51d13a438.webp)
+![](https://assets.soloeternity.me/images/posts/you-get/37e011370c5146feba562bc512148749.webp)
 
 等待安装完成：
-![](10b3c31fa5a4cde426a4a6d26a0a2c36.png)
+![](https://assets.soloeternity.me/images/posts/you-get/10b3c31fa5a4cde426a4a6d26a0a2c36.webp)
 
 安装完成，(o゜▽゜)o☆[BINGO!]：
-![](361c1b945ee9ae1ce1645237759a68c1.png)
+![](https://assets.soloeternity.me/images/posts/you-get/361c1b945ee9ae1ce1645237759a68c1.webp)
 
 > **注意**：选择自定义安装时注意更改Python保存位置，否则接下来的操作可能无法完成。具体操作方法参考以下链接：
 > [https://blog.csdn.net/Steve_Lee_/article/details/123169242#t5](https://blog.csdn.net/Steve_Lee_/article/details/123169242#t5)
@@ -46,21 +46,21 @@ you-get是一个小巧的网页媒体下载工具，可以从网页上下载视�
 > 查看方法：右键**保存文件夹** → **属性** → **安全** → **Users**
 >
 > 正确示例：
-> ![](e40eeb518b62d6486b1887b64a734279.png)
+> ![](https://assets.soloeternity.me/images/posts/you-get/e40eeb518b62d6486b1887b64a734279.webp)
 
 #### 1.1.2 检验安装
 
 1. 按 "**Win+R**" 打开运行框，输入 "**cmd**" 回车
-   ![](c1a02adc57acb2e413711ccb2104f657.png)
+   ![](https://assets.soloeternity.me/images/posts/you-get/c1a02adc57acb2e413711ccb2104f657.webp)
 
 2. 输入 "**python**" 回车，出现以下代码说明安装成功
-   ![](073f0e2656f94001285d5400ec670de1.png)
+   ![](https://assets.soloeternity.me/images/posts/you-get/073f0e2656f94001285d5400ec670de1.webp)
 
 #### 1.1.3 常见问题
 
 1. 安装时出现未指定错误"**0x80072efd**"
    原因：误勾选了最后两个选项
-   ![](b10f521e9ad7358be4ec9e22ce979318.png)
+   ![](https://assets.soloeternity.me/images/posts/you-get/b10f521e9ad7358be4ec9e22ce979318.webp)
 
    解决链接: [https://www.jianshu.com/p/bc1263f12c4f](https://www.jianshu.com/p/bc1263f12c4f)
 
@@ -86,25 +86,25 @@ you-get是一个小巧的网页媒体下载工具，可以从网页上下载视�
 curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py 
 ```
 
-![](ce3a29c2df6f9b81199e6f98d547c097.png)
+![](https://assets.soloeternity.me/images/posts/you-get/ce3a29c2df6f9b81199e6f98d547c097.webp)
 
 ```shell
 python get-pip.py  
 ```
 
-![](4fb1401480c0dec43517252608c42959.png)
+![](https://assets.soloeternity.me/images/posts/you-get/4fb1401480c0dec43517252608c42959.webp)
 
 ```shell
 python -m pip install --upgrade pip 
 ```
 
-![](6b42949ee3a67d8a198e84cc61ab2f7e.png)
+![](https://assets.soloeternity.me/images/posts/you-get/6b42949ee3a67d8a198e84cc61ab2f7e.webp)
 
 #### 1.2.2 检验安装
 
 运行cmd输入pip回车，若出现如下信息说明安装成功：
 
-![](138174f02a47147337f4f137944b826d.png)
+![](https://assets.soloeternity.me/images/posts/you-get/138174f02a47147337f4f137944b826d.webp)
 
 > **提示**：pip更详细的使用方法可参考：
 >
@@ -121,7 +121,7 @@ python -m pip install --upgrade pip
 pip install you-get
 ```
 
-![](77489cd9c5f51f22c4c703d562828342.png)
+![](https://assets.soloeternity.me/images/posts/you-get/77489cd9c5f51f22c4c703d562828342.webp)
 
 #### 1.3.2 检验安装
 
@@ -133,7 +133,7 @@ you-get
 
 回车，若出现以下信息说明安装成功：
 
-![](a2df127d2566908eba908e59c87e8e50.png)
+![](https://assets.soloeternity.me/images/posts/you-get/a2df127d2566908eba908e59c87e8e50.webp)
 
 ## 2 基础使用
 
@@ -243,7 +243,7 @@ Proxy options:
 you-get -i https://www.bilibili.com/video/BV16V4y1J7XL?spm_id_from=333.1007.tianma.4-1-9.click
 ```
 
-![](cdf6b3d8ab2db37f4c2d5743e73c5d57.png)
+![](https://assets.soloeternity.me/images/posts/you-get/cdf6b3d8ab2db37f4c2d5743e73c5d57.webp)
 
 ### 2. 指定视频格式
 
@@ -252,7 +252,7 @@ you-get -i https://www.bilibili.com/video/BV16V4y1J7XL?spm_id_from=333.1007.tian
 ```
 
 从上面的图中可以看到很多不同的格式和清晰度，如果要选择就需要使用 `-F/--format` 参数，示例如下：
-![](5f54e29da9322d93c7165045b5d81c31.png)
+![](https://assets.soloeternity.me/images/posts/you-get/5f54e29da9322d93c7165045b5d81c31.webp)
 
 然后再加上网址，最终命令如下：
 
@@ -368,7 +368,7 @@ you-get -c D:\cookies.sqlite -l -o D:\mhp --no-caption https://www.bilibili.com/
 
 1. 打开网页，对url进行分析
 
-![](0b8185d18a4c8cf2b2b613a85c27ea43.png)
+![](https://assets.soloeternity.me/images/posts/you-get/0b8185d18a4c8cf2b2b613a85c27ea43.webp)
 
 第一集：`https://www.bilibili.com/bangumi/play/ep83810?from_spmid=666.25.episode.0&from_outer_spmid=666.4.0.0&t=1.5`
 第二集：`https://www.bilibili.com/bangumi/play/ep83811?from_spmid=666.25.episode.0&from_outer_spmid=666.4.0.0&t=48.4`

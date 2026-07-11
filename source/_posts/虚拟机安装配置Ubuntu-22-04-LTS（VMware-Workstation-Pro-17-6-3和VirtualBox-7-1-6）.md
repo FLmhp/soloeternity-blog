@@ -2,8 +2,8 @@
 title: 虚拟机安装配置Ubuntu 22.04 LTS（VMware Workstation Pro 17.6.3和VirtualBox 7.1.6）
 tags: [Ubuntu, VirtualBox, VMware]
 categories: [虚拟机, Linux]
-index_img: https://assets.soloeternity.me/images/posts/covers/ubuntu.png
-banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.png
+index_img: https://assets.soloeternity.me/images/posts/covers/ubuntu.webp
+banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.webp
 date: 2025-03-16 21:47:58
 ---
 
@@ -54,10 +54,10 @@ date: 2025-03-16 21:47:58
 
 打开页面后按下图提示操作（没有账户的按照指示注册完再次打开链接即可，如果需要补充信息就随便填一下）
 
-![](d605948a31724b7a8f16f2c3c7963d8c.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/d605948a31724b7a8f16f2c3c7963d8c.webp)
 安装过程一路下一步即可（系统PATH、安装位置、快捷方式可以自定义，下图中两个选项建议取消勾选）
 
-![](0baf268afcde4e7485b4138f2b1c1c58.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/0baf268afcde4e7485b4138f2b1c1c58.webp)
 
 #### 2.1.2 VirtualBox 7.1.6
 
@@ -65,15 +65,15 @@ date: 2025-03-16 21:47:58
 
 点击Windows hosts下载安装包
 
-![](f00342396c284813aedb193104269307.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/f00342396c284813aedb193104269307.webp)
 无脑下一步即可
 
 左上角 **“管理”** -> **“全局设定”**
 
-![](e2d8b072314a446c834304aef73d7ecf.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/e2d8b072314a446c834304aef73d7ecf.webp)
 可以更改虚拟机默认存放位置
 
-![](414137d5cc774cf8b9bb23ac65b91140.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/414137d5cc774cf8b9bb23ac65b91140.webp)
 
 #### 2.1.3 Ubuntu 22.04 LTS 镜像
 
@@ -83,13 +83,13 @@ date: 2025-03-16 21:47:58
 - **步骤**：
   1. 访问 [Ubuntu 官方下载页面](https://ubuntu.com/download/desktop)。
   2. 点击 **“check out our alternative downloads”**。
- ![](7c8df2c4c2824960b1cfe8dbc6ef7a95.png)
+ ![](https://assets.soloeternity.me/images/posts/ubuntu-vm/7c8df2c4c2824960b1cfe8dbc6ef7a95.webp)
   3. 点击 **“Past releases and other flavours
 ”** ，选择 **“Ubuntu 22.04 LTS (Jammy Jellyfish)”** 。
-  ![](22740f394ec64d1293365085439ff28b.png)
+  ![](https://assets.soloeternity.me/images/posts/ubuntu-vm/22740f394ec64d1293365085439ff28b.webp)
   4. 点击 **“64-bit PC (AMD64) desktop image”** 下载ISO镜像文件
   
-![](bde695f4192648b9b98c56cdc73e3e07.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/bde695f4192648b9b98c56cdc73e3e07.webp)
 
 ##### 清华镜像站下载
 
@@ -143,69 +143,69 @@ date: 2025-03-16 21:47:58
 
 点击 **“创建新的虚拟机”**
 
-![](2b1d71f976ad46b4b3e7a771e8fa4a96.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/2b1d71f976ad46b4b3e7a771e8fa4a96.webp)
 选择 **“自定义(高级)”**
 
-![](1c9b472ccc27473d8018f5128dc284ee.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/1c9b472ccc27473d8018f5128dc284ee.webp)
 下一步
 
-![](3d2cb6f6c64943e1ae37bdb94dddaf3c.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/3d2cb6f6c64943e1ae37bdb94dddaf3c.webp)
 选择 **“安装程序光盘映像文件”** ，然后点击 **“浏览”**打开刚下载的ISO文件
 
-![](96712c0370ae463bb01ea7b7d7a098fd.png)
-![](63b5f0801fb443ada43ab07a2473e574.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/96712c0370ae463bb01ea7b7d7a098fd.webp)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/63b5f0801fb443ada43ab07a2473e574.webp)
 出现下图红框中内容表示ISO文件正确
 
-![](18959b2c48684f8697441b79f1b46ea4.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/18959b2c48684f8697441b79f1b46ea4.webp)
 设置用户名和密码
 
-![](88bce790da7f438394df404888b33dd5.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/88bce790da7f438394df404888b33dd5.webp)
 设置虚拟机名称和存储位置
 
-![](ace9ca763fd540d782a640ce7913bc99.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/ace9ca763fd540d782a640ce7913bc99.webp)
 建议把内核数量调整为2
 
-![](16982f725a94423596ef80142256585c.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/16982f725a94423596ef80142256585c.webp)
 运行内存推荐4GB
 
-![](bf5e5c27492340bfa7e4170f23e49298.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/bf5e5c27492340bfa7e4170f23e49298.webp)
 网络类型先选NAT，后期有独立访问外网需求再改桥接
 
-![](5b23692333f044a4848774cde704340b.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/5b23692333f044a4848774cde704340b.webp)
 下一步
 
-![](2bd9008d2e0d4e45a31ed7632c68e0ac.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/2bd9008d2e0d4e45a31ed7632c68e0ac.webp)
 下一步
 
-![](291f62a4e615491e8e290bc41a905a49.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/291f62a4e615491e8e290bc41a905a49.webp)
 下一步
 
-![](c3a79695844346ef9a4dc2e8538ddbc6.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/c3a79695844346ef9a4dc2e8538ddbc6.webp)
 设置磁盘大小（默认20GB，推荐60GB）
 不建议勾选 **“立即分配所有磁盘空间”** （不勾选的话虚拟机实际占用的空间是根据实际情况动态增加的，即你用多少它占多少）
 
-![](fc08898cb57944f4ba51f784f7a471e1.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/fc08898cb57944f4ba51f784f7a471e1.webp)
 下一步
 
-![](149d87b266ce4536ab04ec4a1b14e59f.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/149d87b266ce4536ab04ec4a1b14e59f.webp)
 如果没有额外需求点击 **“完成”** 即可完成虚拟机的创建（如果你勾选了最下面的 **“创建后开启此虚拟机”** 那么点击 **“完成”** 后虚拟机会自动开启）
 
-![](5b9e7e6b35ef4c82ac5e51658b45bd6b.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/5b9e7e6b35ef4c82ac5e51658b45bd6b.webp)
 
 有自定义需求的可以点击 **“自定义硬件”** 进行硬件的添加、移除或配置（笔者这边就是针对USB控制器进行了配置）
 
-![](acf148197b8d4d9aadeacc8e65deb033.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/acf148197b8d4d9aadeacc8e65deb033.webp)
 
 ### 3.2 安装 Ubuntu 系统
 
 点击 **“开启此虚拟机”**
 
-![](bf9d076a336948a98f28a75bfbc6249f.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/bf9d076a336948a98f28a75bfbc6249f.webp)
 功能区最后一个功能，点击下拉小箭头选择保持纵横比拉伸
 
 语言先选Chinese-Chinese，后面可以根据需求选择英语
 
-![](cfef06a8db2c4202b789f3cbd290095b.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/cfef06a8db2c4202b789f3cbd290095b.webp)
 这边选择看个人需求：
 
  **“Minimal Installation（最简安装）”** 相较于默认的 **“Normal Installation（普通安装）”** 少了办公、游戏和媒体软件
@@ -214,53 +214,53 @@ date: 2025-03-16 21:47:58
 
   **“Install third-party software for graphics and Wi-Fi hardware and additional media formats（为图形和 Wi-Fi 硬件以及其他媒体格式安装第三方软件）”** 没有特殊需求一般不用勾选
 
-![](03246965c3944a5abd6c2b26d9269516.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/03246965c3944a5abd6c2b26d9269516.webp)
 直接 **“Install Now”** （ **“Erase disk and Install Ubuntu（擦除硬盘并安装 Ubuntu）”** 擦除的是刚创建的虚拟硬盘而不是你的物理磁盘所以不用担心）
 
-![](5d6b0eae387b48698f58037f24f55caf.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/5d6b0eae387b48698f58037f24f55caf.webp)
 直接 **“Continue”**
 
-![](f7a730b96fb84382a46f420c276c3c31.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/f7a730b96fb84382a46f420c276c3c31.webp)
 地图上大致标一下上海的位置，时区更改为 **“Shanghai”** 然后 **“Continue”**
 
-![](725ee020b81c4896a03507a723ea2eae.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/725ee020b81c4896a03507a723ea2eae.webp)
 设置姓名、电脑名、用户名和密码（登录用的是用户名和密码），点击 **“Continue”** 开始安装
 
-![](c1cec9017c6443f09a8440d089ae3fc5.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/c1cec9017c6443f09a8440d089ae3fc5.webp)
 安装完成后直接 **“Restart Now”**
 
-![](190ac5fda3864b5aa93f8b07e252f63d.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/190ac5fda3864b5aa93f8b07e252f63d.webp)
 看到下面这个界面说明系统已经成功安装
 
-![](2e6f14a55c8d40debefe3bcd30ebe644.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/2e6f14a55c8d40debefe3bcd30ebe644.webp)
 
 点击账号图标，输密码回车进入系统
 
-![](f14db8854bf74f2195a07ab4e5882eea.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/f14db8854bf74f2195a07ab4e5882eea.webp)
 关联账号，有需求可以关联下，没需求直接 **“Skip”**
 
-![](73b824d8dc4a4039aaafd68fee862117.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/73b824d8dc4a4039aaafd68fee862117.webp)
  **“Enable Ubuntu Pro（激活Ubuntu Pro）”** 这个一般不用激活，直接默认 **“Skip for now”** 然后右上角 **“Next”**
 
-![](7d37679180e64ac4a997a24a85d40878.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/7d37679180e64ac4a997a24a85d40878.webp)
 是否帮助改善Ubuntu，推荐选择 **“No, don’t send sysytem info”** 然后右上角 **“Next”**
 
-![](04f85f5d00ef4b5492b80e4ae99d3432.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/04f85f5d00ef4b5492b80e4ae99d3432.webp)
 是否启用定位服务，默认不启用即可，直接 **“Next”**
 
-![](3f12b51e8f3046cab1d85b29c9717e50.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/3f12b51e8f3046cab1d85b29c9717e50.webp)
 点击 **“Done”** 结束
 
-![](1177ecb718854d84b6df7bd0ec72506c.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/1177ecb718854d84b6df7bd0ec72506c.webp)
 
 >#### 注意事项
 >
 >碰到这个弹窗先不要更新（还没更换国内源，更新速度较慢），先选 **“Remind me Later”**
 >
->![](a16977bdcaf941488a752ea0e75c7ff6.png)
+>![](https://assets.soloeternity.me/images/posts/ubuntu-vm/a16977bdcaf941488a752ea0e75c7ff6.webp)
 >碰到这个弹窗直接 **“Don't Upgrade”（装的就是22.04不用更新到24.04）
 >
->![](be691bac7a2f4ec78d9c0941d6777da8.png)
+>![](https://assets.soloeternity.me/images/posts/ubuntu-vm/be691bac7a2f4ec78d9c0941d6777da8.webp)
 
 ### 3.3 配置虚拟机
 
@@ -284,71 +284,71 @@ Tip：换源后安装软件包出现报错 **“E: 无法修正错误，因为�
 
 左上角 **“控制”** -> **“新建”** （不要点 **“创建”** ，那个是创建虚拟硬盘）
 
-![](728113df991943dd9644f59eb953cba9.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/728113df991943dd9644f59eb953cba9.webp)
 依次设置虚拟机名称、存放位置以及镜像（之前下载的ISO文件），取消勾选 **“跳过自动安装”**
 
-![](34f67176b300479b9fe9dd7d7828c077.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/34f67176b300479b9fe9dd7d7828c077.webp)
 切换到 **“硬件”** 选项卡，运存设为4096MB（4GB），CPU数量设为2
 
-![](2bff189d96ed443f8c176a01e54b9bd1.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/2bff189d96ed443f8c176a01e54b9bd1.webp)
 切换到 **“虚拟硬盘”** 选项卡，硬盘大小调整为60GB（不要勾选 **“预先分配所有空间”** ！！！）
 
 然后点击 **“完成”** 结束虚拟机的创建
-![](8ea3be266ba24ad0b679e42de516a6bb.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/8ea3be266ba24ad0b679e42de516a6bb.webp)
 最后更改两个配置
 
-![](f786d24206ba42c8bed8dc8f60ceb1d7.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/f786d24206ba42c8bed8dc8f60ceb1d7.webp)
 取消勾选 **“软驱”**
 
-![](45ca9f85ee074c338238e9ff8d6fdf20.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/45ca9f85ee074c338238e9ff8d6fdf20.webp)
 显存设置为64MB
 
-![](9a9c96de203846df8e86cfd9f73a03e3.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/9a9c96de203846df8e86cfd9f73a03e3.webp)
 
 ### 4.2 安装 Ubuntu 系统
 
 启动
 
-![](9afc4805d69547a784b0aae1603db355.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/9afc4805d69547a784b0aae1603db355.webp)
 直接Enter
 
 小Tip：可以右Ctrl + C切换至缩放模式然后再全屏
 
-![](c133ad7afd01425cb3e0308cb38c3022.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/c133ad7afd01425cb3e0308cb38c3022.webp)
 点击框中按钮隐藏侧边栏
 
-![](3f84237091cb4a5bbac75061882acff5.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/3f84237091cb4a5bbac75061882acff5.webp)
  **“中文（简体）”** -> **“安装Ubuntu”**
 
-![](3fa347ce1c324ca2ad6ca143f6fefdcd.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/3fa347ce1c324ca2ad6ca143f6fefdcd.webp)
 继续
 
-![](728562c0dfe348008d8d1f30e76d5451.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/728562c0dfe348008d8d1f30e76d5451.webp)
 选 **“最小安装”** ，取消勾选 **“安装Ubuntu时下载更新”**（这样安装速度最快~）
 
-![](f4d6fd9fc47e4b5598bac027e3a7dad2.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/f4d6fd9fc47e4b5598bac027e3a7dad2.webp)
 现在安装
 
-![](fe64d92c95534ac28a9f25db2ab90af2.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/fe64d92c95534ac28a9f25db2ab90af2.webp)
 继续
 
-![](30ce6e5c9237483a8c935f06691adf2a.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/30ce6e5c9237483a8c935f06691adf2a.webp)
 选择 **“Shanghai”**
 
-![](044933e323f045cb933a7a11f30af24c.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/044933e323f045cb933a7a11f30af24c.webp)
 设置姓名、电脑名、用户名和密码（登录用的是用户名和密码）
 
-![](26a78c484f244277919a7ea30347ee79.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/26a78c484f244277919a7ea30347ee79.webp)
 安装完成直接 **“现在重启”**
 
-![](4a38ef24cd1b4c5b8b126b59b402637c.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/4a38ef24cd1b4c5b8b126b59b402637c.webp)
 直接Enter
 
-![](b80465524e9445cb8cbcae9e57ddac7d.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/b80465524e9445cb8cbcae9e57ddac7d.webp)
 
 点击头像输入密码进入系统
 
-![](cc4ccea929e8455ca6185163161cd0b6.png)
+![](https://assets.soloeternity.me/images/posts/ubuntu-vm/cc4ccea929e8455ca6185163161cd0b6.webp)
 一路下一步或跳过即可
 
 ### 4.3 配置虚拟机

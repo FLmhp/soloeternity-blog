@@ -16,7 +16,7 @@
 - 评论服务：`https://waline.soloeternity.me`
 - 评论后台：`https://waline.soloeternity.me/ui`
 - 当前统计来源：`busuanzi`
-- 当前评论服务版本：`Waline 1.40.3`
+- 当前评论服务版本：`Waline 1.41.3`
 - 当前线上首页静态文件最近发布时间：`2026-06-08`
 
 如果你只是想确认“我改完内容为什么线上没变”，优先看：
@@ -463,3 +463,29 @@ curl -I https://soloeternity.me
 pnpm clean
 pnpm build
 ```
+
+---
+
+## 12. 动态页面与媒体资源
+
+### 12.1 Gallery
+
+`/gallery/` 会自动读取 `https://gallery.soloeternity.me/explore/albums` 的公开相册。相册名称、简介、标签和图片均在 Chevereto 中维护；设为非公开的相册不会展示。
+
+### 12.2 Anime
+
+`/anime/` 展示 Bangumi 本周放送表，并支持按星期筛选。当前页面使用公共接口，不读取个人收藏；若后续要展示个人进度，再配置 Bangumi 用户名和 OAuth Token。
+
+### 12.3 R2 上传
+
+```bash
+rclone copy ./images r2:soloeternity-assets/images --progress
+rclone copy ./music r2:soloeternity-assets/music --progress
+rclone copy ./live2d r2:soloeternity-assets/live2d --progress
+```
+
+图片优先使用 WebP；二维码和 Live2D 透明贴图保留 PNG；音乐使用 MP3、封面使用 WebP、歌词使用 LRC。
+
+### 12.4 文章更新时间
+
+不要手工修改文件时间。CI 会从 Git 历史读取 Markdown 文件最近一次提交时间，只有提交该文章文件后，页面的更新时间才变化。

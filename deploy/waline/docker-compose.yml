@@ -1,7 +1,7 @@
 services:
   waline:
     container_name: waline
-    image: lizheming/waline:latest
+    image: lizheming/waline:1.41.3
     restart: always
     ports:
       - "127.0.0.1:8360:8360"

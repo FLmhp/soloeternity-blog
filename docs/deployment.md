@@ -23,7 +23,7 @@
 
 - 主站响应头显示 `Server: Caddy`
 - Waline 响应头显示 `X-Powered-By: thinkjs-4.0.0`
-- Waline 响应头显示 `x-waline-version: 1.40.3`
+- Waline 响应头显示 `x-waline-version: 1.41.3`
 - 本次核验时没有观测到 `cloudflare` 响应头
 
 ### 服务器运行状态
@@ -405,7 +405,7 @@ EOF
 services:
   waline:
     container_name: waline
-    image: lizheming/waline:latest
+    image: lizheming/waline:1.41.3
     restart: always
     ports:
       - "127.0.0.1:8360:8360"
@@ -645,4 +645,25 @@ ssh root@your-server "ls -la /var/www/blog/current"
 ```bash
 cd /opt/waline
 docker compose up -d waline
+```
+
+---
+
+## 11. 2026-07-11 当前部署状态
+
+- Waline 固定使用 `lizheming/waline:1.41.3`，服务端响应头为 `x-waline-version: 1.41.3`。
+- 升级前数据库备份保存在 `/opt/waline/data/waline.pre-1.41.3-*.sqlite`。
+- Gallery 直接读取 Chevereto 的公开相册页；Caddy 仅允许 `https://soloeternity.me` 跨域读取。
+- Anime 使用 Bangumi 公共 `/calendar` 接口，不需要 Access Token。
+- R2 使用 `images/`、`music/`、`live2d/`、`downloads/`、`memos/` 五个顶层目录，旧 PNG 背景和旧 `avatars/` 已清理。
+- GitHub Actions 使用完整 Git 历史，`scripts/git-updated.js` 以文章 Markdown 最近一次提交时间生成更新时间。
+
+Waline 升级流程：
+
+```bash
+cp /opt/waline/data/waline.sqlite /opt/waline/data/waline.pre-upgrade-$(date +%Y%m%d-%H%M%S).sqlite
+cd /opt/waline
+docker compose pull waline
+docker compose up -d waline
+curl -I https://waline.soloeternity.me/
 ```

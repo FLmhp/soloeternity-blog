@@ -7,7 +7,7 @@ backend:
 
 site_url: https://soloeternity.me
 display_url: https://soloeternity.me
-logo_url: /img/logo.png
+logo_url: /img/branding/logo.png
 locale: zh_Hans
 publish_mode: editorial_workflow
 
