@@ -1,10 +1,14 @@
 ---
 title: Kali Linux 虚拟机安装详解：轻松上手
-tags: [Kali Linux, VMware]
-categories: [虚拟机, Linux]
+date: 2023-09-24 12:41:44
+categories:
+  - 虚拟机
+  - Linux
+tags:
+  - Kali Linux
+  - VMware
 index_img: https://assets.soloeternity.me/images/posts/covers/kali.png
 banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.png
-date: 2023-09-24 12:41:44
 ---
 
 该文详解在 VMware Workstation 17 Pro 中从环境准备到虚拟机创建、系统初始化、桌面环境选择及快照备份的 Kali Linux 完整安装流程。
@@ -221,7 +225,7 @@ date: 2023-09-24 12:41:44
 
 ![](cd2026e7e147bb1baaa3c1fd2c0f5836.png)
 
-## 2.3 拍摄快照
+### 2.3 拍摄快照
 
 推荐拍个快照以便日后恢复初始状态
 
