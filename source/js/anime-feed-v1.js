@@ -36,9 +36,10 @@
         return response.json();
       })
       .then(function (days) {
-        container.innerHTML = '<div class="solo-anime-filters"><button class="active" data-anime-day="all">全部</button>' +
+        var today = String(new Date().getDay() || 7);
+        container.innerHTML = '<div class="solo-anime-filters"><button data-anime-day="all">全部</button>' +
           days.map(function (day) {
-            return '<button data-anime-day="' + day.weekday.id + '">' + escapeHtml(day.weekday.cn) + "</button>";
+            return '<button' + (String(day.weekday.id) === today ? ' class="active"' : '') + ' data-anime-day="' + day.weekday.id + '">' + escapeHtml(day.weekday.cn) + "</button>";
           }).join("") + '</div><div class="solo-anime-grid" data-anime-list></div>';
         container.addEventListener("click", function (event) {
           var button = event.target.closest("[data-anime-day]");
@@ -47,7 +48,7 @@
           button.classList.add("active");
           render(container, days, button.dataset.animeDay);
         });
-        render(container, days, "all");
+        render(container, days, today);
       })
       .catch(function () {
         container.innerHTML = '<p class="solo-muted">Bangumi 放送表暂时无法加载。</p>';
