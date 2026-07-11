@@ -250,7 +250,7 @@ custom_js:
   - /js/hitokoto-cooldown.js
   - /js/memos-feed-v5.js
   - /js/gallery-feed-v1.js
-  - /js/anime-feed-v1.js
+  - /js/anime-feed-v2.js
   - /js/music-dock-v4.js
   - /js/analytics-v1.js
   # - /js/live2d.js
