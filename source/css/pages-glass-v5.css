@@ -240,11 +240,6 @@
   backdrop-filter: blur(14px);
 }
 
-#solo-music-player .aplayer-lrc {
-  height: 64px;
-  margin: 0.35rem 0;
-}
-
 .links .card-content {
   height: auto;
   min-height: 3.5rem;

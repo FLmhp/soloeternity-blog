@@ -249,14 +249,15 @@ custom_js:
   - /js/typing-effect.js
   - /js/hitokoto-cooldown.js
   - /js/memos-feed-v5.js
-  - /js/music-dock-v3.js
+  - /js/music-dock-v4.js
+  - /js/analytics-v1.js
   # - /js/live2d.js
 
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v4.css
+  - /css/pages-glass-v5.css
   - /css/fish.css
   - /css/glassbackground.css
   - /css/gradient.css
@@ -336,6 +337,9 @@ web_analytics:
     # 如果你只想统计特定的域名可以填入此字段，多个域名通过逗号分隔，这可以避免统计 localhost。
     # If you only want to tracker to specific domains you can fill in this field, multiple domain names are separated by commas, which can avoid tracker localhost
     domains: soloeternity.me
+
+    # 收集 LCP、INP、CLS、FCP 和 TTFB 等真实用户性能数据
+    performance: true
 
     # 用于统计 PV UV 的开始时间，格式为 "YYYY-MM-DD"
     # statistics on the start time, the format is "YYYY-MM-DD"

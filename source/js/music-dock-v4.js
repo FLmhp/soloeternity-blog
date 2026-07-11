@@ -39,7 +39,22 @@
         autoplay: false,
         lrcType: 3,
         listFolded: true,
+        listMaxHeight: "240px",
         audio: audio
+      });
+
+      var controls = [
+        [".aplayer-icon-play", "music-play-toggle"],
+        [".aplayer-icon-menu", "music-playlist-toggle"],
+        [".aplayer-bar-wrap", "music-seek"]
+      ];
+      controls.forEach(function (item) {
+        var element = container.querySelector(item[0]);
+        if (element) element.setAttribute("data-umami-event", item[1]);
+      });
+      container.querySelectorAll(".aplayer-list li").forEach(function (item, index) {
+        item.setAttribute("data-umami-event", "music-track-select");
+        item.setAttribute("data-umami-event-track", audio[index].name);
       });
     }).catch(function () {
       container.innerHTML = '<p class="solo-muted">音乐播放器加载失败。</p>';
