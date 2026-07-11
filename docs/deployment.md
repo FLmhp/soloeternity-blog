@@ -654,7 +654,7 @@ docker compose up -d waline
 - Waline 固定使用 `lizheming/waline:1.41.3`，服务端响应头为 `x-waline-version: 1.41.3`。
 - 升级前数据库备份保存在 `/opt/waline/data/waline.pre-1.41.3-*.sqlite`。
 - Gallery 直接读取 Chevereto 的公开相册页；Caddy 仅允许 `https://soloeternity.me` 跨域读取。
-- Anime 使用 Bangumi 公共 `/calendar` 接口，不需要 Access Token。
+- Anime 使用 Bangumi 用户 `1263468` 的公开收藏接口，不需要 Access Token。
 - R2 使用 `images/`、`music/`、`live2d/`、`downloads/`、`memos/` 五个顶层目录，旧 PNG 背景和旧 `avatars/` 已清理。
 - GitHub Actions 使用完整 Git 历史，`scripts/git-updated.js` 以文章 Markdown 最近一次提交时间生成更新时间。
 

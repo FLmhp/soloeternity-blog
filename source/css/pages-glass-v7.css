@@ -311,6 +311,65 @@
   margin-bottom: 1.25rem;
 }
 
+.solo-anime-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.42);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+.solo-anime-profile > a {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: inherit;
+  text-decoration: none;
+}
+
+.solo-anime-profile img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.solo-anime-profile strong,
+.solo-anime-profile a span,
+.solo-anime-stats span {
+  display: block;
+}
+
+.solo-anime-profile a span,
+.solo-anime-stats span {
+  color: #718096;
+  font-size: 0.85rem;
+}
+
+.solo-anime-stats {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.solo-anime-stats span {
+  min-width: 76px;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  background: rgba(99, 102, 241, 0.12);
+}
+
+.solo-anime-stats b {
+  display: block;
+  color: inherit;
+  font-size: 1.15rem;
+}
+
 .solo-anime-filters button {
   color: inherit;
   cursor: pointer;
@@ -352,6 +411,36 @@
   padding: 1rem;
 }
 
+.solo-anime-card .solo-anime-meta,
+.solo-anime-card .solo-anime-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  padding: 0;
+}
+
+.solo-anime-card .solo-anime-meta span,
+.solo-anime-tag {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(99, 102, 241, 0.12);
+  color: #6366f1;
+  font-size: 0.75rem;
+}
+
+.solo-anime-card .solo-anime-summary {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.solo-anime-card .solo-anime-original {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .solo-anime-card h3,
 .solo-anime-card p {
   margin: 0 0 0.65rem;
@@ -376,6 +465,23 @@ html[data-user-color-scheme="dark"] .solo-service-frame {
 }
 
 html[data-user-color-scheme="dark"] .solo-album,
-html[data-user-color-scheme="dark"] .solo-anime-card {
+html[data-user-color-scheme="dark"] .solo-anime-card,
+html[data-user-color-scheme="dark"] .solo-anime-profile {
   background: rgba(15, 23, 42, 0.58);
+}
+
+@media (max-width: 575px) {
+  .solo-anime-profile,
+  .solo-anime-stats {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .solo-anime-card a {
+    grid-template-columns: 92px 1fr;
+  }
+
+  .solo-anime-card img {
+    width: 92px;
+  }
 }
