@@ -22,9 +22,9 @@ soloeternity.me {
     encode zstd gzip
     root * /var/www/blog/current
     @immutable path /live2d-models/* /live2d-widget/* /js/aplayer-1.10.1.min.js /css/aplayer-1.10.1.min.css
-    header @immutable Cache-Control "public, max-age=31536000, immutable"
     @static path *.css *.js *.mjs *.png *.jpg *.jpeg *.gif *.webp *.svg *.ico *.woff *.woff2 *.ttf *.json *.moc3 *.lrc *.xml
     header @static Cache-Control "public, max-age=3600, s-maxage=604800, stale-while-revalidate=86400"
+    header @immutable Cache-Control "public, max-age=31536000, immutable"
     file_server
 }
 
