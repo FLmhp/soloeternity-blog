@@ -1,5 +1,7 @@
 (function () {
-  var api = "https://api.bgm.tv/v0/users/1263468";
+  var api = "https://api.bgm.tv/v0/users/soloeternity";
+  var cachePrefix = "solo-bangumi:";
+  var cacheTtl = 30 * 60 * 1000;
   var statuses = [
     { type: 1, name: "想看" },
     { type: 2, name: "看过" },
@@ -19,9 +21,16 @@
   }
 
   function request(url) {
+    try {
+      var cached = JSON.parse(sessionStorage.getItem(cachePrefix + url));
+      if (cached && Date.now() - cached.time < cacheTtl) return Promise.resolve(cached.data);
+    } catch (_) {}
     return fetch(url, { headers: { Accept: "application/json" } }).then(function (response) {
       if (!response.ok) throw new Error("Bangumi request failed");
       return response.json();
+    }).then(function (data) {
+      try { sessionStorage.setItem(cachePrefix + url, JSON.stringify({ time: Date.now(), data: data })); } catch (_) {}
+      return data;
     });
   }
 
@@ -56,15 +65,14 @@
       var progress = subject.eps ? item.ep_status + "/" + subject.eps + " 集" : "";
       var year = subject.date ? subject.date.slice(0, 4) : "";
       return '<article class="solo-anime-card"><a href="https://bgm.tv/subject/' + subject.id + '" target="_blank" rel="noopener" title="在 Bangumi 查看' + escapeHtml(subject.name_cn || subject.name) + '">' +
-        (image ? '<img loading="lazy" decoding="async" referrerpolicy="no-referrer" src="' + escapeHtml(image) + '" alt="' + escapeHtml(subject.name_cn || subject.name) + '">' : "") +
+        (image ? '<div class="solo-anime-cover">' + (subject.score ? '<span class="solo-anime-score">★ ' + subject.score + '</span>' : '') + '<img loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" src="' + escapeHtml(image) + '" alt="' + escapeHtml(subject.name_cn || subject.name) + '"></div>' : "") +
         '<div class="solo-anime-card-body"><div class="solo-anime-meta"><span>' + status.name + "</span>" +
         (item.rate ? "<span>我的评分 " + item.rate + "</span>" : "") +
         (progress ? "<span>" + progress + "</span>" : "") + "</div>" +
         '<h3>' + escapeHtml(subject.name_cn || subject.name) + "</h3>" +
         (subject.name_cn ? '<p class="solo-anime-original">' + escapeHtml(subject.name) + "</p>" : "") +
         (subject.short_summary ? '<p class="solo-anime-summary">' + escapeHtml(subject.short_summary) + "</p>" : "") +
-        '<div class="solo-anime-footer">' + (year ? "<span>" + year + "</span>" : "") +
-        (subject.score ? "<span>Bangumi " + subject.score + "</span>" : "") + tagsOf(subject) + "</div></div></a></article>";
+        '<div class="solo-anime-footer">' + (year ? "<span>" + year + "</span>" : "") + tagsOf(subject) + "</div></div></a></article>";
     }).join("");
   }
 

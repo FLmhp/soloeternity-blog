@@ -13,7 +13,7 @@ images/
   backgrounds/
   branding/
   avatars/
-  avatas/
+  link/
   posts/
     covers/
     java-environment/
@@ -34,7 +34,7 @@ memos/
   attachments/YYYY/MM/
 ```
 
-其中 `images/avatas/` 按现有站点约定保存友链头像；`images/avatars/` 保存站长头像。相册原图继续由 Chevereto 管理，不在 R2 中重复保存。
+其中 `images/link/` 保存友链头像；`images/avatars/` 保存站长头像。相册原图继续由 Chevereto 管理，不在 R2 中重复保存。
 
 文章中直接引用：
 
@@ -117,7 +117,7 @@ rclone copy ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
 当前博客配置使用新结构，不再保留旧 `img/` 兼容目录：
 
 - 背景图：`images/backgrounds/`
-- 友链头像：`images/avatas/`
+- 友链头像：`images/link/`
 - 社交图标：`images/social/`
 - 音乐文件：`music/tracks/`
 - 音乐封面：`music/covers/`

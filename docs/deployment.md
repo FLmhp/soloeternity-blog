@@ -333,6 +333,8 @@ EOF
 
 当前 FRP 只用于 `yiharmony.top` 和 `*.yiharmony.top` 的后端转发，以及 `7000/tcp` 的 layer4 转发；`soloeternity.me`、Waline、Memos、LobeHub 均由 Caddy 直接反代到 Docker 网络内服务。
 
+Cloudflare 橙云开启后，Caddy 必须只信任 Cloudflare 官方代理网段，并优先从 `CF-Connecting-IP` 读取访客地址。仓库中的全局 `servers` 配置已启用 `trusted_proxies_strict`，Waline 因而能收到真实访客 IP，而不是 Cloudflare 边缘节点 IP。Cloudflare 发布新网段时应同步更新 `deploy/caddy/Caddyfile`，验证后再 reload。
+
 旧 Nginx 配置保留在下方，仅作为历史方案和紧急回滚参考，不再是当前生产入口。
 
 ## 6.1 Nginx 与 HTTPS（历史/回滚参考）

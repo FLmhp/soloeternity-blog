@@ -250,17 +250,17 @@ custom_js:
   - /js/hitokoto-cooldown.js
   - /js/memos-feed-v5.js
   - /js/gallery-feed-v1.js
-  - /js/anime-feed-v3.js
+  - /js/anime-feed-v4.js
   - /js/aplayer-1.10.1.min.js
-  - /js/music-dock-v5.js
-  - /js/analytics-v1.js
+  - /js/music-dock-v6.js
+  - /js/analytics-v2.js
   # - /js/live2d.js
 
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v8.css
+  - /css/pages-glass-v9.css
   - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css
@@ -1118,19 +1118,19 @@ links:
       title: "澪依",
       intro: "全能开发者 & 电子科技大学在读学生（能力全面碾压同龄人的大佬！）",
       link: "https://www.mioyi.net/zh-cn/",
-      avatar: "https://assets.soloeternity.me/images/avatas/mioyi.webp"
+      avatar: "https://assets.soloeternity.me/images/link/mioyi.webp"
     }
     - {
       title: "Loch",
       intro: "一名开发者、写作者和终身学习者（审美在线的硬件之王！）",
       link: "https://www.blog.locx-loch.top/zh",
-      avatar: "https://assets.soloeternity.me/images/avatas/loch.jpg"
+      avatar: "https://assets.soloeternity.me/images/link/loch.jpg"
     }
     - {
       title: "OrbisLumen",
       intro: "一名软件工程在读本科生（ML佬&ACGN重度爱好者！）",
       link: "https://orbislumen.pages.dev/",
-      avatar: "https://assets.soloeternity.me/images/avatas/orbislumen.webp"
+      avatar: "https://assets.soloeternity.me/images/link/orbislumen.webp"
     }
 
   # 当成员头像加载失败时，替换为指定图片
