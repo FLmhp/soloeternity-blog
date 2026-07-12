@@ -1,6 +1,6 @@
 hexo.extend.injector.register('head_begin', '<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">');
 
-hexo.extend.injector.register('head_end', '<script defer src="/live2d-widget/dist/autoload.js"></script>');
+hexo.extend.injector.register('head_end', '<script>if(!localStorage.getItem("waifu-display")){localStorage.setItem("waifu-display",Date.now())}</script><script defer src="/live2d-widget/dist/autoload.js"></script>');
 
 hexo.extend.injector.register("body_begin", '<div id="web_bg"></div>');
 

@@ -5,29 +5,26 @@ layout: about
 comments: false
 ---
 
-## 我是谁
+## 关于我
 
-你好，这里是 SoloEternity，目前是电子科技大学软件工程专业的大二学生。
+你好，这里是 SoloEternity，电子科技大学软件工程专业大二学生。代码是生活的一部分，但不是全部：我更愿意把这里当作一间随时亮着灯的小屋，放下见闻、照片、喜欢的旋律和偶尔冒出来的奇怪念头。
 
-我喜欢把想法落到真正能运行的东西里：浏览器扩展、自动化脚本、桌面工具、移动端应用、自托管服务，或者只是这座可以长期维护的个人博客。兴趣也比较杂，锻炼、追番、写代码都会占掉不少时间。
+十六型人格测试给出的结果是 **ENTJ-T（指挥官）**。我确实喜欢拆解问题、寻找不一样的解法，也习惯按自己的节奏把事情推进；不过离开待办清单以后，我同样享受漫无目的地走路和发呆。
 
-## 现在在折腾什么
+## 兴趣雷达
 
-- 个人博客：Hexo、Fluid、GitHub Actions、Caddy、Waline、Memos、Cloudflare R2
-- 浏览器扩展：TransFlow，面向网页、PDF 与视频字幕的沉浸式双语翻译扩展
-- 桌面应用：VaporGit、SkillNexus、EchoText，主要用 Tauri、Rust、SolidJS、Python 等技术做跨端工具
-- 自动化工具：RPA、NetAcad Autopilot、英语词汇测试辅助，偏向把重复流程变成可维护的脚本或插件
-- 业务系统练习：SmartLogisticsTracker、Xiaoban、银龄通，覆盖后端 API、移动端、小程序、遥测、告警和健康陪护场景
-- AI 与视觉方向：better-mvdust3r、Pulse 等项目里尝试过低显存推理、事件简报和工程化封装
+- **听歌**：口味跨度很大，民谣、古风、古典、后朋都会听。歌单经常从安静的钢琴曲突然跳到完全不同的频道。
+- **追番**：最喜欢青春校园恋爱题材，热血战斗和悬疑推理也会看。比起追赶数量，更在意那些多年后仍能想起的角色和片段。
+- **运动**：长跑、骑行、自重训练、乒乓球、羽毛球都愿意尝试。运动对我来说既是锻炼，也是给大脑清空缓存。
+- **游戏**：目前常玩《三角洲行动》《卡拉彼丘》《王者荣耀》和 GalGame。既享受多人对局的临场感，也喜欢沉进一段完整的故事。
+- **中医**：纯兴趣向。经脉、穴位和古人理解身体的方式很有意思，仍在慢慢认识，不把兴趣当诊疗建议。
 
-## GitHub
+## 城市漫游
 
-我的 GitHub 会放一些课程之外的工具项目、自动化尝试和博客源码：
+空闲时我喜欢一个人 Citywalk。除了景点，博物馆、图书馆和商场也是常去的地方；路上遇到好看的光影、建筑或普通人的日常，会顺手拍下来。镜头不一定记录大事件，平凡的一刻也值得留下。
 
-- GitHub：<https://github.com/FLmhp>
-- 博客源码：<https://github.com/FLmhp/soloeternity-blog>
-- TransFlow：<https://github.com/FLmhp/TransFlow>
-- SmartLogisticsTracker：<https://github.com/FLmhp/SmartLogisticsTracker>
-- RPA：<https://github.com/FLmhp/RPA>
-- NetAcad Autopilot：<https://github.com/FLmhp/netacad-autopilot>
-- EchoText：<https://github.com/FLmhp/EchoText>
+我喜欢思考人生，也擅长用创造性思维解决问题。目标可以很远，但脚步不必和别人一致：保持好奇，认真体验，然后按照自己的节奏生活。
+
+## 在网络上
+
+GitHub 记录了我的代码、实验和持续学习的痕迹：<https://github.com/FLmhp>。这个博客的源码也保持公开：<https://github.com/FLmhp/soloeternity-blog>。

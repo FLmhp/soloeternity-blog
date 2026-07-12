@@ -55,7 +55,7 @@
       var image = subject.images && (subject.images.common || subject.images.medium || subject.images.large);
       var progress = subject.eps ? item.ep_status + "/" + subject.eps + " 集" : "";
       var year = subject.date ? subject.date.slice(0, 4) : "";
-      return '<article class="solo-anime-card"><a href="https://bgm.tv/subject/' + subject.id + '" target="_blank" rel="noopener">' +
+      return '<article class="solo-anime-card"><a href="https://bgm.tv/subject/' + subject.id + '" target="_blank" rel="noopener" title="在 Bangumi 查看' + escapeHtml(subject.name_cn || subject.name) + '">' +
         (image ? '<img loading="lazy" decoding="async" referrerpolicy="no-referrer" src="' + escapeHtml(image) + '" alt="' + escapeHtml(subject.name_cn || subject.name) + '">' : "") +
         '<div class="solo-anime-card-body"><div class="solo-anime-meta"><span>' + status.name + "</span>" +
         (item.rate ? "<span>我的评分 " + item.rate + "</span>" : "") +

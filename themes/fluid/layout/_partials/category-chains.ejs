@@ -1,18 +1,23 @@
-<% function render_category_chain(cat) { %>
-  <a href="<%= url_for(cat.path) %>" class="category-chain-item"><%= cat.name.trim() %></a>
-  <% var nextCats = categories.find({ parent: cat._id }).sort(config.index_generator.order_by || 'name').filter(cat => cat.length) %>
-  <% if (nextCats.length > 0) { %>
-    <span>></span>
-    <%- render_category_chain(nextCats.data[0]) %>
-  <% } %>
-<% } %>
+<%
+function categoryPaths(cat, prefix = []) {
+  var path = prefix.concat(cat)
+  var children = categories.find({ parent: cat._id }).sort(config.index_generator.order_by || 'name').filter(child => child.length)
+  if (children.length === 0) return [path]
+  return children.data.reduce((paths, child) => paths.concat(categoryPaths(child, path)), [])
+}
+
+var roots = categories.find({ parent: { $exists: false } }).sort(config.index_generator.order_by || 'name').filter(cat => cat.length)
+var paths = roots.data.reduce((result, root) => result.concat(categoryPaths(root)), [])
+%>
 
 <span class="category-chains">
-  <% var catsFirst = categories.find({ parent: { $exists: false } }).sort(config.index_generator.order_by || 'name').filter(cat => cat.length) %>
-  <% catsFirst.each((cat, idx) => { %>
+  <% paths.forEach((path, idx) => { %>
     <% if (typeof(limit) === "undefined" || idx < limit) { %>
       <span class="category-chain">
-        <%- render_category_chain(cat) %>
+        <% path.forEach((cat, catIdx) => { %>
+          <% if (catIdx > 0) { %><span>&gt;</span><% } %>
+          <a href="<%= url_for(cat.path) %>" class="category-chain-item"><%= cat.name.trim() %></a>
+        <% }) %>
       </span>
     <% } %>
   <% }) %>

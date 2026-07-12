@@ -56,6 +56,8 @@
 - 当前发信账号：`fl-mhp@qq.com`
 - 当前发件人名称：`SoloEternity`
 - 当前站长通知邮箱：`fl-mhp@qq.com`
+- `2026-07-12` 已通过 `nodemailer.verify()` 验证 SMTP 登录，并通过匿名评论验证 `Notification mail send success`
+- 管理员本人发布评论时 Waline 会跳过站长自通知；这不是邮件故障
 
 ### 当前证书状态
 

@@ -251,7 +251,8 @@ custom_js:
   - /js/memos-feed-v5.js
   - /js/gallery-feed-v1.js
   - /js/anime-feed-v3.js
-  - /js/music-dock-v4.js
+  - /js/aplayer-1.10.1.min.js
+  - /js/music-dock-v5.js
   - /js/analytics-v1.js
   # - /js/live2d.js
 
@@ -259,7 +260,8 @@ custom_js:
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v7.css
+  - /css/pages-glass-v8.css
+  - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css
   - /css/gradient.css
@@ -1056,7 +1058,7 @@ about:
   banner_mask_alpha: 0.3
   avatar: https://assets.soloeternity.me/images/avatars/nightmare.webp
   name: "SoloEternity"
-  intro: "电子科技大学软件工程在读，写代码，也认真生活。"
+  intro: "按自己的节奏生活，把好奇心留给世界。"
   # 更多图标可从 https://hexo.fluid-dev.com/docs/icon/ 查找，`class` 代表图标的 css class，添加 `qrcode` 后，图标不再是链接而是悬浮二维码
   # More icons can be found from https://hexo.fluid-dev.com/docs/en/icon/  `class` is the css class of the icon. If adding `qrcode`, the icon is no longer a link, but a hovering QR code
   icons:
@@ -1114,19 +1116,19 @@ links:
   items:
     - {
       title: "澪依",
-      intro: "全能开发者 & 电子科技大学在读学生（能力碾压同龄人的佬！）",
+      intro: "全能开发者 & 电子科技大学在读学生（能力全面碾压同龄人的大佬！）",
       link: "https://www.mioyi.net/zh-cn/",
       avatar: "https://assets.soloeternity.me/images/avatas/mioyi.webp"
     }
     - {
       title: "Loch",
-      intro: "一名开发者、写作者和终身学习者。（硬件之神）",
+      intro: "一名开发者、写作者和终身学习者（审美在线的硬件之王！）",
       link: "https://www.blog.locx-loch.top/zh",
       avatar: "https://assets.soloeternity.me/images/avatas/loch.jpg"
     }
     - {
       title: "OrbisLumen",
-      intro: "一名软件工程在读本科生（把前浪拍死在沙滩上的后浪）",
+      intro: "一名软件工程在读本科生（ML佬&ACGN重度爱好者！）",
       link: "https://orbislumen.pages.dev/",
       avatar: "https://assets.soloeternity.me/images/avatas/orbislumen.webp"
     }

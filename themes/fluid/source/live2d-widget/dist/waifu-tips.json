@@ -260,16 +260,20 @@
     "paths": ["/live2d-models/icegirl/IceGirl.model3.json"],
     "message": "IceGirl 已上线。"
   }, {
-    "name": "Frieren",
-    "paths": ["/live2d-models/frieren/Frieren.model3.json"],
-    "message": "芙莉莲已上线。"
+    "name": "Rangbaer",
+    "paths": ["/live2d-models/rangbaer_3/rangbaer_3.model3.json"],
+    "message": "让·巴尔已上线。"
   }, {
-    "name": "Fern",
-    "paths": ["/live2d-models/fern/fern.model3.json"],
-    "message": "菲伦已上线。"
+    "name": "Bismarck",
+    "paths": ["/live2d-models/bisimai_2/bisimai_2.model3.json"],
+    "message": "俾斯麦已上线。"
   }, {
-    "name": "Lolita",
-    "paths": ["/live2d-models/lolita/lolita.model3.json"],
-    "message": "Lolita 已上线。"
+    "name": "Centaur",
+    "paths": ["/live2d-models/banrenma_2/banrenma_2.model3.json"],
+    "message": "半人马已上线。"
+  }, {
+    "name": "Shoukaku",
+    "paths": ["/live2d-models/xianghe_2/xianghe_2.model3.json"],
+    "message": "翔鹤已上线。"
   }]
 }
