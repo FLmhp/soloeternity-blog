@@ -719,6 +719,14 @@ pnpm server
 ## 22. 新增页面视觉规范
 
 - 自定义页面统一使用 Fluid 的 `layout: page` 和 80% Banner 高度，正文板块起始位置与归档页一致。
-- Glass 卡片统一由 `source/css/pages-glass-v9.css?v=10` 提供半透明背景、描边、阴影和 `backdrop-filter`。
+- Glass 卡片统一由 `source/css/pages-glass-v9.css?v=11` 提供半透明背景、描边、阴影和 `backdrop-filter`。
 - Gallery 相册和 Anime 条目沿用同一套圆角、毛玻璃和深色模式规则，不创建独立主题。
 - 页面背景统一从 R2 的 `images/backgrounds/*.webp` 读取，本地镜像保存在 `source/img/backgrounds/`。
+
+---
+
+## 23. 音乐播放器与一言
+
+音乐播放器沿用 APlayer，不覆盖其播放逻辑。`source/css/pages-glass-v9.css` 负责圆角和毛玻璃外观，并关闭 `.aplayer-lrc::before`、`.aplayer-lrc::after` 自带的上下渐变遮罩，避免歌词被白色光晕覆盖。
+
+语录正文使用楷体字体栈，来源使用行楷字体栈；两者均优先调用本机字体，不下载额外 Web Font。接口分类固定为动画、漫画、游戏、文学、影视、网易云和哲学，对应参数 `a、b、c、d、h、j、k`。

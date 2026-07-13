@@ -508,7 +508,7 @@ pnpm build
 
 ### 12.3 音乐播放器
 
-播放器使用站内托管的 APlayer `1.10.1`，避免公共 CDN 不稳定。左下角面板保留 APlayer 原生播放顺序、循环、进度、音量和歌单控件；音频设置为 `preload: none`，并在页面 `load` 后再初始化，只有实际播放时才请求 MP3；圆形按钮可折叠面板。
+播放器使用站内托管的 APlayer `1.10.1`，避免公共 CDN 不稳定。左下角面板保留 APlayer 原生播放顺序、循环、进度、音量和歌单控件；音频设置为 `preload: none`，并在页面 `load` 后再初始化，只有实际播放时才请求 MP3；圆形按钮可折叠面板。歌词上下不再使用 APlayer 默认渐变遮罩，修改播放器外观时不要重新启用 `.aplayer-lrc::before` 和 `.aplayer-lrc::after`。
 
 ### 12.4 R2 上传
 
@@ -529,3 +529,13 @@ rclone copy ./live2d r2:soloeternity-assets/live2d --progress
 - 文章正文图片启用 Fluid 懒加载，首屏之外的图片滚动接近时才请求。
 - 音乐播放器和 Live2D 都在页面 `load` 后初始化，避免与 banner 争抢首屏带宽。
 - 背景图本地和 R2 副本最大宽度为 1920 像素；稳定文件名使用 7 天浏览器缓存，内容更新后应同步上传 R2。
+
+### 12.7 一言分类与样式
+
+一言地址在 `source/js/site-config-v3.js` 的 `hitokotoEndpoint` 中维护。多个类型必须重复填写 `c` 参数：
+
+```text
+https://v1.hitokoto.cn/?encode=json&c=a&c=b&c=c&c=d&c=h&c=j&c=k
+```
+
+当前包含动画、漫画、游戏、文学、影视、网易云和哲学。接口失败时仍会显示 `quotesFallback` 中的本地语录；正文与来源字体分别由 `.solo-hitokoto p` 和 `.solo-hitokoto small` 控制。

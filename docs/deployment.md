@@ -671,3 +671,18 @@ docker compose pull waline
 docker compose up -d waline
 curl -I https://waline.soloeternity.me/
 ```
+
+---
+
+## 12. 2026-07-13 前端资源更新
+
+- 一言接口地址集中在 `source/js/site-config-v3.js`，通过多个 `c` 参数限制句子类型。
+- 播放器和一言样式集中在 `source/css/pages-glass-v9.css`，当前缓存版本为 `v=11`。
+- 以上均属于 Hexo 静态资源，推送 `main` 后由 GitHub Actions 构建并同步到 `/var/www/blog/current`，不需要修改 Caddy 或重启 Docker 服务。
+
+发布后验证：
+
+```bash
+curl -I https://soloeternity.me/css/pages-glass-v9.css?v=11
+curl -I "https://v1.hitokoto.cn/?encode=json&c=a&c=b&c=c&c=d&c=h&c=j&c=k"
+```

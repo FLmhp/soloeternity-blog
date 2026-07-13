@@ -100,9 +100,16 @@
 
 .solo-hitokoto p {
   margin: 0 0 0.75rem;
+  font-family: "STKaiti", "KaiTi", "FangSong", serif;
   font-size: clamp(1.35rem, 4vw, 2.3rem);
   font-weight: 800;
   line-height: 1.45;
+}
+
+.solo-hitokoto small {
+  font-family: "STXingkai", "FZKai-Z03", "KaiTi", cursive;
+  font-size: 1rem;
+  letter-spacing: 0.08em;
 }
 
 .solo-gallery {
@@ -283,6 +290,12 @@
   z-index: 2;
   filter: none;
   text-shadow: none;
+}
+
+#solo-music-player .aplayer-lrc::before,
+#solo-music-player .aplayer-lrc::after {
+  display: none;
+  content: none;
 }
 
 #solo-music-player .aplayer-list,

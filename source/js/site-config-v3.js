@@ -3,7 +3,7 @@
     assetsBase: "https://assets.soloeternity.me",
     memosBase: "https://memos.soloeternity.me",
     memosTag: "moment",
-    hitokotoEndpoint: "https://v1.hitokoto.cn/?encode=json",
+    hitokotoEndpoint: "https://v1.hitokoto.cn/?encode=json&c=a&c=b&c=c&c=d&c=h&c=j&c=k",
     quotesFallback: [
       { text: "愿你有足够的云翳，来造成一个美丽的黄昏。", from: "本地语录" },
       { text: "文字是慢速的备份，Git 是它的时间机器。", from: "SoloEternity" },
