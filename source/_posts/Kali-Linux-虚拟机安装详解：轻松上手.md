@@ -197,7 +197,6 @@ date: 2023-09-24 12:41:44
 ![](https://assets.soloeternity.me/images/posts/kali-linux-vm/d101b664bd33e20e7c97bd8a9f5ab1b9.webp)
 自动安装软件
 
-![](https://assets.soloeternity.me/images/posts/kali-linux-vm/62eec6401ea2b432dd3fc4256a2e38e5.webp)
 桌面环境选择Xface（或从GNOME、KDE桌面环境任选一个），其它选项默认即可，然后Continue
 注：桌面环境的选择可参考[Linux的桌面环境比较与选择（gnome、kde、xfce、lxde 等）](https://blog.csdn.net/daobaqin/article/details/121029653)
 

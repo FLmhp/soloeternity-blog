@@ -1,5 +1,5 @@
 (function () {
-  document.addEventListener("DOMContentLoaded", function () {
+  function initMusicPlayer() {
     var config = window.SoloEternity || {};
     var audio = config.music || [];
     if (!audio.length || document.getElementById("solo-music-dock")) return;
@@ -22,35 +22,37 @@
       return;
     }
 
-      new window.APlayer({
-        container: container,
-        fixed: false,
-        autoplay: false,
-        lrcType: 3,
-        loop: "all",
-        order: "list",
-        volume: 0.7,
-        preload: "none",
-        listFolded: false,
-        listMaxHeight: "180px",
-        audio: audio
-      });
+    new window.APlayer({
+      container: container,
+      fixed: false,
+      autoplay: false,
+      lrcType: 3,
+      loop: "all",
+      order: "list",
+      volume: 0.7,
+      preload: "none",
+      listFolded: false,
+      listMaxHeight: "180px",
+      audio: audio
+    });
 
-      var trackedControls = [
-        [".aplayer-icon-play", "music-play-toggle"],
-        [".aplayer-icon-order", "music-order-toggle"],
-        [".aplayer-icon-loop", "music-loop-toggle"],
-        [".aplayer-volume-bar-wrap", "music-volume-change"],
-        [".aplayer-icon-menu", "music-playlist-toggle"],
-        [".aplayer-bar-wrap", "music-seek"]
-      ];
-      trackedControls.forEach(function (item) {
-        var element = container.querySelector(item[0]);
-        if (element) element.setAttribute("data-umami-event", item[1]);
-      });
-      container.querySelectorAll(".aplayer-list li").forEach(function (item, index) {
-        item.setAttribute("data-umami-event", "music-track-select");
-        item.setAttribute("data-umami-event-track", audio[index].name);
-      });
-  });
+    [
+      [".aplayer-icon-play", "music-play-toggle"],
+      [".aplayer-icon-order", "music-order-toggle"],
+      [".aplayer-icon-loop", "music-loop-toggle"],
+      [".aplayer-volume-bar-wrap", "music-volume-change"],
+      [".aplayer-icon-menu", "music-playlist-toggle"],
+      [".aplayer-bar-wrap", "music-seek"]
+    ].forEach(function (item) {
+      var element = container.querySelector(item[0]);
+      if (element) element.setAttribute("data-umami-event", item[1]);
+    });
+    container.querySelectorAll(".aplayer-list li").forEach(function (item, index) {
+      item.setAttribute("data-umami-event", "music-track-select");
+      item.setAttribute("data-umami-event-track", audio[index].name);
+    });
+  }
+
+  if (document.readyState === "complete") initMusicPlayer();
+  else window.addEventListener("load", initMusicPlayer, { once: true });
 })();

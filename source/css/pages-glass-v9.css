@@ -204,11 +204,12 @@
   position: fixed;
   left: 1rem;
   bottom: 4.25rem;
-  z-index: 9999;
+  z-index: 100000000;
   display: flex;
   align-items: flex-end;
   gap: 0.5rem;
   max-width: min(410px, calc(100vw - 2rem));
+  isolation: isolate;
 }
 
 .solo-music-toggle {
@@ -262,11 +263,26 @@
 }
 
 #solo-music-player .aplayer-info {
+  position: relative;
+  z-index: 1;
   border-bottom: 0;
 }
 
 #solo-music-player .aplayer-list {
   margin-top: 0.55rem;
+}
+
+#solo-music-player .aplayer-list.aplayer-list-hide {
+  margin-top: 0;
+}
+
+#solo-music-player .aplayer-title,
+#solo-music-player .aplayer-author,
+#solo-music-player .aplayer-lrc {
+  position: relative;
+  z-index: 2;
+  filter: none;
+  text-shadow: none;
 }
 
 #solo-music-player .aplayer-list,
@@ -488,6 +504,10 @@
   flex-wrap: wrap;
   gap: 0.45rem;
   padding: 0;
+}
+
+.solo-anime-card .solo-anime-meta {
+  margin-bottom: 0.7rem;
 }
 
 .solo-anime-card .solo-anime-meta span,

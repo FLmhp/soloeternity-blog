@@ -38,6 +38,10 @@
   animation: neoneffect 5s linear infinite;
 }
 
+.navbar-brand .navbar-title-static {
+  opacity: 1;
+}
+
 @keyframes neoneffect{
   to{
       filter: hue-rotate(360deg);

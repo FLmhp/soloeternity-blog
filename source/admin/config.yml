@@ -25,7 +25,7 @@ collections:
     fields:
       - { label: 标题, name: title, widget: string }
       - { label: 发布时间, name: date, widget: datetime, format: "YYYY-MM-DD HH:mm:ss" }
-      - { label: 分类, name: categories, widget: list, required: false }
+      - { label: 分类, name: categories, widget: list, required: false, hint: "多级分类按父级到子级逐项添加，例如先添加“虚拟机”，再添加“Linux”。" }
       - { label: 标签, name: tags, widget: list, required: false }
       - { label: 摘要, name: excerpt, widget: text, required: false }
       - { label: 封面, name: index_img, widget: string, required: false, hint: "建议填 R2 URL，例如 https://assets.soloeternity.me/images/posts/example.jpg" }

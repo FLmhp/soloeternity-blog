@@ -252,7 +252,7 @@ custom_js:
   - /js/gallery-feed-v1.js
   - /js/anime-feed-v4.js
   - /js/aplayer-1.10.1.min.js
-  - /js/music-dock-v6.js
+  - /js/music-dock-v6.js?v=7
   - /js/analytics-v2.js
   # - /js/live2d.js
 
@@ -260,7 +260,7 @@ custom_js:
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v9.css
+  - /css/pages-glass-v9.css?v=10
   - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css
@@ -271,7 +271,7 @@ custom_css:
   - /css/scrollanimation.css
   - /css/scrollbar.css
   - /css/selection.css
-  - /css/svg-neon.css
+  - /css/svg-neon.css?v=2
 
 # 自定义 <head> 节点中的 HTML 内容
 # Customize <head> HTML content
@@ -366,7 +366,7 @@ canonical:
 # 对页面中的图片和评论插件进行懒加载处理，可见范围外的元素不会提前加载
 # Lazy loading of images and comment plugin on the page
 lazyload:
-  enable: false
+  enable: true
 
   # 加载时的占位图片
   # The placeholder image when loading
@@ -374,7 +374,7 @@ lazyload:
 
   # 开启后懒加载仅在文章页生效，如果自定义页面需要使用，可以在 Front-matter 里指定 `lazyload: true`
   # If true, only enable lazyload on the post page. For custom pages, you can set 'lazyload: true' in front-matter
-  onlypost: false
+  onlypost: true
 
   # 触发加载的偏移倍数，基数是视窗高度，可根据部署环境的请求速度调节
   # The factor of viewport height that triggers loading

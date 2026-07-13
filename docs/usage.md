@@ -118,6 +118,8 @@ categories:
   - Linux
 ```
 
+在 Decap CMS 的“分类”栏中同样按顺序逐项添加：先添加父级“虚拟机”，再添加子级“Linux”。不要填写成单个 `虚拟机/Linux` 字符串。
+
 同一篇文章存在多条分类链时使用嵌套数组；主题会完整渲染每条链，而不是只显示第一个子分类：
 
 ```yaml
@@ -127,6 +129,14 @@ categories:
 ```
 
 ### 3.3 插入图片
+
+文章正文图片建议先上传到 R2 的 `images/posts/<文章短名>/`，再直接引用 `https://assets.soloeternity.me/images/posts/<文章短名>/<文件名>.webp`。这样 Git 仓库只保存 Markdown，部署时不会重复传输图片。
+
+```powershell
+rclone copy "C:\path\to\article-images" r2:soloeternity-assets/images/posts/article-slug --progress
+```
+
+上传后先用浏览器或 `curl -I` 确认 URL 返回 `200`，再写入 Markdown。下面的本地同名目录方式仅适合临时草稿或必须跟随仓库版本的小图片。
 
 如果图片和文章放在同名目录下，例如：
 
@@ -498,7 +508,7 @@ pnpm build
 
 ### 12.3 音乐播放器
 
-播放器使用站内托管的 APlayer `1.10.1`，避免公共 CDN 不稳定。左下角面板保留 APlayer 原生播放顺序、循环、进度、音量和歌单控件；音频设置为 `preload: none`，只有实际播放时才请求 MP3；圆形按钮可折叠面板。
+播放器使用站内托管的 APlayer `1.10.1`，避免公共 CDN 不稳定。左下角面板保留 APlayer 原生播放顺序、循环、进度、音量和歌单控件；音频设置为 `preload: none`，并在页面 `load` 后再初始化，只有实际播放时才请求 MP3；圆形按钮可折叠面板。
 
 ### 12.4 R2 上传
 
@@ -513,3 +523,9 @@ rclone copy ./live2d r2:soloeternity-assets/live2d --progress
 ### 12.5 文章更新时间
 
 不要手工修改文件时间。CI 会从 Git 历史读取 Markdown 文件最近一次提交时间，只有提交该文章文件后，页面的更新时间才变化。
+
+### 12.6 性能约定
+
+- 文章正文图片启用 Fluid 懒加载，首屏之外的图片滚动接近时才请求。
+- 音乐播放器和 Live2D 都在页面 `load` 后初始化，避免与 banner 争抢首屏带宽。
+- 背景图本地和 R2 副本最大宽度为 1920 像素；稳定文件名使用 7 天浏览器缓存，内容更新后应同步上传 R2。

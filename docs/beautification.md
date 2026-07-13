@@ -87,7 +87,7 @@ hexo.extend.injector.register("body_begin", '<div id="web_bg"></div>');
 hexo.extend.injector.register('body_begin', '<div id="loader-container">...</div>', 'home');
 hexo.extend.injector.register('body_end', '<script src="/js/sakura.js"></script>', 'home');
 hexo.extend.injector.register('body_end', '<script src="/js/backgroundize.js"></script>');
-hexo.extend.injector.register('body_end', '<script src="/js/svg-neon.js"></script>', 'home');
+hexo.extend.injector.register('body_end', '<script src="/js/svg-neon.js?v=2"></script>');
 ```
 
 ---
@@ -107,7 +107,7 @@ hexo.extend.injector.register('body_end', '<script src="/js/svg-neon.js"></scrip
 | 毛玻璃效果面板 | `source/css/glassbackground.css` + `ground_glass` | 内容板 / TOC / navbar | 部分由主题原生支持 |
 | 鼠标移动小星星 | `source/js/stars.js` | 全站 | 跟随指针生成彩色星星 |
 | 导航栏标题 SVG 描边 | `source/js/svg-neon.js` + `source/css/svg-neon.css` | 首页导航栏 | 替换 `.navbar-brand strong` |
-| 导航栏标题霓虹灯 | `source/js/svg-neon.js` + `source/css/svg-neon.css` | 首页导航栏 | SVG 动画后进入霓虹循环 |
+| 导航栏标题霓虹灯 | `source/js/svg-neon.js` + `source/css/svg-neon.css` | 全站导航栏 | 首页完成 SVG 动画后进入霓虹循环，其他页面直接显示霓虹文字 |
 | 打字礼花特效 | `source/js/typing-effect.js` | 全站输入区 | 输入时喷射粒子 |
 | 首页文章滑入动画 | `source/js/scrollanimation.js` + `source/css/scrollanimation.css` | 首页文章卡片 | 控制 `.index-card` |
 | 滚动条渐变样式 | `source/css/scrollbar.css` | 全站 | 包括表格横向滚动条 |
@@ -719,6 +719,6 @@ pnpm server
 ## 22. 新增页面视觉规范
 
 - 自定义页面统一使用 Fluid 的 `layout: page` 和 80% Banner 高度，正文板块起始位置与归档页一致。
-- Glass 卡片统一由 `source/css/pages-glass-v9.css` 提供半透明背景、描边、阴影和 `backdrop-filter`。
+- Glass 卡片统一由 `source/css/pages-glass-v9.css?v=10` 提供半透明背景、描边、阴影和 `backdrop-filter`。
 - Gallery 相册和 Anime 条目沿用同一套圆角、毛玻璃和深色模式规则，不创建独立主题。
 - 页面背景统一从 R2 的 `images/backgrounds/*.webp` 读取，本地镜像保存在 `source/img/backgrounds/`。
