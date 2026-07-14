@@ -260,7 +260,7 @@ custom_js:
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v9.css?v=11
+  - /css/pages-glass-v9.css?v=12
   - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css
@@ -918,7 +918,7 @@ waline:
   login: 'enable'
   copyright: false
   locale: {
-    placeholder: '写下此刻的心跳，它便不再只是你的。每一行字，都会在风里找到归宿。',
+    placeholder: '欢迎大家来评论区灌水喵~',
   }
 
 # 畅言 Changyan

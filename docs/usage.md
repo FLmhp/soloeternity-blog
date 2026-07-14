@@ -327,7 +327,11 @@ waline:
   lang: 'zh-CN'
   pageSize: 10
   commentSorting: 'latest'
+  locale:
+    placeholder: '欢迎大家来评论区灌水喵~'
 ```
+
+留言板通过 `source/message/index.md` 的 `waline_placeholder` 单独保留“写下此刻的心跳……”文案；其他评论区使用上面的全局文案。
 
 ### 7.3 邮件通知修改
 
@@ -351,6 +355,7 @@ docker compose up -d waline
 
 - QQ 邮箱授权码只保留在服务器 `.env`，不要写回仓库
 - 中文模板建议继续使用 `UTF-8` 保存
+- `MAIL_SUBJECT` 与 `MAIL_SUBJECT_ADMIN` 使用 `self.url` 区分 `/message/` 和文章评论；文章邮件会显示唯一文章路径并链接到对应评论
 - 已登录管理员发表的评论不会向管理员本人发送通知，这是 Waline 的防自通知逻辑
 - 测试博主邮件通知时应退出管理员账号后匿名评论；`2026-07-12` 已验证 SMTP 登录及匿名评论发信成功
 
