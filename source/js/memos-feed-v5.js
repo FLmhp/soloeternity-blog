@@ -68,11 +68,42 @@
   }
 
   function renderMarkdown(value) {
-    var escaped = escapeHtml(value);
-    if (!window.marked) return escaped.replace(/\n/g, "<br>");
+    if (!window.marked) return escapeHtml(value).replace(/\n/g, "<br>");
 
     var template = document.createElement("template");
-    template.innerHTML = window.marked.parse(escaped, { breaks: true, gfm: true });
+    template.innerHTML = window.marked.parse(value, { breaks: true, gfm: true });
+
+    var allowedTags = new Set([
+      "A", "BLOCKQUOTE", "BR", "CODE", "DEL", "EM", "H1", "H2", "H3", "H4", "H5", "H6",
+      "HR", "IMG", "LI", "OL", "P", "PRE", "STRONG", "TABLE", "TBODY", "TD", "TH", "THEAD", "TR", "UL"
+    ]);
+    var blockedTags = new Set([
+      "BASE", "BUTTON", "EMBED", "FORM", "IFRAME", "INPUT", "LINK", "MATH", "META", "OBJECT",
+      "OPTION", "SCRIPT", "SELECT", "STYLE", "SVG", "TEXTAREA"
+    ]);
+
+    template.content.querySelectorAll("*").forEach(function (element) {
+      if (blockedTags.has(element.tagName)) {
+        element.remove();
+      } else if (!allowedTags.has(element.tagName)) {
+        element.replaceWith.apply(element, Array.from(element.childNodes));
+      }
+    });
+
+    var allowedAttributes = {
+      A: ["href", "title"],
+      CODE: ["class"],
+      IMG: ["alt", "src", "title"],
+      OL: ["start"],
+      TD: ["align"],
+      TH: ["align"]
+    };
+    template.content.querySelectorAll("*").forEach(function (element) {
+      var attributes = allowedAttributes[element.tagName] || [];
+      Array.from(element.attributes).forEach(function (attribute) {
+        if (!attributes.includes(attribute.name)) element.removeAttribute(attribute.name);
+      });
+    });
     template.content.querySelectorAll("a[href]").forEach(function (link) {
       if (!safeUrl(link.getAttribute("href"), true)) link.removeAttribute("href");
       else if (link.origin !== window.location.origin) {

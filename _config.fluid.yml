@@ -248,7 +248,7 @@ custom_js:
   - /js/title.js
   - /js/typing-effect.js
   - /js/hitokoto-cooldown.js
-  - /js/memos-feed-v5.js?v=6
+  - /js/memos-feed-v5.js?v=7
   - /js/gallery-feed-v1.js
   - /js/anime-feed-v4.js
   - /js/aplayer-1.10.1.min.js
