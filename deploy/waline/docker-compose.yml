@@ -9,3 +9,4 @@ services:
       - .env
     volumes:
       - /opt/waline/data:/app/data
+      - ./config.js:/app/node_modules/@waline/vercel/config.js:ro
