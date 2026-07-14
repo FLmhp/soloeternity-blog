@@ -248,7 +248,7 @@ custom_js:
   - /js/title.js
   - /js/typing-effect.js
   - /js/hitokoto-cooldown.js
-  - /js/memos-feed-v5.js
+  - /js/memos-feed-v5.js?v=6
   - /js/gallery-feed-v1.js
   - /js/anime-feed-v4.js
   - /js/aplayer-1.10.1.min.js
@@ -260,7 +260,7 @@ custom_js:
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v9.css?v=12
+  - /css/pages-glass-v9.css?v=13
   - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css

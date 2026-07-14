@@ -151,6 +151,66 @@
   font-weight: 700;
 }
 
+.solo-memo-markdown {
+  margin-top: 0.65rem;
+  line-height: 1.8;
+  overflow-wrap: anywhere;
+}
+
+.solo-memo-markdown > :last-child {
+  margin-bottom: 0;
+}
+
+.solo-memo-markdown h1,
+.solo-memo-markdown h2,
+.solo-memo-markdown h3,
+.solo-memo-markdown h4 {
+  margin: 1.15em 0 0.55em;
+  color: inherit;
+  line-height: 1.35;
+}
+
+.solo-memo-markdown blockquote {
+  margin: 0.9rem 0;
+  padding: 0.65rem 1rem;
+  border-left: 4px solid #22d3ee;
+  border-radius: 0 12px 12px 0;
+  background: rgba(99, 102, 241, 0.1);
+}
+
+.solo-memo-markdown pre {
+  overflow-x: auto;
+  padding: 0.9rem 1rem;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.88);
+  color: #e2e8f0;
+}
+
+.solo-memo-markdown :not(pre) > code {
+  padding: 0.12em 0.35em;
+  border-radius: 5px;
+  background: rgba(99, 102, 241, 0.12);
+}
+
+.solo-memo-markdown table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+.solo-memo-markdown th,
+.solo-memo-markdown td {
+  padding: 0.45rem 0.7rem;
+  border: 1px solid rgba(113, 128, 150, 0.35);
+}
+
+.solo-memo-markdown img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
 .solo-memo-attachments {
   display: grid;
   gap: 0.75rem;
