@@ -1,51 +1,27 @@
-# 美化文档
+# 博客美化与前端增强文档
 
-## 1. 文档目标
+本文记录当前仓库实际启用的 Fluid 主题视觉增强、动态页面组件和维护原则。最后核验：`2026-07-15`。
 
-本文档只记录当前仓库已经落地的视觉增强和交互特效，包括：
+## 1. 设计原则
 
-- 建站时间统计
-- 浏览器标签恶搞标题
-- 副标题颜色渐变
-- 鼠标点击烟花特效
-- 首页樱花飘落特效
-- 页脚养鱼
-- 彩虹加载动画
-- 背景全屏固定
-- 毛玻璃效果面板
-- 鼠标移动小星星特效
-- 导航栏标题 SVG 描边渐显
-- 导航栏标题霓虹灯特效
-- 打字礼花特效
-- 首页文章滑入动画
-- 滚动条自定义渐变样式
-- Live2D Widget
+- 保留 Hexo + Fluid 的页面结构，不复制整套主题模板。
+- 导航使用英文，页面标题和正文使用简体中文。
+- 新增页面继续使用 Fluid `layout: page`，保持 banner、正文宽度和页脚一致。
+- 卡片采用半透明毛玻璃，而不是不透明深色块。
+- 动画只增强反馈，不能阻塞正文、导航或辅助功能。
+- 音乐、Live2D、Memos、Gallery、Anime 等重资源延迟加载。
+- 媒体优先 R2，运行时必须同源的资源保留在静态站。
+- 所有页面必须同时检查桌面、移动端、亮色和暗色主题。
 
-说明：
+## 2. 资源入口
 
-- 你提到的 `live2d-winget`，仓库里实际接入的是 `live2d-widget`
-- 你提到的“标签恶搞”，当前实现对应的是浏览器标签页标题恶搞
+### 2.1 JavaScript
 
-## 1.1 当前线上启用状态（2026-07-08）
-
-本次核验时，文档中列出的这组美化功能仍然和仓库配置一致：
-
-- `custom_js` 中仍启用了烟花、鱼池、加载动画、滚动卡片、星星、标题恶搞、输入礼花
-- `custom_css` 中仍启用了渐变副标题、毛玻璃、滚动条、SVG 霓虹标题等样式
-- `scripts/injects.js` 仍在注入 `#web_bg`、首页加载器、首页樱花、首页 SVG 标题特效、Live2D autoload
-
-也就是说，当前这份文档不是“曾经设计过什么”，而是“仓库里现在还在启用什么”。
-
----
-
-## 2. 特效入口总览
-
-### 2.1 JS 入口
-
-在 `_config.fluid.yml` 的 `custom_js` 中注册：
+`_config.fluid.yml` 当前注册：
 
 ```yaml
 custom_js:
+  - /js/site-config-v3.js?v=4
   - /js/anime.min.js
   - /js/custom.js
   - /js/duration.js
@@ -56,15 +32,24 @@ custom_js:
   - /js/stars.js
   - /js/title.js
   - /js/typing-effect.js
+  - /js/hitokoto-cooldown.js
+  - /js/memos-feed-v5.js?v=7
+  - /js/gallery-feed-v1.js
+  - /js/anime-feed-v4.js
+  - /js/aplayer-1.10.1.min.js
+  - /js/music-dock-v6.js?v=7
+  - /js/analytics-v2.js
 ```
 
-### 2.2 CSS 入口
+实际文件名以配置为准。修改脚本后应同步更新查询参数版本，避免 Cloudflare 和浏览器继续使用旧文件。
 
-在 `_config.fluid.yml` 的 `custom_css` 中注册：
+### 2.2 CSS
 
 ```yaml
 custom_css:
   - /css/custom.css
+  - /css/pages-glass-v9.css?v=13
+  - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css
   - /css/gradient.css
@@ -74,659 +59,499 @@ custom_css:
   - /css/scrollanimation.css
   - /css/scrollbar.css
   - /css/selection.css
-  - /css/svg-neon.css
+  - /css/svg-neon.css?v=2
 ```
 
-### 2.3 模板注入入口
+`pages-glass-v9.css` 是新增页面、音乐播放器、动态卡片和 Anime 卡片的统一外观层。不要在每个页面重复创建一套近似的背景和边框样式。
 
-`scripts/injects.js` 当前负责注入：
+### 2.3 Hexo 注入
 
-```js
-hexo.extend.injector.register('head_end', '<script>if(!localStorage.getItem("waifu-display")){localStorage.setItem("waifu-display",Date.now())}</script><script defer src="/live2d-widget/dist/autoload.js"></script>');
-hexo.extend.injector.register("body_begin", '<div id="web_bg"></div>');
-hexo.extend.injector.register('body_begin', '<div id="loader-container">...</div>', 'home');
-hexo.extend.injector.register('body_end', '<script src="/js/sakura.js"></script>', 'home');
-hexo.extend.injector.register('body_end', '<script src="/js/backgroundize.js"></script>');
-hexo.extend.injector.register('body_end', '<script src="/js/svg-neon.js?v=2"></script>');
-```
+`scripts/injects.js` 负责：
 
----
+- 全屏固定背景容器 `#web_bg`
+- 首页加载动画
+- 首页樱花
+- SVG/霓虹导航标题脚本
+- Live2D 本地 autoload
+- 需要早于主题脚本存在的 DOM
 
-## 3. 功能对照表
+注入应限制页面作用域。首页专用樱花和加载器不能无条件注入全部页面。
 
-| 功能 | 入口文件 | 作用范围 | 备注 |
-| --- | --- | --- | --- |
-| 建站时间统计 | `_config.fluid.yml` + `source/js/duration.js` | 全站 footer | 依赖 `#timeDate` 和 `#times` |
-| 浏览器标签恶搞标题 | `source/js/title.js` | 全站 | 切换标签页时修改标题和 favicon |
-| 副标题颜色渐变 | `source/css/gradient.css` | 首屏 subtitle | 配合 Typed 光标渐变 |
-| 鼠标点击烟花 | `_config.fluid.yml:custom_html` + `source/js/fireworks.js` | 全站 | 依赖固定定位 canvas |
-| 首页樱花飘落 | `scripts/injects.js` + `source/js/sakura.js` | 首页 | 只注入 `home` |
-| 页脚养鱼 | `source/js/fishes.js` + `source/js/fish.js` + `source/css/fish.css` | 页脚 | 自动在 footer 追加容器 |
-| 彩虹加载动画 | `scripts/injects.js` + `source/css/loader.css` + `source/js/loader.js` | 首页 | 进入页面后淡出 |
-| 背景全屏固定 | `scripts/injects.js` + `source/js/backgroundize.js` | 全站 | 复用 banner 图做全屏背景 |
-| 毛玻璃效果面板 | `source/css/glassbackground.css` + `ground_glass` | 内容板 / TOC / navbar | 部分由主题原生支持 |
-| 鼠标移动小星星 | `source/js/stars.js` | 全站 | 跟随指针生成彩色星星 |
-| 导航栏标题 SVG 描边 | `source/js/svg-neon.js` + `source/css/svg-neon.css` | 首页导航栏 | 替换 `.navbar-brand strong` |
-| 导航栏标题霓虹灯 | `source/js/svg-neon.js` + `source/css/svg-neon.css` | 全站导航栏 | 首页完成 SVG 动画后进入霓虹循环，其他页面直接显示霓虹文字 |
-| 打字礼花特效 | `source/js/typing-effect.js` | 全站输入区 | 输入时喷射粒子 |
-| 首页文章滑入动画 | `source/js/scrollanimation.js` + `source/css/scrollanimation.css` | 首页文章卡片 | 控制 `.index-card` |
-| 滚动条渐变样式 | `source/css/scrollbar.css` | 全站 | 包括表格横向滚动条 |
-| Live2D Widget | `scripts/injects.js` + `themes/fluid/source/live2d-widget` | 全站 | 当前启用本地 autoload 版本 |
+## 3. 功能总览
 
----
+| 功能 | 入口 | 范围 |
+| --- | --- | --- |
+| 建站时间 | `duration.js` + footer | 全站 |
+| 标签页标题变化 | `title.js` | 全站 |
+| 副标题渐变 | `gradient.css` | 首页 banner |
+| 点击烟花 | `fireworks.js` | 全站 |
+| 樱花飘落 | `sakura.js` | 首页 |
+| 页脚鱼池 | `fishes.js` / `fish.js` / `fish.css` | 页脚 |
+| 彩虹加载器 | `loader.js` / `loader.css` | 首页 |
+| 顶部渐变进度条 | `custom.js` / `custom.css` | 全站 |
+| 固定背景 | `backgroundize.js` | 全站 |
+| 毛玻璃卡片 | `glassbackground.css` / `pages-glass-v9.css` | 全站与新增页 |
+| 鼠标星星 | `stars.js` | 桌面端 |
+| SVG 描边和霓虹标题 | `svg-neon.js` / `svg-neon.css` | 全站 navbar brand |
+| 打字礼花 | `typing-effect.js` | 输入框 |
+| 首页文章滑入 | `scrollanimation.js` / CSS | 首页 |
+| 渐变滚动条 | `scrollbar.css` | 全站 |
+| Hitokoto | `hitokoto-cooldown.js` | Quotes |
+| Memos Feed | `memos-feed-v5.js` | Essays/Moments |
+| Gallery Feed | `gallery-feed-v1.js` | Gallery |
+| Bangumi Feed | `anime-feed-v4.js` | Anime |
+| 音乐播放器 | APlayer + `music-dock-v6.js` | 全站 |
+| Live2D | 本地 widget | 全站，首次隐藏 |
+| 行为分析 | `analytics-v2.js` | 全站 |
 
-## 4. 建站时间统计
+## 4. 建站时间
 
-### 4.1 入口
+`source/js/duration.js` 以固定建站时间计算天、小时、分、秒，再写入页脚。
 
-`_config.fluid.yml`
+维护要求：
 
-```yaml
-footer:
-  content: |
-    <div>
-      <span id="timeDate">载入天数...</span>
-      <span id="times">载入时分秒...</span>
-      <script src="/js/duration.js"></script>
-      <a href="/atom.xml" target="_blank" rel="nofollow noopener"><i class="iconfont icon-rss"></i></a>
-    </div>
-```
+- 起始时间必须带明确时区或按 `Asia/Shanghai` 解释。
+- 不要用构建时间作为建站时间。
+- DOM 不存在时脚本应安全退出。
+- 使用 `setInterval` 每秒更新即可，不需要更高频率。
 
-`source/js/duration.js`
+页面在后台时可暂停高频更新以减少资源消耗，但当前每秒一次开销很小。
 
-```js
-var startDate = new Date("2025-07-27T12:00:00");
-document.getElementById("timeDate").innerHTML = "本站已在夹缝中生存 " + days + " 天 ";
-document.getElementById("times").innerHTML = hours + " 小时 " + minutes + " 分 " + seconds + " 秒";
-```
+## 5. 浏览器标题效果
 
-### 4.2 修改建站时间
+`title.js` 监听 `visibilitychange`：
 
-只需要改 `startDate`：
+- 用户切换到其他标签页时显示趣味标题。
+- 用户返回时恢复原始标题。
 
-```js
-var startDate = new Date("2026-01-01T00:00:00");
-```
+脚本必须缓存真实 `document.title`，不能覆盖文章标题、SEO 标题或永久保留趣味文案。
 
-### 4.3 修改文案
+## 6. 副标题渐变
 
-```js
-document.getElementById("timeDate").innerHTML = "本站已运行 " + days + " 天 ";
-```
-
----
-
-## 5. 浏览器标签恶搞标题
-
-### 5.1 入口
-
-`source/js/title.js`
-
-```js
-document.addEventListener('visibilitychange', function() {
-  if (document.hidden) {
-    document.title = '╭(°A°`)╮ 页面崩溃啦 ~';
-  } else {
-    document.title = '(ฅ>ω<*ฅ) 噫又好啦 ~' + OriginTitle;
-  }
-});
-```
-
-### 5.2 修改文案
-
-直接改这两行即可：
-
-```js
-document.title = '你怎么走了 QAQ';
-document.title = '欢迎回来 OwO ' + OriginTitle;
-```
-
----
-
-## 6. 副标题颜色渐变
-
-### 6.1 入口
-
-`source/css/gradient.css`
+`gradient.css` 为首页 Typed 副标题设置动画渐变：
 
 ```css
-#subtitle {
-  background: linear-gradient(-45deg, #ee7752, #ce3e75, #23a6d5, #23d5ab);
-  background-size: 400% 400%;
-  animation: Gradient 10s ease infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.typed-cursor {
-  background: linear-gradient(-45deg, #ee7752, #ce3e75, #23a6d5, #23d5ab);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+background-image: linear-gradient(90deg, #14d8c4, #43b7ff, #ff7a59);
+background-clip: text;
+color: transparent;
 ```
 
-### 6.2 前置条件
+注意：
 
-副标题节点来自：
+- 保证浅色和深色背景上的对比度。
+- Typed 光标单独设置颜色，不要继承透明文字。
+- `prefers-reduced-motion` 下关闭持续位移动画。
 
-```ejs
-<span id="subtitle" data-typed-text="<%= subtitle %>"></span>
-```
+## 7. 烟花、星星和打字礼花
 
-Typed 开关在 `_config.fluid.yml`：
+三个效果都创建短生命周期粒子：
 
-```yaml
-fun_features:
-  typing:
-    enable: true
-```
+- 点击烟花：鼠标/触摸点击触发。
+- 小星星：指针移动触发。
+- 打字礼花：文本输入触发。
 
-### 6.3 修改渐变色
+维护原则：
+
+- 元素使用 `pointer-events: none`。
+- 设置最大粒子数量和自动回收。
+- 移动端降低数量。
+- 在 `prefers-reduced-motion: reduce` 下关闭。
+- 不把粒子层放到导航和表单之上截获事件。
+
+## 8. 首页樱花
+
+樱花只在首页注入。它与背景大图、Live2D 和鼠标粒子叠加时可能增加合成开销。
+
+建议限制：
+
+- 标签页不可见时停止动画。
+- 移动端减少花瓣数。
+- 不使用超大透明 PNG。
+- z-index 低于导航、评论框和 Live2D 控件。
+
+## 9. 页脚鱼池
+
+鱼池容器由脚本追加到 footer 周围，使用 CSS 控制高度和层级。
+
+它不能覆盖：
+
+- 建站时间
+- Busuanzi 统计
+- RSS 链接
+- 回到顶部按钮
+- 移动端底部安全区
+
+页面内容很短时也要保证 footer 不被固定背景吞没。
+
+## 10. 彩虹加载和顶部进度条
+
+### 10.1 首页加载动画
+
+首页加载器在页面可用后淡出。必须有超时兜底，即使某个外部资源失败也不能永久遮住页面。
+
+### 10.2 顶部进度条
+
+顶部渐变条表达页面加载/滚动进度：
+
+- fixed 定位在 viewport 顶部。
+- 高度保持轻量，不影响 navbar 布局。
+- 颜色使用站点青蓝橙体系。
+- 完成后淡出。
+- 不依赖大型第三方库。
+
+## 11. 固定背景
+
+`#web_bg` 在正文后方固定全屏显示。页面 banner 图或页面专属背景由脚本映射到背景层。
+
+背景图来源：
+
+- 生产优先：R2 `images/backgrounds/*.webp`
+- 本地镜像：`source/img/backgrounds/`
+
+优化：
+
+- 桌面背景建议不超过 2560 px 宽。
+- 转 WebP，控制在约 300-800 KiB；复杂插画可适当放宽。
+- 首屏背景应预加载，非当前页面背景不要预加载。
+- 使用 `background-size: cover` 和稳定的焦点位置。
+- 移动端可提供单独裁剪版本。
+
+## 12. 毛玻璃系统
+
+统一变量示例：
 
 ```css
-background: linear-gradient(-45deg, #ff7b7b, #ffd166, #06d6a0, #118ab2);
-```
-
----
-
-## 7. 鼠标点击烟花特效
-
-### 7.1 入口
-
-`_config.fluid.yml`
-
-```yaml
-custom_html: <canvas class="fireworks" style="position:fixed;left:0;top:0;z-index:99999999;pointer-events:none;"> </canvas>
-```
-
-`source/js/fireworks.js`
-
-```js
-var canvasEl = document.querySelector(".fireworks");
-```
-
-### 7.2 工作原理
-
-- 页面中先放一个固定定位的 `<canvas>`
-- `fireworks.js` 监听点击位置
-- `anime.min.js` 驱动粒子扩散和圆环动画
-
-### 7.3 关闭方法
-
-1. 从 `custom_js` 中移除 `/js/fireworks.js`
-2. 或把 `custom_html` 里的 `<canvas class="fireworks">` 删除
-
----
-
-## 8. 首页樱花飘落特效
-
-### 8.1 入口
-
-`scripts/injects.js`
-
-```js
-hexo.extend.injector.register('body_end', '<script src="/js/sakura.js"></script>', 'home');
-```
-
-`source/js/sakura.js`
-
-```js
-canvas.setAttribute('id', 'canvas_sakura');
-for (var i = 0; i < 12; i++) {
-  // 初始化花瓣
+:root {
+  --glass-bg: rgb(7 13 28 / 68%);
+  --glass-border: rgb(255 255 255 / 20%);
+  --glass-shadow: 0 18px 50px rgb(0 0 0 / 24%);
+  --glass-blur: 18px;
 }
 ```
 
-### 8.2 作用范围
-
-只在 `home` 页面注入。
-
-### 8.3 关闭方法
-
-删除或注释：
-
-```js
-hexo.extend.injector.register('body_end', '<script src="/js/sakura.js"></script>', 'home');
-```
-
----
-
-## 9. 页脚养鱼
-
-### 9.1 入口
-
-`source/js/fishes.js`
-
-```js
-$("footer").append('<div class="container" id="jsi-flying-fish-container"></div>');
-$("body").append('<script src="/js/fish.js"></script>');
-$("body").append('<script src="/js/fish-theme.js"></script>');
-```
-
-`source/css/fish.css`
+卡片：
 
 ```css
-#jsi-flying-fish-container {
-  position: absolute;
-  height: 128px;
-  z-index: -1;
+background: var(--glass-bg);
+border: 1px solid var(--glass-border);
+box-shadow: var(--glass-shadow);
+backdrop-filter: blur(var(--glass-blur)) saturate(125%);
+```
+
+新增页面统一要求：
+
+- banner 高度与 Fluid 普通 page 一致。
+- 正文卡片起始位置与归档/分类页接近，不贴住 navbar。
+- 页面简介只有一段，避免操作提示堆积。
+- 亮色主题提高白色透明度，暗色主题提高深色透明度。
+- 不支持 backdrop-filter 时仍有可读实色 fallback。
+- 卡片内文字对比度不低于可读标准。
+
+## 13. 导航标题 SVG 描边与霓虹
+
+`svg-neon.js` 将 `.navbar-brand strong` 转为描边动画或添加霓虹类。
+
+当前行为：
+
+- 首页先播放 SVG 描边渐显，再进入霓虹循环。
+- 其他页面直接显示霓虹标题，避免左上角退回普通文字。
+- 移动端缩短动画并保持标题不换行。
+
+脚本执行失败时必须保留原始站点标题作为 fallback，不能让品牌标题消失。
+
+## 14. 首页文章滑入
+
+`scrollanimation.js` 观察 `.index-card`，进入 viewport 后添加展示 class。
+
+使用 IntersectionObserver，不在滚动事件中逐帧读取布局。`prefers-reduced-motion` 下卡片直接显示。
+
+文章卡片封面必须有：
+
+- 正确 `alt`
+- 固定比例或尺寸，降低 CLS
+- WebP
+- R2 可访问 URL
+- 加载失败时不破坏标题区域
+
+## 15. 滚动条
+
+`scrollbar.css` 同时设置页面和 Markdown 表格滚动条。
+
+只对支持 `::-webkit-scrollbar` 的浏览器生效；Firefox 使用标准 `scrollbar-color`。不要把滚动条宽度设得过窄，移动端使用系统滚动。
+
+## 16. Essays 与 Moments
+
+`memos-feed-v5.js`：
+
+- 请求 Memos 公共 API。
+- 根据页面 `data` 和标签区分 `#essay` / `#moment`。
+- 兼容多个 API 路径。
+- 使用本地 Marked 渲染 Markdown。
+- 清洗 HTML。
+- 渲染附件、地点、引用和被引用关系。
+- 将 UTC 时间转为访客本地时区。
+
+样式要求：
+
+- 正文完整显示，而不是只取纯文本。
+- 引用摘要只显示纯文本，整个引用块可点击。
+- 附件图片不显示文件名。
+- 地点和关系信息作为弱化元数据。
+- 页面顶部不显示“打开 Memos”等无关提示。
+
+## 17. Quotes 与 Hitokoto
+
+一言类型固定为：`a`、`b`、`c`、`d`、`h`、`j`、`k`。
+
+正文和来源使用不同字体栈，例如：
+
+```css
+.quote-text {
+  font-family: "STKaiti", "KaiTi", serif;
+}
+
+.quote-source {
+  font-family: "STXingkai", "FZKai-Z03", serif;
 }
 ```
 
-### 9.2 主题联动
+交互：
 
-`source/js/fish-theme.js` 会跟随明暗主题切换鱼池背景色。
+- 加载中显示动画。
+- 单击加载下一条。
+- 请求过程中锁定按钮。
+- 请求结束后继续冷却 3 秒。
+- 快速点击只保留一个请求。
+- 请求失败使用本地语句。
 
-### 9.3 调整数目与范围
+## 18. Gallery
 
-`source/js/fish.js`
+`gallery-feed-v1.js` 读取 Chevereto 公开相册 HTML：
 
-```js
-FISH_COUNT : 3,
-POINT_INTERVAL : 5,
-THRESHOLD : 50,
-```
+1. 请求 `/explore/albums`。
+2. 提取相册 URL、标题和封面。
+3. 请求相册页。
+4. 提取简介、标签和图片。
+5. 在博客毛玻璃卡片中展示。
 
-可直接调整：
+图片使用 lazy loading。相册封面应设置固定宽高比。由于依赖 Chevereto HTML，升级 Chevereto 后必须回归测试选择器。
 
-- `FISH_COUNT`：鱼数量基数
-- `height`：鱼池可见高度
+## 19. Anime
 
----
+`anime-feed-v4.js` 使用 Bangumi API，用户为 `soloeternity`。
 
-## 10. 彩虹加载动画
+功能：
 
-### 10.1 入口
+- 读取动画收藏的五种状态。
+- 默认展示“在看”。
+- 统计收藏、看过和完成率。
+- 卡片封面悬停缩放。
+- 右上角显示“★ 评分”。
+- 点击跳转 Bangumi 条目。
+- sessionStorage 缓存约 30 分钟。
+- 图片 lazy loading。
 
-`scripts/injects.js`
+卡片布局：
 
-```js
-hexo.extend.injector.register('body_begin', `
-<div id="loader-container">
-  <div id="loader" class="loader"></div>
-  ...
-</div>`, 'home');
-```
+- 预览图和正文分区稳定。
+- 标题使用较小字号和行数限制，避免遮挡。
+- 进度行与标题之间保留间距。
+- 标签区与进度行之间保留间距。
+- 移动端改为单列或窄双列。
+- 外部 API 失败时只替换数据区域，不覆盖整页。
 
-`source/css/loader.css`
+## 20. 音乐播放器
 
-```css
-.loader-line-wrap:nth-child(1) .loader-line { border-color: hsl(0, 80%, 60%); }
-.loader-line-wrap:nth-child(2) .loader-line { border-color: hsl(60, 80%, 60%); }
-.loader-line-wrap:nth-child(3) .loader-line { border-color: hsl(120, 80%, 60%); }
-.loader-line-wrap:nth-child(4) .loader-line { border-color: hsl(180, 80%, 60%); }
-.loader-line-wrap:nth-child(5) .loader-line { border-color: hsl(240, 80%, 60%); }
-```
+播放器基于本地 APlayer `1.10.1` 和 `music-dock-v6.js`。
 
-`source/js/loader.js`
+### 20.1 数据
 
-```js
-$("#loader-container").fadeOut(300);
-```
+`site-config-v3.js` 定义曲目：
 
-### 10.2 作用范围
+- R2 MP3
+- R2 WebP 封面
+- 本地同源 LRC
 
-当前只在首页显示。
+音频设置 `preload: none`，播放器在 `window.load` 后初始化。
 
----
+### 20.2 外观
 
-## 11. 背景全屏固定
+- 整体圆角。
+- 封面圆角。
+- 外边框与内部元素保留单倍间距。
+- 收起歌单后底部 padding 不叠加。
+- 背景为与当前主题一致的半透明毛玻璃。
+- 标题、歌词和进度条不被渐变光晕遮挡。
+- 歌词区域关闭 APlayer 自带的上下白色渐变伪元素。
+- 歌单展开时不覆盖文章目录。
 
-### 11.1 入口
-
-`scripts/injects.js`
-
-```js
-hexo.extend.injector.register("body_begin", '<div id="web_bg"></div>');
-hexo.extend.injector.register("body_end", '<script src="/js/backgroundize.js"></script>');
-```
-
-`source/js/backgroundize.js`
-
-```js
-document.querySelector('#web_bg').setAttribute(
-  'style',
-  `background-image: ${document.querySelector('.banner').style.background.split(' ')[0]};position: fixed;width: 100%;height: 100%;z-index: -1;background-size: cover;`
-);
-```
-
-### 11.2 效果说明
-
-- 读取当前页面 `.banner` 的背景图
-- 写入到全局的 `#web_bg`
-- 把原始 banner 背景清空
-- 形成“首屏横幅图变全屏固定背景”的视觉效果
-
----
-
-## 12. 毛玻璃效果面板
-
-### 12.1 CSS 毛玻璃
-
-`source/css/glassbackground.css`
+关键覆盖：
 
 ```css
-#board {
-  backdrop-filter: blur(15px);
-}
-
-#toc {
-  backdrop-filter: blur(15px);
+.aplayer-lrc::before,
+.aplayer-lrc::after {
+  display: none !important;
 }
 ```
 
-### 12.2 主题自带导航栏毛玻璃
+### 20.3 功能
 
-`_config.fluid.yml`
+- 切换歌曲
+- 拖动进度
+- 音量
+- 顺序、随机、循环模式
+- 歌单展开/收起
+- 播放器隐藏
+- localStorage 记忆显示状态
+- Umami 音乐行为事件
 
-```yaml
-navbar:
-  ground_glass:
-    enable: true
-    px: 3
-```
+不要删除 APlayer 内部结构后再重新实现播放逻辑。样式覆盖和外部控制器应保持最小。
 
-### 12.3 调整模糊强度
+## 21. Live2D
 
-```css
-backdrop-filter: blur(24px);
-```
-
-或：
-
-```yaml
-ground_glass:
-  px: 6
-```
-
----
-
-## 13. 鼠标移动小星星特效
-
-### 13.1 入口
-
-`source/js/stars.js`
-
-```js
-document.addEventListener("mousemove", o);
-this.character = "*";
-var r = ["#f94a70","#ffd12b","#49c99a","#1f90ed"];
-```
-
-### 13.2 修改字符
-
-如果想把 `*` 改成别的字符：
-
-```js
-this.character = "✦";
-```
-
-### 13.3 修改颜色
-
-```js
-var r = ["#ff7eb6", "#7afcff", "#feff9c", "#fff740"];
-```
-
----
-
-## 14. 导航栏标题 SVG 描边渐显
-
-### 14.1 入口
-
-`themes/fluid/layout/_partials/header/navigation.ejs`
-
-```ejs
-<a class="navbar-brand" href="<%= url_for() %>">
-  <strong><%= theme.navbar.blog_title || config.title %></strong>
-</a>
-```
-
-`source/js/svg-neon.js` 会把上面的 `<strong>` 替换为：
-
-- 一个 SVG 描边动画层
-- 一个文字霓虹层
-
-### 14.2 关键代码
-
-```js
-const container = document.createElement('span');
-container.className = 'navbar-title-container';
-container.appendChild(svg);
-container.appendChild(navbarTitle);
-```
-
-### 14.3 动画参数
-
-```js
-path.style.animation = 'navbarSvgDraw 16s ease-in-out 0s forwards, navbarSvgFade 2s 4s forwards';
-```
-
-如果想缩短描边动画：
-
-```js
-path.style.animation = 'navbarSvgDraw 8s ease-in-out 0s forwards, navbarSvgFade 1s 3s forwards';
-```
-
----
-
-## 15. 导航栏标题霓虹灯特效
-
-### 15.1 入口
-
-`source/css/svg-neon.css`
-
-```css
-.navbar-brand .navbar-title {
-  --c: lightseagreen;
-  text-shadow: 0 0 10px var(--c), 0 0 20px var(--c), 0 0 40px var(--c), 0 0 80px var(--c), 0 0 160px var(--c);
-  animation: neoneffect 5s linear infinite;
-}
-```
-
-### 15.2 修改霓虹主色
-
-```css
---c: #7df9ff;
-```
-
-### 15.3 修改循环速度
-
-```css
-animation: neoneffect 2.5s linear infinite;
-```
-
----
-
-## 16. 打字礼花特效
-
-### 16.1 入口
-
-`source/js/typing-effect.js`
-
-```js
-POWERMODE.colorful = !0;
-POWERMODE.shake = !1;
-document.body.addEventListener("input", POWERMODE);
-```
-
-### 16.2 效果说明
-
-这个特效并不是首页副标题打字机，而是：
-
-- 在输入框、文本框或可选中文本输入时
-- 在光标位置喷射彩色粒子
-
-也就是典型的 `input powermode` 效果。
-
-### 16.3 关闭方法
-
-从 `custom_js` 中移除：
-
-```yaml
-- /js/typing-effect.js
-```
-
----
-
-## 17. 首页文章滑入动画
-
-### 17.1 入口
-
-`source/js/scrollanimation.js`
-
-```js
-const cards = document.querySelectorAll('.index-card')
-card.setAttribute('style', `--state: ${(card.getBoundingClientRect().top - origin) < 0 ? 1 : 0};`)
-```
-
-`source/css/scrollanimation.css`
-
-```css
-.index-card {
-  transition: all 0.5s;
-  transform: scale(calc(1.5 - 0.5 * var(--state)));
-  opacity: var(--state);
-}
-```
-
-### 17.2 效果说明
-
-- 首页文章卡片进入视口前更大且透明
-- 滚动到阈值后恢复正常尺寸和透明度
-
----
-
-## 18. 滚动条自定义渐变样式
-
-### 18.1 入口
-
-`source/css/scrollbar.css`
-
-```css
-html::-webkit-scrollbar-thumb,
-body::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #30a9de, #2f4154) !important;
-}
-```
-
-表格横向滚动条也做了单独处理：
-
-```css
-.markdown-body table::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #30a9de, #2f4154) !important;
-}
-```
-
-### 18.2 修改配色
-
-```css
-background: linear-gradient(180deg, #ff7b7b, #6c5ce7) !important;
-```
-
----
-
-## 19. Live2D Widget
-
-### 19.1 当前启用方式
-
-`scripts/injects.js`
-
-```js
-hexo.extend.injector.register('head_end', '<script src="/live2d-widget/dist/autoload.js"></script>');
-```
-
-也就是说，当前实际启用的是仓库内的：
+本地运行资源：
 
 ```text
-themes/fluid/source/live2d-widget/dist/autoload.js
+themes/fluid/source/live2d-widget/
+source/live2d-models/
 ```
 
-看板娘首次访问默认折叠，只显示右下角唤出按钮。当前模型为 IceGirl、让·巴尔、俾斯麦、半人马和翔鹤；后四个模型来自 `zenghongtu/live2d-model-assets`。
-
-### 19.2 可选备用方案
-
-仓库里还保留了一个未启用的远程 CDN 版本：
-
-```js
-// source/js/live2d.js
-script.src = "https://fastly.jsdelivr.net/npm/live2d-widgets@1.0.0-rc.6/dist/autoload.js";
-```
-
-当前 `_config.fluid.yml` 中该入口仍是注释状态：
-
-```yaml
-# - /js/live2d.js
-```
-
-### 19.3 关闭 Live2D
-
-直接删掉或注释 `scripts/injects.js` 中这一行：
-
-```js
-hexo.extend.injector.register('head_end', '<script src="/live2d-widget/dist/autoload.js"></script>');
-```
-
----
-
-## 20. 常见修改策略
-
-### 20.1 暂时关闭单个特效
-
-优先做法是从 `_config.fluid.yml` 里移除对应文件：
-
-```yaml
-custom_js:
-  - /js/fireworks.js
-```
-
-删掉这一行即可关闭烟花。
-
-### 20.2 关闭模板注入类特效
-
-如果是 `loader`、`sakura`、`background`、`live2d` 这类依赖 `injects.js` 的功能，就去改：
+R2 备份：
 
 ```text
-scripts/injects.js
+live2d/models/
 ```
 
-### 20.3 修改后验证
+行为：
 
-```bash
+- 首次访问默认隐藏。
+- 右下角按钮唤出。
+- 默认模型 IceGirl。
+- 另有四个来自 `zenghongtu/live2d-model-assets` 的替代模型。
+- 当前模型和显示状态使用 localStorage 跨页面同步。
+- 只加载当前模型，不预加载全部模型。
+
+层级：
+
+- 模型高于正文卡片，但不遮挡导航和翻译按钮。
+- 控件可点击。
+- 移动端默认隐藏，避免占据正文。
+- `z-index` 修改要同时测试 Waline、APlayer、回到顶部和移动导航。
+
+## 22. Waline 评论区
+
+Fluid 当前使用 `@waline/client 2.15.8`，服务端为 `1.41.3`。
+
+样式优化：
+
+- 评论容器使用与正文一致的毛玻璃变量。
+- 输入框、按钮、用户卡片和分页保持主题对比度。
+- 不隐藏审核、登录和可访问性状态。
+- 文章 placeholder 为“欢迎大家来评论区灌水喵~”。
+- 留言板 placeholder 保持单独文案。
+
+评论邮件通过服务器 Waline 主题脚本按路径区分文章和留言板，属于服务端逻辑，不应在 CSS/前端伪造。
+
+## 23. Umami 行为和性能
+
+`analytics-v2.js` 使用事件委托，记录真正有分析价值的动作，不对每次鼠标移动发事件。
+
+已跟踪：导航、搜索、主题、一言、音乐、Live2D、Anime、外链、下载、友链、评论开始、复制、阅读深度和参与时长。
+
+性能原则：
+
+- Umami 脚本 defer。
+- 不把事件发送放在渲染关键路径。
+- 事件属性避免邮箱、评论正文等个人数据。
+- 同类事件使用稳定命名，避免后台碎片化。
+
+## 24. 性能优化
+
+Umami 曾观察到 P95：LCP 约 `22.81 s`、FCP 约 `22.71 s`、TTFB 约 `6.67 s`、INP 约 `303 ms`、CLS 约 `0.181`。这不是单次本地测速，而是包含不同地区、代理和设备的真实样本。
+
+优先级：
+
+1. 缩小首屏背景并提供移动端版本。
+2. 验证 R2 Cloudflare Cache Rule 和 `CF-Cache-Status: HIT`。
+3. 本地托管或减少 Google Fonts，避免跨境字体阻塞。
+4. Live2D 只在用户打开后加载模型。
+5. 音频不预加载，封面延迟到播放器初始化。
+6. Anime/Memos/Gallery 在首屏稳定后请求。
+7. 图片设置尺寸，降低 CLS。
+8. 首页只预加载当前 banner，不预加载其他页面背景。
+9. 使用版本化 JS/CSS 长缓存，HTML 保持可更新。
+10. 按页面、国家、设备和网络分组比较优化前后数据。
+
+## 25. 可访问性和降级
+
+- 所有交互支持键盘。
+- 图片提供有效 alt。
+- 按钮有 aria-label。
+- 颜色不是唯一状态提示。
+- `prefers-reduced-motion` 关闭大部分粒子和持续动画。
+- JS 失败时正文和导航仍可使用。
+- 外部 API 失败时只显示局部错误。
+- 亮/暗主题均保持文字对比度。
+
+## 26. 修改和验证
+
+修改 JS/CSS：
+
+1. 编辑 `source/js`、`source/css` 或 `scripts/injects.js`。
+2. 更新 `_config.fluid.yml` 查询参数版本。
+3. 构建。
+4. 先在本地检查控制台和布局。
+5. 发布后清理对应 Cloudflare URL 缓存，而不是全站无差别清理。
+
+```powershell
 pnpm clean
 pnpm build
 pnpm server
 ```
 
-重点检查：
+检查页面：
 
-- 首页首屏
-- 导航栏标题
-- footer 鱼池
-- 评论输入区
-- 文章列表卡片动画
+- 首页
+- 普通文章和长目录文章
+- 归档/分类/标签
+- Essays/Moments/Quotes
+- Gallery/Anime
+- Friends/Message/About
+- 移动端导航
+- 明暗主题
+- 低动态偏好
 
----
+## 27. 常见问题
 
-## 21. 推荐维护习惯
+### 样式未更新
 
-1. 先改 `source/js` / `source/css`，再改 `_config.fluid.yml` 的注册列表。
-2. 文案类调整尽量集中到单个脚本，例如 `duration.js`、`title.js`。
-3. 涉及中文字符串的环境变量文件优先用 `UTF-8` 保存。
-4. 视觉增强脚本尽量避免重复操作 DOM，优先按页面作用域注入。
+- 查询参数版本未变。
+- Cloudflare 命中旧文件。
+- 浏览器缓存。
+- Actions 未发布当前 commit。
 
----
+### 毛玻璃变成黑块
 
-## 22. 新增页面视觉规范
+- 页面命中了旧 CSS。
+- `backdrop-filter` 不支持且 fallback 太深。
+- 页面自定义选择器优先级覆盖统一变量。
+- 暗色主题重复叠加背景。
 
-- 自定义页面统一使用 Fluid 的 `layout: page` 和 80% Banner 高度，正文板块起始位置与归档页一致。
-- Glass 卡片统一由 `source/css/pages-glass-v9.css?v=11` 提供半透明背景、描边、阴影和 `backdrop-filter`。
-- Gallery 相册和 Anime 条目沿用同一套圆角、毛玻璃和深色模式规则，不创建独立主题。
-- 页面背景统一从 R2 的 `images/backgrounds/*.webp` 读取，本地镜像保存在 `source/img/backgrounds/`。
+### Live2D 遮挡
 
----
+- widget z-index 过高。
+- 页面卡片 z-index 误设为更高堆叠上下文。
+- 移动端没有默认隐藏。
 
-## 23. 音乐播放器与一言
+### 音乐歌词光晕
 
-音乐播放器沿用 APlayer，不覆盖其播放逻辑。`source/css/pages-glass-v9.css` 负责圆角和毛玻璃外观，并关闭 `.aplayer-lrc::before`、`.aplayer-lrc::after` 自带的上下渐变遮罩，避免歌词被白色光晕覆盖。
+- APlayer `.aplayer-lrc::before/after` 没有被关闭。
+- 旧 CSS 缓存。
+- 父容器另有渐变伪元素。
 
-语录正文使用楷体字体栈，来源使用行楷字体栈；两者均优先调用本机字体，不下载额外 Web Font。接口分类固定为动画、漫画、游戏、文学、影视、网易云和哲学，对应参数 `a、b、c、d、h、j、k`。
+### 动态页面无内容
+
+- Memos 非公开或标签错误。
+- CORS。
+- API 版本变化。
+- Feed JS 旧缓存。

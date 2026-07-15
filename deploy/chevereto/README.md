@@ -1,63 +1,125 @@
 # Chevereto 图床部署
 
-当前生产地址：
+域名：`https://gallery.soloeternity.me`。
 
-- 图床入口：`https://gallery.soloeternity.me`
-- Compose 目录：`/opt/chevereto`
-- 图片数据目录：`/opt/chevereto/images`
+## 当前状态
+
+- Chevereto：`ghcr.io/chevereto/chevereto:latest`
+- 数据库：MariaDB `11.4`
+- 图片目录：`/opt/chevereto/images`
 - 数据库目录：`/opt/chevereto/database`
+- 公网入口：Docker Caddy -> `chevereto:8080`
+- 核验快照：21 张图片、1 个公开相册
 
-## 启动
+Chevereto 当前使用服务器本地存储，不是 R2。博客文章媒体走 R2，相册管理走 Chevereto，两者不要混用目录。
+
+## 部署
 
 ```bash
 cd /opt/chevereto
+chmod 600 .env
 docker compose up -d
+docker compose ps
+docker logs --tail=100 chevereto
+docker logs --tail=100 chevereto-db
 ```
 
-Chevereto 当前镜像实际由 Apache 监听 `8080`，Caddy 应反代到：
+`.env` 至少包含数据库名、用户、密码和 root 密码。仓库不得保存生产值。
 
-```caddyfile
-gallery.soloeternity.me {
-    encode zstd gzip
-    reverse_proxy chevereto:8080
-}
-```
+## 首次配置
 
-如果页面提示 `/images/` 无写权限，执行：
+1. 打开 `https://gallery.soloeternity.me`。
+2. 创建管理员。
+3. 设置站点名、默认语言、时区和上传限制。
+4. 修改默认发件人邮箱。
+5. 配置 SMTP，或明确关闭依赖邮件的功能。
+6. 新建公开相册并匿名测试。
 
-```bash
-uid=$(docker exec chevereto id -u www-data)
-gid=$(docker exec chevereto id -g www-data)
-chown -R "$uid:$gid" /opt/chevereto/images
-docker restart chevereto
-```
+管理员页面出现“未修改默认邮箱”“未配置邮件提供商”时，不影响基本上传，但会影响找回密码、通知和安全告警。应在 Chevereto Email settings 中填写独立 SMTP，不要把 Waline `.env` 直接复制过去。
 
-## 初始化
+## Gallery 对接
 
-打开：
+博客脚本读取：
 
 ```text
-https://gallery.soloeternity.me/install
+https://gallery.soloeternity.me/explore/albums
 ```
 
-填写管理员用户名、邮箱和密码，完成安装。
+要求：
 
-## 管理员首次配置
+- 相册公开。
+- 相册标题、简述和标签完整。
+- 匿名访客可以打开相册页和图片。
+- Caddy 对 `https://soloeternity.me` 返回正确 CORS。
 
-个人图床建议使用以下最小配置：
+博客会展示相册信息和图片，不显示 Chevereto 管理入口。
 
-1. `Dashboard > Settings > Website`：站点名设为 `SoloEternity Gallery`，站点 URL 保持 `https://gallery.soloeternity.me`。
-2. `Dashboard > Settings > File uploads`：关闭游客上传和游客相册，开启登录用户上传；存储模式选 `Datefolders`，文件命名选 `Random`，最大上传大小建议 `20 MB`，按需移除 EXIF。
-3. `Dashboard > Settings > Users`：不需要公开图床时关闭注册，只保留管理员账号。
-4. `Dashboard > Settings > Email`：先修改默认发件人和管理员邮箱，再填写 SMTP。未配置邮件不会影响上传，只影响找回密码和通知。
-5. 上传一张测试图，确认原图、缩略图和 Markdown 链接均能访问后，再在博客中使用图床 URL。
+## 真实 IP
 
-当前先使用 `/opt/chevereto/images` 本地持久化。需要把图床独立迁到 R2 时，建议新建专用 bucket 和图片域名，再在 `Dashboard > Settings > Upload storage` 中添加 `S3 compatible`，不要与博客静态资源共用同一个前缀。
+Chevereto 经过 Cloudflare 和 Caddy。应用应使用 Caddy 传递的可信客户端 IP 头，避免所有上传都记录为 Caddy 容器地址。
 
-## 验证
+不要无条件信任任意访客传入的 `X-Forwarded-For`。只信任 Cloudflare/Caddy 链路。
+
+## 备份
+
+### 数据库
 
 ```bash
-curl -I https://gallery.soloeternity.me/
-docker ps --filter name=chevereto
-docker logs --tail 80 chevereto
+install -d -m 700 /var/backups/soloeternity/chevereto
+docker exec chevereto-db sh -lc \
+  'mariadb-dump -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"' \
+  > "/var/backups/soloeternity/chevereto/database-$(date -u +%Y%m%dT%H%M%SZ).sql"
 ```
+
+### 图片
+
+```bash
+tar -C /opt/chevereto -czf \
+  "/var/backups/soloeternity/chevereto/images-$(date -u +%Y%m%dT%H%M%SZ).tar.gz" images
+```
+
+数据库和图片必须使用相近时间点成对保存。只备份其中一个会产生失效记录或孤立文件。
+
+## 恢复
+
+1. 停止 Chevereto 写入。
+2. 恢复图片目录。
+3. 创建空数据库。
+4. 导入 SQL。
+5. 启动容器。
+6. 检查管理员登录、相册数量、缩略图和原图。
+7. 检查博客 `/gallery/`。
+
+导入示例：
+
+```bash
+cat /path/to/database.sql | docker exec -i chevereto-db sh -lc \
+  'mariadb -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE"'
+```
+
+## 升级
+
+Chevereto 和 MariaDB 都使用可能变化的镜像标签。升级前：
+
+1. 备份数据库和图片。
+2. 记录镜像 digest。
+3. 阅读 Chevereto 与 MariaDB 升级说明。
+4. 先升级测试环境。
+5. 验证公开 HTML 结构没有破坏 `gallery-feed-v1.js`。
+
+## 故障排查
+
+### 登录后黑屏/通知
+
+- 检查浏览器控制台。
+- 检查 Chevereto 容器日志。
+- 配置默认邮箱和 SMTP。
+- 清除 Cloudflare/浏览器缓存。
+
+### Gallery 空白
+
+- 相册是否公开。
+- 匿名 `/explore/albums` 是否有内容。
+- CORS。
+- HTML 结构是否升级变化。
+- 图片域名是否可访问。
