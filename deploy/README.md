@@ -168,7 +168,7 @@ Waline 已固定到 `1.41.3`；其余多个服务仍使用 `latest` 或 `stable`
 - `SSH_PRIVATE_KEY`
 - 可选 `SSH_KNOWN_HOSTS`
 
-最近一次核验到的成功运行：Actions run `29388820274`，对应提交 `ec3576d`。当时线上 `index.html` 修改时间与工作流完成时间一致。连续检查的最近四次发布均成功。
+本次文档发布对应的 Actions run `29414972495` 已成功，服务器 `index.html` 修改时间与工作流完成时间一致。运行编号会随提交变化，后续以 `gh run list --workflow deploy.yml --limit 5` 查询结果为准，不要把固定 run ID 当成健康条件。
 
 ## 7. 新服务器部署顺序
 
