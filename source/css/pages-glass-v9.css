@@ -658,9 +658,14 @@ html[data-user-color-scheme="dark"] .solo-service-frame {
 }
 
 #waline .wl-editor {
+  box-sizing: border-box;
   min-height: 8rem;
   padding: 0.85rem 1rem;
   line-height: 1.75;
+}
+
+#waline .wl-header {
+  padding-inline: 0;
 }
 
 #waline .wl-btn.primary {

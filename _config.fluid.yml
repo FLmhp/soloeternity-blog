@@ -260,7 +260,7 @@ custom_js:
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v9.css?v=13
+  - /css/pages-glass-v9.css?v=14
   - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css
