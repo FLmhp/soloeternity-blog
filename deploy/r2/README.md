@@ -1,180 +1,384 @@
-# Cloudflare R2 媒体存储规划
+# Cloudflare R2 媒体存储
 
-## 目标
+Bucket：`soloeternity-assets`。
 
-- Bucket：`soloeternity-assets`
-- 自定义域名：`assets.soloeternity.me`
-- 用途：图片、音乐、大附件，不把二进制资源塞进 Git 仓库。
+公开域名：`https://assets.soloeternity.me`。
 
-## 目录约定
+最后核验：`2026-07-15`。
 
-```text
-images/
-  posts/YYYY/slug/
-  gallery/YYYY/
-  backgrounds/
-  social/
-avatars/
-music/
-  tracks/
-  covers/
-  lyrics/
-downloads/
-  docs/
-  packages/
-live2d/
-  models/
-memos/
-  attachments/YYYY/MM/
-```
+## 1. 当前实际状态
 
-文章中直接引用：
+- 约 `259` 个对象。
+- 总体积约 `84.8 MiB`。
+- 顶层只有 `images/`、`live2d/`、`music/`。
+- 自定义域名可返回文章封面、背景、音乐和模型资源。
+- `assets.soloeternity.me` 不指向 Ubuntu 服务器。
+- 源站 Caddy 对该域名返回 404，用于发现 DNS 误配。
+- 抽检没有确认所有对象稳定命中 Cloudflare 缓存，因此需要单独的 Cache Rule 和响应头验证。
 
-```md
-![示例图](https://assets.soloeternity.me/images/posts/example.jpg)
-```
-
-音乐播放器配置在 `source/js/site-config.js`：
-
-```js
-music: [
-  {
-    name: "歌曲名",
-    artist: "作者",
-    url: "https://assets.soloeternity.me/music/song.mp3",
-    cover: "https://assets.soloeternity.me/images/gallery/cover.jpg"
-  }
-]
-```
-
-## rclone 示例
-
-Cloudflare R2 S3 API endpoint 格式：
+## 2. 目录规范
 
 ```text
-https://edc50ca92af82eb445c6be9cfc2253ff.r2.cloudflarestorage.com
+soloeternity-assets/
+├─ images/
+│  ├─ avatars/                 # 博主头像、通用人物头像
+│  ├─ backgrounds/             # 全站和页面背景
+│  ├─ branding/                # logo、品牌图形
+│  ├─ link/                    # 友链头像
+│  ├─ posts/
+│  │  ├─ covers/               # 所有文章封面
+│  │  └─ <article-slug>/       # 正文图片
+│  └─ social/                  # QQ、社交平台图标或二维码
+├─ live2d/
+│  └─ models/                  # Live2D 模型镜像备份
+└─ music/
+   ├─ covers/                  # WebP 封面
+   ├─ lyrics/                  # LRC 备份
+   └─ tracks/                  # MP3
 ```
 
-上传示例：
+旧目录 `images/avatas/` 不再使用。友链头像本地和 R2 均统一为 `link`。
 
-```bash
-rclone copy ./images r2:soloeternity-assets/images --progress
-rclone copy ./music r2:soloeternity-assets/music --progress
-```
+## 3. 文章资源
 
-v1 不做博客内上传后台；先使用 Cloudflare Dashboard、rclone 或 S3 客户端管理文件。
+### 3.1 封面
 
-## 更方便的管理方式
-
-Cloudflare 控制面板适合偶尔看一眼，不适合批量管理。日常建议用 S3 兼容客户端：
-
-- `rclone`：最适合批量同步、脚本化上传、从本地目录镜像到 R2。
-- WinSCP：Windows 图形界面，选择 `Amazon S3` 协议，填 R2 endpoint、Access Key、Secret Key。
-- Cyberduck：图形界面也比较省心，适合拖拽上传和预览目录。
-- S3 Browser：偏传统 Windows 客户端，适合只想管理 bucket 文件的人。
-
-### rclone 配置
-
-1. 在 Cloudflare R2 创建 API Token，权限至少需要目标 bucket 的对象读写。
-2. 执行：
-
-```bash
-rclone config
-```
-
-3. 新建 remote，类型选择 `s3`，provider 选择 `Cloudflare`，endpoint 填：
+统一：
 
 ```text
-https://edc50ca92af82eb445c6be9cfc2253ff.r2.cloudflarestorage.com
+images/posts/covers/<article-slug>.webp
 ```
 
-4. 常用命令：
-
-```bash
-# 查看目录
-rclone lsd r2:soloeternity-assets
-
-# 上传单个文件
-rclone copy ./cover.jpg r2:soloeternity-assets/images/posts/2026/example/ --progress
-
-# 本地目录同步到 R2，R2 多余文件会被删除，谨慎使用
-rclone sync ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
-
-# 只复制新增和变更，不删除远端
-rclone copy ./gallery r2:soloeternity-assets/images/gallery/2026 --progress
-```
-
-## 当前站点使用的上传命令
-
-当前博客配置使用新结构，不再保留旧 `img/` 兼容目录：
-
-- 背景图：`images/backgrounds/`
-- 友链头像：`avatars/`
-- 社交图标：`images/social/`
-- 音乐文件：`music/tracks/`
-- 音乐封面：`music/covers/`
-- 歌词文件：`music/lyrics/`
-
-```bash
-rclone copy ./deploy/r2/music r2:soloeternity-assets/music --progress
-rclone copy ./music-upload r2:soloeternity-assets/music/tracks --include "*.mp3" --exclude "*" --progress
-```
-
-本地已为网页播放整理这些 R2 上传文件：
+公开 URL：
 
 ```text
-music-upload/uchiage-hanabi.mp3 -> music/tracks/uchiage-hanabi.mp3
-music-upload/the-last-rain.mp3 -> music/tracks/the-last-rain.mp3
-music-upload/merry-christmas-mr-lawrence.mp3 -> music/tracks/merry-christmas-mr-lawrence.mp3
-deploy/r2/music/covers/uchiage-hanabi.webp
-deploy/r2/music/covers/the-last-rain.webp
-deploy/r2/music/covers/merry-christmas-mr-lawrence.webp
-deploy/r2/music/lyrics/uchiage-hanabi.lrc
-deploy/r2/music/lyrics/the-last-rain.lrc
-deploy/r2/music/lyrics/merry-christmas-mr-lawrence.lrc
+https://assets.soloeternity.me/images/posts/covers/<article-slug>.webp
 ```
 
-音频源文件和转码后的 MP3 体积较大，只作为临时上传源，不放入 `source/`，也不提交进 Git。歌词由 Hexo 同源提供，R2 中保留一份备份。
+Hexo front matter：
 
-旧目录清理命令：
-
-```bash
-rclone purge r2:soloeternity-assets/img
-rclone deletefile "r2:soloeternity-assets/music/merry-christmas-mr-lawrence.mp3"
-rclone deletefile "r2:soloeternity-assets/music/merry-christmas-mr-lawrence.lrc"
-rclone deletefile "r2:soloeternity-assets/music/the-last-rain.mp3"
-rclone deletefile "r2:soloeternity-assets/music/uchiage-hanabi.mp3"
-rclone deletefile "r2:soloeternity-assets/music/坂本龍一 - Merry Christmas Mr. Lawrence.mp3"
-rclone deletefile "r2:soloeternity-assets/music/坂本龍一 - Merry Christmas Mr. Lawrence.lrc"
-rclone deletefile "r2:soloeternity-assets/music/lyrics/坂本龍一 - Merry Christmas Mr. Lawrence.lrc"
+```yaml
+index_img: https://assets.soloeternity.me/images/posts/covers/<article-slug>.webp
+banner_img: https://assets.soloeternity.me/images/posts/covers/<article-slug>.webp
 ```
 
-## 适合迁移到 R2 的文件
+### 3.2 正文图片
 
-优先迁移体积大、变化少、无需参与 Hexo 构建的资源：
+```text
+images/posts/<article-slug>/01.webp
+images/posts/<article-slug>/02.webp
+```
 
-- 文章封面和正文大图：`source/_posts/**` 中引用的图片，以及 Decap CMS 的 `index_img`。
-- 图集资源：`source/gallery/` 页面展示的图片，目标目录为 `images/gallery/YYYY/`。
-- 全站背景和 banner：如首页、归档、分类、标签、页面 banner 等大图，目标目录为 `images/backgrounds/`。
-- 音乐播放器文件：`music/tracks/` 放音频，`music/covers/` 放封面，`music/lyrics/` 放歌词。
-- 头像、社交二维码和展示图：`avatars/`、`images/social/`。
-- Live2D 模型贴图：模型体积变大后可迁到 `live2d/models/`，但要同步修改模型 JSON 内的相对资源路径。
-- 可下载附件：PDF、压缩包、演示文件等放到 `downloads/`。
+```markdown
+![说明](https://assets.soloeternity.me/images/posts/<article-slug>/01.webp)
+```
 
-## 暂时保留在 Git 仓库的文件
+### 3.3 四叶花文章示例
 
-- Markdown 正文、Hexo 配置、主题模板、部署脚本和文档。
-- 小型站点脚本和样式：`source/js/`、`source/css/`。
-- Decap CMS 配置：`source/admin/`。
-- 极小且影响首屏稳定性的图标资源，例如 favicon；后续确认缓存策略后再迁。
-- Waline、Memos 的 SQLite 数据库和服务配置，不属于静态媒体资源。
+只保留 8 张 WebP：
 
-## Memos 附件说明
+- `images/posts/covers/lv-molly-trademark-dispute.webp`
+- `images/posts/lv-molly-trademark-dispute/case-timeline.webp`
+- `images/posts/lv-molly-trademark-dispute/confusion-framework.webp`
+- `images/posts/lv-molly-trademark-dispute/consumer-perception-path.webp`
+- `images/posts/lv-molly-trademark-dispute/baoxianghua-cultural-motif.webp`
+- `images/posts/lv-molly-trademark-dispute/private-rights-cultural-commons.webp`
+- `images/posts/lv-molly-trademark-dispute/public-opinion-divide.webp`
+- `images/posts/lv-molly-trademark-dispute/trademark-compliance-flow.webp`
 
-Memos 中上传的图片默认由 Memos 服务管理。若要把 Memos 附件也迁到 R2，应优先在 Memos 的存储设置里配置 S3/R2 兼容存储，而不是手动改博客页面里的附件链接。博客的 `/essays/` 和 `/moments/` 只读取公开文本流，不直接托管 Memos 附件。
+不上传 8 张 PNG 原稿。PNG 原稿放本地离线归档即可。
 
-## 推荐迁移顺序
+## 4. 格式规范
 
-1. 先迁音乐和图集图片，改 `source/js/site-config.js` 与 `source/gallery/index.md`。
-2. 再迁文章封面，把 Decap CMS 的封面字段统一填 `https://assets.soloeternity.me/images/posts/...`。
-3. 最后迁全站背景和 Live2D 资源；这些资源影响页面观感，迁移后要完整跑一次 `npx hexo generate` 并线上检查首屏。
+| 类型 | 格式 | 备注 |
+| --- | --- | --- |
+| 文章封面 | WebP | 质量 78-85，固定比例 |
+| 正文照片/插画 | WebP | 保持可读文字，必要时较高质量 |
+| 页面背景 | WebP | 桌面和移动端可分版本 |
+| 友链头像 | WebP/PNG | 有透明需求才用 PNG |
+| Live2D 贴图 | 原模型格式 | 不强制转码，避免破坏 UV/透明度 |
+| 音乐封面 | WebP | 正方形 |
+| 音频 | MP3 | 不自动播放，不预加载 |
+| 歌词 | LRC UTF-8 | 文件名与曲目配置一致 |
+
+包含大量小字的信息图转 WebP 时要人工检查，不能只追求极小体积导致文字模糊。
+
+## 5. 本地镜像
+
+本地 `source/img` 的结构参考 R2 `images`：
+
+```text
+source/img/
+├─ backgrounds/
+├─ link/
+├─ posts/
+└─ social/
+```
+
+本地镜像用途：
+
+- R2 故障时恢复。
+- 构建前编辑和转码。
+- 小型主题资源的同源 fallback。
+
+不应把所有 R2 大媒体重复放进 Git。需要离线保留的大文件应放在仓库外的备份目录。
+
+## 6. rclone 配置
+
+本机程序：
+
+```text
+C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe
+```
+
+Cloudflare R2 S3 endpoint：
+
+```text
+https://<account-id>.r2.cloudflarestorage.com
+```
+
+Bucket 名不要重复写进 endpoint；rclone 目标中再写 bucket。
+
+### 6.1 创建 R2 Token
+
+Cloudflare Dashboard：
+
+1. R2 Object Storage。
+2. Manage R2 API Tokens。
+3. Create API token。
+4. 权限选择目标 bucket 的 Object Read & Write。
+5. Scope 只包含 `soloeternity-assets`。
+6. 记录 Access Key ID 与 Secret Access Key。
+
+Secret 只显示一次。曾出现在截图或聊天中的凭据必须撤销并重新创建。
+
+### 6.2 配置 remote
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' config
+```
+
+选择：
+
+```text
+n) New remote
+name: r2
+Storage: s3
+provider: Cloudflare
+access_key_id: <new access key>
+secret_access_key: <new secret>
+endpoint: https://<account-id>.r2.cloudflarestorage.com
+region: auto
+```
+
+rclone 配置通常位于：
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' config file
+```
+
+该文件包含凭据，不得提交 Git。
+
+### 6.3 验证
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' lsd r2:soloeternity-assets
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' size r2:soloeternity-assets
+```
+
+## 7. 常用命令
+
+### 列出目录
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' lsf `
+  r2:soloeternity-assets/images/posts/covers/
+```
+
+### 上传封面
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' copyto `
+  '.\cover.webp' `
+  'r2:soloeternity-assets/images/posts/covers/article-slug.webp' `
+  --progress
+```
+
+### 上传正文 WebP
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' copy `
+  '.\webp-output' `
+  'r2:soloeternity-assets/images/posts/article-slug' `
+  --include '*.webp' `
+  --progress
+```
+
+### 检查差异
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' check `
+  '.\webp-output' `
+  'r2:soloeternity-assets/images/posts/article-slug' `
+  --one-way
+```
+
+### 下载备份
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' copy `
+  'r2:soloeternity-assets' `
+  'D:\Backups\soloeternity-assets' `
+  --progress
+```
+
+## 8. `copy`、`copyto` 与 `sync`
+
+- `copyto`：一个本地文件到一个明确对象键，最适合封面。
+- `copy`：复制目录中的新增/变化文件，不删除远端多余对象。
+- `sync`：让目标完全等于源，可能删除远端文件。
+
+日常上传使用 `copy`/`copyto`。只有在明确审查 dry-run 后才使用 `sync`：
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' sync `
+  '.\local-dir' `
+  'r2:soloeternity-assets/some/exact/prefix' `
+  --dry-run
+```
+
+确认输出中的删除对象全部合理后，才移除 `--dry-run`。
+
+## 9. 音乐
+
+```text
+music/tracks/<slug>.mp3
+music/covers/<slug>.webp
+music/lyrics/<slug>.lrc
+```
+
+曲目配置在 `source/js/site-config-v3.js`。三个文件 slug 必须一致。
+
+音频源文件、无损文件和转码中间文件不提交 Git。歌词在 R2 存备份，站点还保留同源 `/music/lyrics/`，以避免播放器跨域和缓存问题。
+
+## 10. Live2D
+
+R2：
+
+```text
+live2d/models/<model-name>/
+```
+
+必须保留模型完整相对路径：JSON、moc、贴图、动作、物理文件不能拆散。
+
+站点当前仍优先从同源 `/live2d-models/` 加载运行模型。R2 是备份和未来迁移来源。若改为直接从 R2 加载，需要额外验证：
+
+- CORS
+- JSON 内相对路径
+- MIME
+- Range 请求
+- WebGL 纹理加载
+- Cloudflare 缓存
+
+## 11. Cloudflare 缓存
+
+建议创建 Cache Rule：
+
+```text
+Hostname equals assets.soloeternity.me
+```
+
+策略：
+
+- Eligible for cache。
+- Edge TTL 30 天或更长。
+- Browser TTL 1-7 天。
+- 对文件名版本化或内容不变的对象使用更长 TTL。
+
+文章资源若需要原路径覆盖更新，应主动 purge 对象 URL。更稳妥的是改文件名，例如 `cover-v2.webp`。
+
+验证：
+
+```powershell
+curl.exe -I 'https://assets.soloeternity.me/images/posts/covers/kali.webp'
+curl.exe -I 'https://assets.soloeternity.me/images/posts/covers/kali.webp'
+```
+
+关注第二次响应是否出现：
+
+```text
+CF-Cache-Status: HIT
+Age: ...
+```
+
+不能只看到 Cloudflare 响应头就认为对象已命中缓存。
+
+## 12. CORS
+
+公开图片通常可以匿名读取。音频、Live2D JSON、字体等被 JS/WebGL 请求时可能需要 CORS。
+
+推荐只允许：
+
+```text
+https://soloeternity.me
+```
+
+若资源需要其他可信域名使用，再逐项添加。不要为私有 bucket 开启公共 `*`。
+
+## 13. 不适合放 R2 的内容
+
+- Markdown 真源
+- Git 仓库
+- `.env`
+- R2/GitHub/SMTP 密钥
+- Waline、Memos SQLite
+- Umami PostgreSQL
+- Chevereto MariaDB
+- 未脱敏数据库导出
+- 需要服务端执行的脚本
+
+R2 是对象存储，不是服务器文件系统或数据库备份的唯一位置。
+
+## 14. 文章发布检查
+
+1. 文件名使用小写英文、数字和连字符。
+2. 转 WebP。
+3. 上传 cover 到 `images/posts/covers/`。
+4. 上传正文图到 `images/posts/<slug>/`。
+5. rclone check。
+6. curl 验证 HTTP 200 和 MIME。
+7. 在 Decap 填写完整 HTTPS URL。
+8. 预览首页卡片和正文。
+9. 发布后检查移动端和暗色主题。
+
+## 15. 故障排查
+
+### 404
+
+- bucket/key 拼写错误。
+- 漏写 `covers`。
+- 大小写不一致。
+- 自定义域名未绑定到该 bucket。
+- Cloudflare 缓存旧 404。
+
+### 403
+
+- 对象或 bucket 不是公开访问。
+- 请求打到了 S3 API endpoint，而不是公开自定义域名。
+- WAF/Access 阻止。
+
+### MIME 错误
+
+重新上传并设置正确 Content-Type。WebP 应为 `image/webp`，MP3 应为 `audio/mpeg`，LRC 通常为 `text/plain; charset=utf-8`。
+
+### rclone 认证失败
+
+- Access Key/Secret 填反。
+- Token 已撤销。
+- endpoint 包含了重复 bucket。
+- Token scope 不包含目标 bucket。
+- 本地 rclone 使用了旧配置文件。
+
+### 首页封面破图
+
+先直接打开 front matter 中的 URL。若直接 URL 失败，就是对象路径问题；若直接 URL 正常，再检查生成 HTML、CSP、混合内容和缓存。

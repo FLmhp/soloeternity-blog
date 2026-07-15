@@ -3,6 +3,10 @@ document.addEventListener('DOMContentLoaded', function() {
   if (navbarBrand) {
     const strongEl = navbarBrand.querySelector('strong');
     if (strongEl) {
+      if (location.pathname !== '/') {
+        strongEl.classList.add('navbar-title', 'navbar-title-static');
+        return;
+      }
       const titleText = strongEl.textContent;
       const navbarTitle = document.createElement('span');
       navbarTitle.className = 'navbar-title';

@@ -1,222 +1,109 @@
-# 部署文档
+# 博客部署与迁移文档
 
-## 1. 文档范围
+本文同时记录最初的 GitHub Pages / Vercel / LeanCloud 架构、迁移过程和当前生产架构，供重装、换机、回滚和故障排查使用。
 
-本文档同时记录两套部署方式：
+最后核验：`2026-07-15`。
 
-- 原始方案：`GitHub Pages + LeanCloud + Vercel`
-- 当前方案：`GitHub Actions + Ubuntu + Caddy + Docker Waline/Memos/LobeHub + SQLite`
+## 1. 结论先行
 
-第一套方案保留为历史参考，不建议继续用于生产。当前实际运行以第二套方案为准。
+当前生产方案为：
 
-## 1.1 当前真实状态（2026-07-08）
+- Hexo `7.3.0` + Fluid 生成静态站。
+- GitHub 仓库 `FLmhp/soloeternity-blog` 保存源码。
+- GitHub Actions 在 Node.js `20`、pnpm `9.15.9` 下构建。
+- Actions 通过 SSH/rsync 发布 `public/` 到 `/var/www/blog/current`。
+- Docker Caddy 直接托管静态文件并反向代理动态服务。
+- Waline 使用 Docker + SQLite，自托管在 `waline.soloeternity.me`。
+- Memos、Umami、Chevereto、LobeHub、OpenList、SeaweedFS 和 FRPS 同机运行。
+- Cloudflare 为公开域名提供 DNS、代理和 TLS 边缘层。
+- Cloudflare R2 保存博客媒体，域名为 `assets.soloeternity.me`。
+- Decap CMS 使用 Cloudflare Worker 完成 GitHub OAuth，域名为 `cms-auth.soloeternity.me`。
 
-以下信息已经按线上和服务器实际情况核验过：
+不再使用：
 
-### 站点访问状态
+- GitHub Pages 作为主站托管。
+- Vercel 作为 Waline 服务端。
+- LeanCloud 作为评论数据库或访问统计数据库。
+- Nginx 作为当前 `80/443` 入口。
 
-- `https://soloeternity.me` 返回 `HTTP/1.1 200 OK`
-- `https://waline.soloeternity.me` 返回 `HTTP/1.1 200 OK`
-- `https://waline.soloeternity.me/ui` 返回 `HTTP/1.1 200 OK`
+## 2. 架构演进
 
-### 当前响应特征
+### 2.1 原始架构
 
-- 主站响应头显示 `Server: Caddy`
-- Waline 响应头显示 `X-Powered-By: thinkjs-4.0.0`
-- Waline 响应头显示 `x-waline-version: 1.40.3`
-- 本次核验时没有观测到 `cloudflare` 响应头
-
-### 服务器运行状态
-
-- 操作系统：`Ubuntu 22.04.5 LTS`
-- Python：`3.10.12`
-- Caddy：Docker 容器 `caddy`
-- `caddy` 容器状态：`Up`
-- `nginx` 服务状态：`inactive` 且 `disabled`
-- `docker` 服务状态：`active`
-- Waline 容器状态：`Up`
-
-### 当前部署产物状态
-
-- 线上首页文件：`/var/www/blog/current/index.html`
-- 该文件最近修改时间：`2026-06-08 18:07:03`（由服务器文件时间换算）
-- 当前线上主站响应头 `Last-Modified` 为 `Mon, 08 Jun 2026 10:07:03 GMT`
-
-### 当前 Waline 数据状态
-
-- `wl_Users = 1`
-- `wl_Comment = 3`
-- `wl_Counter = 0`
-- 当前管理员：`FLmhp / 2122283196@qq.com / administrator`
-
-### 当前 Waline 邮件通知状态
-
-- 已配置 SMTP 主机：`smtp.qq.com`
-- 已配置 SMTP 端口：`465`
-- 当前发信账号：`fl-mhp@qq.com`
-- 当前发件人名称：`SoloEternity`
-- 当前站长通知邮箱：`fl-mhp@qq.com`
-
-### 当前证书状态
-
-- `soloeternity.me` 证书到期时间：`2026-09-06 01:54:37 GMT`
-- `waline.soloeternity.me` 证书到期时间：`2026-09-06 02:57:40 GMT`
-
-### 当前自动部署状态
-
-- 仓库：`FLmhp/soloeternity-blog`
-- 最近一次成功部署 run：`27130282506`
-- 对应提交：`de815e9055f31fe32adf3b49f2d3369ee6a37de9`
-- 工作流完成时间：`2026-06-08T10:07:18Z`
-
----
-
-## 2. 仓库结构
-
-当前仓库和部署相关的关键文件如下：
+早期链路大致为：
 
 ```text
-.
-├─ _config.yml                         # Hexo 主配置
-├─ _config.fluid.yml                   # Fluid 主题配置
-├─ .github/workflows/deploy.yml        # GitHub Actions 自动部署
-├─ deploy/
-│  ├─ README.md                        # Ubuntu / Waline 部署模板说明
-│  ├─ caddy/
-│  │  ├─ Caddyfile                     # 当前生产边缘入口配置
-│  │  ├─ Dockerfile                    # 带 Cloudflare DNS 与 layer4 插件的 Caddy
-│  │  └─ docker-compose.yml            # Caddy Compose
-│  ├─ nginx/                           # 历史配置，仅作回滚参考
-│  ├─ server/bootstrap.sh              # Ubuntu 初始化脚本
-│  └─ waline/
-│     ├─ docker-compose.yml            # Waline Compose
-│     └─ .env.example                  # Waline 环境变量示例
-└─ tools/import_waline_leancloud.py    # LeanCloud 历史数据导入脚本
+Hexo 源码
+  -> 本地或 CI 构建
+  -> FLmhp.github.io / GitHub Pages
+
+博客评论组件
+  -> Vercel Waline
+  -> LeanCloud 数据库
 ```
 
----
+这种方案的优点：
 
-## 3. 原始部署方案：GitHub Pages + LeanCloud + Vercel
+- 初始部署简单。
+- GitHub Pages 无需维护服务器。
+- Vercel 可快速运行 Waline。
+- LeanCloud 曾提供较低门槛的数据服务。
 
-### 3.1 架构说明
+长期问题：
 
-原始链路的职责拆分一般如下：
+- 静态站、评论后端和数据库分散在三个平台。
+- 域名、构建、评论和数据库故障需要跨平台排查。
+- LeanCloud 对外服务终止计划要求提前迁移。
+- Vercel Waline 仓库只承担后端部署，容易与博客源码仓库混淆。
+- GitHub Pages 仓库只保存构建产物，不适合作为新的源码真源。
 
-```text
-本地 Hexo 源码
-  ├─ hexo generate
-  ├─ hexo deploy
-  ▼
-GitHub Pages / FLmhp.github.io
-  └─ 托管 Hexo 生成后的静态页面
+完成迁移并验证历史评论后，旧 `waline-server`、旧 Vercel 项目、旧 LeanCloud 项目和旧 GitHub Pages 发布仓库才可以删除。删除前应保留：
 
-Waline 前端
-  ▼
-Vercel waline-server
-  ▼
-LeanCloud
-  ├─ Users
-  ├─ Comment
-  └─ Counter
-```
+1. LeanCloud 原始导出文件。
+2. 导入后的 Waline SQLite 离线备份。
+3. 旧仓库最终提交或压缩归档。
+4. 一份域名、环境变量和数据表映射说明。
 
-这套方案的优点是初期门槛低，缺点也很明确：
+### 2.2 迁移后的职责拆分
 
-- 博客发布依赖 `hexo deploy`，部署产物和源码通常分离
-- 评论服务与主站分散在不同平台
-- LeanCloud 是评论和统计的外部依赖
-- Waline 后端、数据库、静态站三者分散，排障链路较长
+| 能力 | 当前承载 |
+| --- | --- |
+| 博客源码 | GitHub `FLmhp/soloeternity-blog` |
+| 静态构建 | GitHub Actions |
+| 静态发布 | rsync 到 Ubuntu |
+| HTTP/TLS 入口 | Docker Caddy |
+| 评论 | Waline 1.41.3 + SQLite |
+| 动态/随笔 | Memos + SQLite |
+| 图床/相册 | Chevereto + MariaDB |
+| 大媒体 | Cloudflare R2 |
+| 访问分析 | Umami + PostgreSQL |
+| 在线写作 | Decap CMS + GitHub OAuth Worker |
+| 对话服务 | LobeHub，`chat.soloeternity.me` |
+| 文件服务 | OpenList + SeaweedFS |
+| 旧域名穿透 | FRPS + Caddy layer4 |
 
-### 3.2 原始 Hexo 静态发布思路
+Hexo 仍然只负责静态内容。需要写数据库的功能放在独立服务中，没有把 Hexo 改造成后端应用。
 
-历史上常见的 `GitHub Pages` 发布方式是：
+## 3. 当前仓库构建
 
-```yaml
-deploy:
-  type: git
-  repo: git@github.com:FLmhp/FLmhp.github.io.git
-  branch: main
-```
+### 3.1 核心配置
 
-对应发布命令通常是：
+`_config.yml`：
 
-```bash
-npx hexo clean
-npx hexo generate
-npx hexo deploy
-```
+- `url: https://soloeternity.me`
+- `language: zh-CN`
+- `timezone: Asia/Shanghai`
+- `theme: fluid`
+- `post_asset_folder: true`
+- `updated_option: empty`
 
-如果使用 `FLmhp.github.io` 作为 Pages 仓库，通常会把 `public/` 中的生成文件直接推送到该仓库。
+`updated_option: empty` 用于避免每次构建都把文章更新时间刷新成构建时间。项目脚本按 Git 历史判断实际正文修改时间。
 
-### 3.3 原始 Waline / Vercel / LeanCloud 思路
-
-原始评论系统通常是：
-
-- 前端评论组件挂在博客文章页
-- `serverURL` 指向一个 `Vercel` 上的 Waline 服务
-- Waline 服务再连接 `LeanCloud`
-
-典型环境变量示例：
-
-```env
-LEAN_ID=your-leancloud-app-id
-LEAN_KEY=your-leancloud-app-key
-LEAN_MASTER_KEY=your-leancloud-master-key
-LEAN_SERVER=https://xxx.avoscloud.com
-JWT_TOKEN=your-random-token
-SITE_NAME=FLmhp's Blog
-SITE_URL=https://flmhp.github.io
-```
-
-Vercel 的作用是跑 Waline 服务端，LeanCloud 的作用是保存：
-
-- 用户表 `Users`
-- 评论表 `Comment`
-- 计数表 `Counter`
-
-### 3.4 为什么迁移
-
-迁移原因主要有三类：
-
-1. 站点、评论、数据库分散在多个平台，维护成本高。
-2. 评论和统计依赖 LeanCloud，存在外部平台约束。
-3. GitHub Pages 适合纯静态托管，但不适合把评论系统、运维和证书管理统一收口。
-
----
-
-## 4. 当前部署方案：GitHub Actions + Ubuntu + Caddy + Docker Waline
-
-### 4.1 架构说明
-
-当前生产架构如下：
-
-```text
-GitHub 源码仓库 (main)
-  ▼
-GitHub Actions
-  ├─ pnpm install --frozen-lockfile
-  ├─ pnpm build
-  └─ rsync public/ 到服务器
-      ▼
-Ubuntu Server
-  ├─ Caddy                           # 80/443/7000 公共入口
-  ├─ /var/www/blog/current           # Hexo 静态文件
-  ├─ /opt/waline/docker-compose.yml  # Waline 容器编排
-  ├─ /opt/memos/docker-compose.yml   # Memos 容器编排
-  └─ /opt/waline/data/waline.sqlite  # Waline SQLite 数据
-```
-
-域名划分：
-
-- 博客主站：`https://soloeternity.me`
-- 评论服务：`https://waline.soloeternity.me`
-
-### 4.2 当前发布流程
-
-当前仓库的 `package.json` 使用以下脚本：
+`package.json`：
 
 ```json
 {
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "build": "npx hexo generate",
     "clean": "npx hexo clean",
@@ -225,424 +112,463 @@ Ubuntu Server
 }
 ```
 
-GitHub Actions 工作流位于 `.github/workflows/deploy.yml`，核心流程如下：
+本地验证：
 
-```yaml
-- uses: actions/checkout@v6
-- uses: pnpm/action-setup@v6
-- uses: actions/setup-node@v6
-- run: pnpm install --frozen-lockfile
-- run: pnpm build
-- uses: webfactory/ssh-agent@v0.10.0
-- run: rsync -az --delete public/ "${SSH_USER}@${SSH_HOST}:${REMOTE_PATH}/"
-```
-
-也就是说，服务器不参与 Hexo 构建，只负责接收构建产物。
-
-补充说明：
-
-- 当前自动部署链路是通的，但线上静态内容自 `2026-06-08` 后没有新的成功发布记录
-- 如果你修改了文章或页面但线上没变化，优先检查是否只是最近没有新的 `main` 分支推送
-
----
-
-## 5. 服务器初始化
-
-### 5.1 初始化命令
-
-当前仓库已提供 `deploy/server/bootstrap.sh`，建议直接执行：
-
-```bash
-scp deploy/server/bootstrap.sh root@your-server:/tmp/bootstrap.sh
-ssh root@your-server 'bash /tmp/bootstrap.sh'
-```
-
-脚本会安装：
-
-- `nginx`
-- `certbot`
-- `python3-certbot-nginx`
-- `rsync`
-- `docker-ce`
-- `docker-compose-plugin`
-
-并创建目录：
-
-```bash
-/var/www/blog/current
-/opt/waline
-/opt/waline/data
-```
-
-### 5.2 DNS 规划
-
-需要先准备两条记录：
-
-```text
-soloeternity.me          -> 服务器公网 IP
-waline.soloeternity.me   -> 服务器公网 IP
-```
-
-如果接入 Cloudflare：
-
-- 主站和 Waline 都可以走橙云代理
-- SSL 模式建议使用 `Full (strict)`
-
-本次核验中，本地直接请求没有出现 `cloudflare` 响应头，因此文档应按“源站可直连”理解当前现状，而不是默认认为 Cloudflare 代理正在生效。
-
----
-
-## 6. Caddy 与 HTTPS（当前生产）
-
-当前生产环境已经从 Nginx 整体迁回 Caddy。Caddy 占用 `80/tcp`、`443/tcp`、`443/udp`、`7000/tcp`，Nginx 保留安装但处于 `inactive/disabled`。
-
-配置文件：
-
-- `deploy/caddy/Caddyfile`
-- `deploy/caddy/docker-compose.yml`
-- `deploy/caddy/Dockerfile`
-- `deploy/caddy/.env.example`
-
-服务器路径：
-
-- `/root/docker/caddy/conf/Caddyfile`
-- `/root/docker/caddy/docker-compose.yml`
-- `/root/docker/caddy/Dockerfile`
-- `/root/docker/caddy/.env`
-
-更新 Caddy：
-
-```bash
-scp deploy/caddy/Caddyfile root@107.151.246.42:/tmp/Caddyfile
-scp deploy/caddy/docker-compose.yml root@107.151.246.42:/tmp/docker-compose.yml
-scp deploy/caddy/Dockerfile root@107.151.246.42:/tmp/Dockerfile
-ssh root@107.151.246.42 <<'EOF'
-cp /tmp/Caddyfile /root/docker/caddy/conf/Caddyfile
-cp /tmp/docker-compose.yml /root/docker/caddy/docker-compose.yml
-cp /tmp/Dockerfile /root/docker/caddy/Dockerfile
-systemctl stop nginx || true
-systemctl disable nginx || true
-cd /root/docker/caddy
-docker compose run --rm --no-deps --entrypoint caddy caddy2 validate --config /etc/caddy/Caddyfile
-docker compose up -d --build
-docker ps --filter name=caddy
-EOF
-```
-
-当前 FRP 只用于 `yiharmony.top` 和 `*.yiharmony.top` 的后端转发，以及 `7000/tcp` 的 layer4 转发；`soloeternity.me`、Waline、Memos、LobeHub 均由 Caddy 直接反代到 Docker 网络内服务。
-
-旧 Nginx 配置保留在下方，仅作为历史方案和紧急回滚参考，不再是当前生产入口。
-
-## 6.1 Nginx 与 HTTPS（历史/回滚参考）
-
-### 6.1 博客站点配置
-
-文件：`deploy/nginx/soloeternity.me.conf`
-
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name soloeternity.me;
-
-    root /var/www/blog/current;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ $uri/index.html =404;
-    }
-}
-```
-
-### 6.2 Waline 反向代理配置
-
-文件：`deploy/nginx/waline.soloeternity.me.conf`
-
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name waline.soloeternity.me;
-
-    client_max_body_size 16m;
-
-    location / {
-        proxy_pass http://127.0.0.1:8360;
-        proxy_http_version 1.1;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-### 6.3 启用配置与签发证书
-
-```bash
-scp deploy/nginx/*.conf root@your-server:/tmp/
-ssh root@your-server <<'EOF'
-cp /tmp/soloeternity.me.conf /etc/nginx/sites-available/soloeternity.me.conf
-cp /tmp/waline.soloeternity.me.conf /etc/nginx/sites-available/waline.soloeternity.me.conf
-ln -sf /etc/nginx/sites-available/soloeternity.me.conf /etc/nginx/sites-enabled/soloeternity.me.conf
-ln -sf /etc/nginx/sites-available/waline.soloeternity.me.conf /etc/nginx/sites-enabled/waline.soloeternity.me.conf
-nginx -t
-systemctl reload nginx
-certbot --nginx -d soloeternity.me -d waline.soloeternity.me
-certbot renew --dry-run
-EOF
-```
-
----
-
-## 7. Waline 部署
-
-### 7.1 Docker Compose
-
-文件：`deploy/waline/docker-compose.yml`
-
-```yaml
-services:
-  waline:
-    container_name: waline
-    image: lizheming/waline:latest
-    restart: always
-    ports:
-      - "127.0.0.1:8360:8360"
-    env_file:
-      - .env
-    volumes:
-      - /opt/waline/data:/app/data
-```
-
-### 7.2 首次部署命令
-
-```bash
-scp deploy/waline/docker-compose.yml root@your-server:/tmp/docker-compose.yml
-scp deploy/waline/.env.example root@your-server:/tmp/waline.env
-
-ssh root@your-server <<'EOF'
-mkdir -p /opt/waline /opt/waline/data
-curl -L https://raw.githubusercontent.com/walinejs/waline/main/assets/waline.sqlite -o /opt/waline/data/waline.sqlite
-cp /tmp/docker-compose.yml /opt/waline/docker-compose.yml
-cp /tmp/waline.env /opt/waline/.env
-cd /opt/waline
-docker compose up -d
-EOF
-```
-
-### 7.3 核心环境变量
-
-```env
-TZ=Asia/Shanghai
-SQLITE_PATH=/app/data
-JWT_TOKEN=replace-with-a-long-random-string
-SITE_NAME=FLmhp's Blog
-SITE_URL=https://soloeternity.me
-SERVER_URL=https://waline.soloeternity.me
-SECURE_DOMAINS=soloeternity.me,waline.soloeternity.me
-AUTHOR_EMAIL=your-email@example.com
-SMTP_HOST=smtp.example.com
-SMTP_PORT=465
-SMTP_USER=your-smtp-user
-SMTP_PASS=your-smtp-password-or-app-password
-SMTP_SECURE=true
-SENDER_NAME=SoloEternity
-SENDER_EMAIL=your-email@example.com
-```
-
-注意：
-
-- SQLite 不能从空文件自动建表，必须先下载官方模板库
-- `SECURE_DOMAINS` 要同时包含主站域名和 Waline 子域名
-- 如需中文邮件模板，建议以 `UTF-8` 编码编辑 `.env`
-
-当前线上核验到的 SMTP 配置特征为：
-
-- `SMTP_HOST=smtp.qq.com`
-- `SMTP_PORT=465`
-- `SMTP_USER=fl-mhp@qq.com`
-- `SENDER_NAME=SoloEternity`
-- 授权码未写入文档，继续只保留在服务器 `.env`
-
-### 7.4 管理后台
-
-初始化完成后：
-
-```text
-https://waline.soloeternity.me/ui
-```
-
-常用运维命令：
-
-```bash
-cd /opt/waline
-docker compose ps
-docker compose logs -f waline
-docker compose restart waline
-```
-
----
-
-## 8. GitHub Actions 自动部署
-
-### 8.1 需要配置的 Secrets
-
-仓库 `Settings -> Secrets and variables -> Actions` 中至少需要：
-
-- `SSH_HOST`
-- `SSH_PORT`
-- `SSH_USER`
-- `SSH_PRIVATE_KEY`
-- `SSH_KNOWN_HOSTS`（可选）
-
-### 8.2 触发条件
-
-工作流当前只在以下条件触发：
-
-```yaml
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-```
-
-### 8.3 实际部署命令
-
-本质上等价于：
-
-```bash
+```powershell
+corepack enable
 pnpm install --frozen-lockfile
+pnpm clean
 pnpm build
-rsync -az --delete public/ root@server:/var/www/blog/current/
 ```
 
-### 8.4 发布校验
+构建成功后至少检查：
 
-推送后建议至少检查：
+```text
+public/index.html
+public/archives/index.html
+public/categories/index.html
+public/tags/index.html
+public/essays/index.html
+public/moments/index.html
+public/gallery/index.html
+public/anime/index.html
+public/message/index.html
+public/admin/index.html
+```
+
+### 3.2 GitHub Actions
+
+工作流位于 `.github/workflows/deploy.yml`。
+
+步骤：
+
+1. `actions/checkout@v6`
+2. `pnpm/action-setup@v6`
+3. `actions/setup-node@v6`，Node `20`
+4. `pnpm install --frozen-lockfile`
+5. `pnpm build`
+6. `webfactory/ssh-agent@v0.10.0` 导入部署私钥
+7. `rsync -az --delete public/ ...:/var/www/blog/current/`
+8. 远端规范化权限为目录 `755`、文件 `644`
+
+工作流使用 concurrency，同一分支的新发布会取消旧的未完成发布，避免两次 rsync 竞争。
+
+Secrets：
+
+| 名称 | 内容 |
+| --- | --- |
+| `SSH_HOST` | `107.151.246.42` 或对应源站地址 |
+| `SSH_PORT` | 当前为 `22` |
+| `SSH_USER` | 当前为 `root` |
+| `SSH_PRIVATE_KEY` | 部署专用私钥 |
+| `SSH_KNOWN_HOSTS` | 可选，推荐固定服务器主机指纹 |
+
+生产目前以 root 密钥发布。更严格的做法是创建专用 `deploy` 用户，只授予 `/var/www/blog/current` 写权限；这属于建议改进，并非当前已完成状态。
+
+## 4. 服务器实际状态
+
+### 4.1 操作系统与容量
+
+- Ubuntu `22.04.5 LTS`
+- Docker `29.5.3`
+- Docker Compose `v5.1.4`
+- 系统时区 `Etc/UTC`
+- 约 `58 GiB` 磁盘，使用率约 `36%`
+- 约 `7.8 GiB` 内存，无 Swap
+
+Hexo 和 Waline 应用内使用 `Asia/Shanghai`，但服务器日志时间通常是 UTC。排查 GitHub Actions、Caddy 和 Docker 日志时，需要将 UTC 加 8 小时再与本地时间对照。
+
+### 4.2 入口服务
+
+生产入口是 `/root/docker/caddy` 中的 Docker Caddy，不是 systemd Caddy，也不是 Nginx。
+
+监听状态：
+
+- `22/tcp`：SSH
+- `80/tcp`：HTTP
+- `443/tcp`：HTTPS
+- `443/udp`：HTTP/3
+- `7000/tcp`：FRPS/layer4
+- `127.0.0.1:8360`：Waline 宿主机回环映射
+- `127.0.0.1:5230`：Memos 宿主机回环映射
+- `127.0.0.1:3001`：Umami 宿主机回环映射
+- `127.0.0.1:3210`：LobeHub 宿主机回环映射
+
+Nginx 配置保留在仓库作为历史资料，生产服务是 inactive。不要同时启动 Nginx 与 Docker Caddy，否则会争用 `80/443`。
+
+### 4.3 静态目录
+
+```text
+/var/www/blog/current
+```
+
+核验时约 `53 MiB`、`317` 个文件。线上 `index.html` 的 UTC 修改时间与最近一次成功 Actions 发布一致。
+
+`/var/www/blog/backup-2026070801` 是历史手工备份，不是持续更新的回滚版本。日常回滚优先使用 Git revert 后重新运行 Actions，而不是依赖这个旧目录。
+
+## 5. Caddy 路由与 HTTPS
+
+### 5.1 Caddy 镜像
+
+仓库 `deploy/caddy/Dockerfile` 构建自定义 Caddy，包含：
+
+- Cloudflare DNS provider：用于 DNS-01 自动签发证书。
+- layer4：用于 FRP TCP 转发。
+
+源站证书抽检：
+
+- 证书域名：`soloeternity.me`
+- 颁发机构：Let's Encrypt `YE1`
+- 有效期：`2026-06-17` 至 `2026-09-15`
+
+Caddy会自动续期。服务器仍有历史 `certbot.timer`，但当前 HTTPS 不依赖 Certbot。
+
+### 5.2 主要路由
+
+- `soloeternity.me`：`root * /var/www/blog/current` + `file_server`
+- `www.soloeternity.me`：永久重定向到主域名
+- `waline.*`：反向代理 `waline:8360`
+- `memos.*`：反向代理 `memos:5230`，只允许博客主域跨域读取公共内容
+- `gallery.*`：反向代理 `chevereto:8080`，只允许博客主域跨域读取公开相册
+- `umami.*`：反向代理 `umami:3000`
+- `chat.*`：反向代理 `lobehub:3210`
+- `openlist.*`：反向代理 `openlist:5244`
+- `s3.*`：反向代理 `seaweedfs-s3:8333`
+- `yiharmony.top` 及通配符：保留 FRP 反代
+- `:7000`：layer4 转发到 `frps:7000`
+
+`assets.*` 和 `cms-auth.*` 的 Caddy 404 仅用于防止 DNS 误指向源站；两者真实服务分别在 R2 和 Worker。
+
+### 5.3 Cloudflare
+
+已观察到主域及主要服务域名解析到 Cloudflare Anycast 地址，并带 Cloudflare 响应头。推荐保持：
+
+- SSL/TLS：`Full (strict)`
+- Always Use HTTPS：启用
+- HTTP/3：可启用
+- Brotli：可启用
+- 主站 HTML：不要设置长期 immutable 缓存
+- 带哈希或版本参数的静态资源：可长缓存
+- `assets.soloeternity.me/*`：单独配置媒体 Cache Rule
+
+当前抽检结果：
+
+- HTML：`CF-Cache-Status: DYNAMIC`
+- 站点 JS：Caddy 提供长期共享缓存头，Cloudflare 首次抽检为 `MISS`
+- R2 对象：可正常访问，但抽检未确认稳定 `HIT`
+
+因此不能在文档中笼统声称“所有资源均已 CDN 命中”。要以具体 URL 连续请求后的 `CF-Cache-Status` 为准。
+
+## 6. Waline
+
+### 6.1 运行状态
+
+- 容器：`waline`
+- 镜像：`lizheming/waline:1.41.3`
+- 服务端包：`@waline/vercel 1.41.3`
+- 数据库：`/opt/waline/data/waline.sqlite`
+- 评论端点：`https://waline.soloeternity.me`
+- 管理后台：`https://waline.soloeternity.me/ui`
+
+核验时数据库中有：
+
+- 用户 `1`
+- 评论 `6`
+- 计数器表记录 `0`
+
+这些数字只是核验时快照，不应作为以后健康判断的固定期望值。
+
+### 6.2 邮件
+
+`/opt/waline/.env` 已配置 QQ SMTP，使用 `465` 端口和 SSL。仓库不保存授权码。
+
+邮件逻辑：
+
+- 文章评论预设文案：`欢迎大家来评论区灌水喵~`
+- 留言板预设文案：`写下此刻的心跳，它便不再只是你的。每一行字，都会在风里找到归宿。`
+- 留言板新评论邮件主题：`你的博客网站收到了新的留言`
+- 文章新评论邮件应包含具体文章标题或路径
+
+Waline 管理员本人发表评论时可能跳过给自己发通知。测试邮件应退出管理员账号，使用另一个邮箱匿名评论，并同时查看容器日志。
+
+### 6.3 历史数据
+
+LeanCloud 历史用户和评论已导入 SQLite。旧用户密码哈希沿用 LeanCloud 导出的 bcrypt 兼容形式。重置或再次导入前必须先做一致性备份，不要直接覆盖正在运行的数据库。
+
+## 7. Memos 与动态页面
+
+- 容器：`memos`
+- 镜像：`neosmemo/memos:stable`
+- 数据：`/opt/memos/data`
+- 域名：`https://memos.soloeternity.me`
+
+核验时存在 `3` 条 memo、`1` 个用户、数据库内附件记录 `0`。数据文件使用 SQLite WAL 模式，能看到 `memos_prod.db`、`memos_prod.db-wal` 和 `memos_prod.db-shm`。
+
+博客读取策略：
+
+- `/moments/`：筛选公开内容中的 `#moment`
+- `/essays/`：筛选公开内容中的 `#essay`
+- 优先 Memos v1 API，兼容旧 API 路径
+- 支持 Markdown、附件、引用、被引用关系、地点和标签
+- 浏览器端清洗 HTML，避免直接注入不可信内容
+
+公共 API 抽检能返回 `3` 条公开内容。Memos 页面空白时，先检查公开可见性、标签、CORS、API 结构和浏览器控制台，而不是先重启服务器。
+
+## 8. Chevereto 与 Gallery
+
+- Chevereto 容器 + MariaDB `11.4`
+- 图片目录：`/opt/chevereto/images`
+- 数据库目录：`/opt/chevereto/database`
+- 域名：`https://gallery.soloeternity.me`
+- 核验时公开相册 `1` 个、图片 `21` 张
+
+博客 Gallery 不显示 Chevereto 后台入口，而是读取：
+
+```text
+https://gallery.soloeternity.me/explore/albums
+```
+
+然后抓取公开相册页中的相册名、简述、标签和图片。该实现依赖公开 HTML 结构，并非稳定 API；每次升级 Chevereto 后必须测试 `/gallery/`。
+
+Chevereto 当前图片存储在本机磁盘，不在 R2。R2 与 Chevereto 是两套不同用途的媒体系统：文章资源走 R2，相册由 Chevereto 管理。
+
+## 9. Umami
+
+- Umami 容器：PostgreSQL 版本镜像
+- PostgreSQL：`postgres:16-alpine`
+- 宿主机回环：`127.0.0.1:3001`
+- 公网：`https://umami.soloeternity.me`
+- 数据：`/opt/umami/db`
+- `DISABLE_TELEMETRY=1`
+
+核验时数据库中有 `1` 个网站、约 `61` 个会话和 `1314` 个事件。
+
+博客 `_config.fluid.yml` 注入 Umami 脚本并启用性能采集。`source/js/analytics-v2.js` 额外记录：
+
+- 导航、搜索、主题切换
+- 一言刷新
+- 音乐播放器显示、播放控制和曲目操作
+- Live2D 打开
+- Anime 筛选和番剧跳转
+- 外部链接、下载、友链
+- 评论开始、正文复制
+- 50%/90% 阅读深度
+- 30 秒/120 秒参与时长
+
+Busuanzi 仍用于页脚公开展示总访问量，Umami 用于后台分析。两者职责不同。
+
+## 10. R2
+
+### 10.1 实际对象结构
+
+Bucket：`soloeternity-assets`。
+
+核验时约 `259` 个对象、`84.8 MiB`，顶层只有：
+
+```text
+images/
+live2d/
+music/
+```
+
+推荐结构：
+
+```text
+images/
+  avatars/
+  backgrounds/
+  branding/
+  link/
+  posts/
+    covers/
+    <article-slug>/
+  social/
+live2d/
+  models/
+music/
+  covers/
+  lyrics/
+  tracks/
+```
+
+友链头像统一使用 `images/link/`，不再使用拼写错误的 `avatas`。
+
+文章封面统一：
+
+```text
+images/posts/covers/<slug>.webp
+```
+
+文章正文图统一：
+
+```text
+images/posts/<slug>/<序号或语义名>.webp
+```
+
+最近四叶花文章只上传 8 张 WebP：1 张封面和 7 张正文图；不上传 PNG 原稿。
+
+### 10.2 不放入 R2 的数据
+
+- Waline/Memos 数据库
+- Umami/Chevereto 数据库
+- GitHub OAuth secret
+- SMTP 授权码
+- `.env`
+- Hexo Markdown 真源
+
+## 11. Decap CMS
+
+- 管理页：`https://soloeternity.me/admin/`
+- 后端仓库：`FLmhp/soloeternity-blog`
+- 分支：`main`
+- OAuth：`https://cms-auth.soloeternity.me/auth`
+- 工作流：`editorial_workflow`
+
+Decap 保存内容后通过 GitHub 分支/PR 工作流进入仓库，再由 Actions 发布。生产验证中已经有 CMS 创建和合并提交的记录，因此 OAuth 和发布链路当前可用。
+
+分类和标签字段使用列表：
+
+- 多个项目使用英文逗号 `,` 分隔。
+- 多级分类按父级到子级依次填写，例如：`法律与社会, 知识产权`。
+- 标签没有层级，例如：`LV, 茉莉奶白, 商标侵权`。
+- 只输入空格会被视为一个完整字符串，不能作为分隔符。
+
+当前 Decap 媒体目录仍是仓库内 `source/uploads`。文章大图推荐先通过 rclone 上传 R2，再把 HTTPS URL 填入正文和封面字段，避免仓库膨胀。
+
+## 12. 备份与恢复
+
+### 12.1 当前事实
+
+- 没有自动业务备份 cron。
+- 没有业务备份 systemd timer。
+- Waline 有历史手工备份。
+- Memos 使用 WAL，直接复制单个 `.db` 不可靠。
+- 静态站可从 GitHub 重新构建，不是最关键备份对象。
+
+### 12.2 建议频率
+
+| 数据 | 频率 | 保留 |
+| --- | --- | --- |
+| Waline SQLite | 每日 | 30 天 + 每月 12 份 |
+| Memos 数据目录 | 每日 | 30 天 + 每月 12 份 |
+| Umami PostgreSQL | 每日或每周 | 30 天 |
+| Chevereto DB + images | 每日增量、每周全量 | 至少 4 周 |
+| Caddy/Compose/.env | 每次改动后加密备份 | 最近 5 版 |
+| R2 | 依赖版本控制/异地清单 | 定期导出对象清单 |
+
+至少保留一份服务器之外的备份。恢复演练比“有备份文件”更重要。
+
+### 12.3 静态站回滚
+
+优先方式：
+
+```bash
+git revert <bad-commit>
+git push origin main
+```
+
+Actions 会重新构建并覆盖 `current`。只有 GitHub 不可用时才考虑恢复旧静态目录。
+
+### 12.4 动态服务恢复原则
+
+1. 停止对应应用写入。
+2. 备份当前损坏现场。
+3. 恢复数据库和附件到新目录。
+4. 先执行数据库一致性检查。
+5. 启动容器并在回环地址测试。
+6. 再通过公网域名测试。
+7. 保留恢复记录和备份时间点。
+
+## 13. 安全与密钥
+
+密钥位置：
+
+- GitHub 部署私钥：GitHub Actions Secrets
+- Caddy Cloudflare Token：`/root/docker/caddy/.env`
+- Waline JWT/SMTP：`/opt/waline/.env`
+- Umami DB/App Secret：`/opt/umami/.env` 或 Compose 环境
+- Chevereto DB Secret：`/opt/chevereto/.env`
+- R2 S3 Key：本机 rclone 配置或安全凭据库
+- Decap GitHub OAuth Secret：Cloudflare Worker secret
+
+要求：
+
+- 文件权限 `600`，目录 `700`。
+- 不在 Markdown、截图、issue、Actions 日志中粘贴明文。
+- 已经公开过的密钥立即撤销并重新生成。
+- Worker 使用 secret binding，不在源码常量中写入 Client Secret。
+- rclone 配置包含可解密凭据，不能提交到仓库。
+
+## 14. 发布和巡检
+
+### 14.1 每次提交前
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm clean
+pnpm build
+git diff --check
+```
+
+### 14.2 发布后
 
 ```bash
 curl -I https://soloeternity.me
 curl -I https://waline.soloeternity.me
+curl -I https://memos.soloeternity.me
+curl -I https://gallery.soloeternity.me/explore/albums
+curl -I https://umami.soloeternity.me/script.js
+curl -I https://assets.soloeternity.me/images/posts/covers/kali.webp
 ```
 
-如果你还想核对是否真的是最新静态文件，可再检查：
+浏览器检查项目见 `docs/usage.md`。
 
-```bash
-ssh root@your-server "stat -c '%y %n' /var/www/blog/current/index.html"
-```
+## 15. 故障定位顺序
 
-如果要从 GitHub CLI 检查工作流：
+### 主站 502/空白
 
-```bash
-gh run list -R FLmhp/soloeternity-blog --workflow deploy.yml
-gh run view <run-id> -R FLmhp/soloeternity-blog
-```
+1. Cloudflare 是否正常。
+2. Caddy 容器是否 Up。
+3. `/var/www/blog/current/index.html` 是否存在。
+4. Caddy bind mount 是否正确。
+5. Actions 最近一次是否成功。
 
----
+### 评论失败
 
-## 9. LeanCloud 历史数据导入
+1. 浏览器请求是否到 `waline.soloeternity.me`。
+2. Waline 容器日志。
+3. SQLite 权限与完整性。
+4. `SECURE_DOMAINS`。
+5. Cloudflare/WAF 是否拦截 POST。
 
-### 9.1 导入脚本
+### Memos 空白
 
-当前仓库已提供：
+1. 内容是否 `PUBLIC`。
+2. 是否包含 `#moment` 或 `#essay`。
+3. 公共 API 是否返回数据。
+4. CORS 的 Origin 是否为 `https://soloeternity.me`。
+5. `memos-feed-v5.js` 是否被旧缓存覆盖。
 
-```text
-tools/import_waline_leancloud.py
-```
+### Gallery 空白
 
-该脚本会读取：
+1. Chevereto 相册是否公开。
+2. `/explore/albums` 是否能匿名打开。
+3. CORS 是否正常。
+4. Chevereto 升级是否改变 HTML 结构。
 
-- `Users.0.jsonl`
-- `Comment.0.jsonl`
+### Anime 超时
 
-然后写入：
+1. Bangumi API 是否从访客网络可达。
+2. 浏览器控制台是否是 CORS、429 或 timeout。
+3. sessionStorage 缓存是否损坏。
+4. 页面应保留重试入口，不要把外部 API 超时误判成 Caddy 故障。
 
-- `wl_Users`
-- `wl_Comment`
+## 16. 当前待办优先级
 
-### 9.2 导入命令
+1. 建立自动离机备份并做恢复演练。
+2. 在云安全组限制端口，评估 Docker 的 `DOCKER-USER` 规则。
+3. 为浮动镜像建立版本锁定和升级记录。
+4. 为 R2 媒体建立并验证 Cloudflare Cache Rule。
+5. 创建最小权限部署用户，替代 root Actions 发布。
+6. 评估 Swap 或 zram，降低瞬时内存压力风险。
 
-```bash
-python tools/import_waline_leancloud.py \
-  --export-dir /path/to/leancloud-export \
-  --db /opt/waline/data/waline.sqlite
-```
-
-### 9.3 重置为历史数据
-
-如果要把 Waline 重置为 LeanCloud 历史导出状态，建议按下面顺序操作：
-
-```bash
-cp /opt/waline/data/waline.sqlite /opt/waline/data/waline.pre-reset-$(date +%Y%m%d%H%M%S).sqlite
-curl -L https://raw.githubusercontent.com/walinejs/waline/main/assets/waline.sqlite -o /opt/waline/data/waline.sqlite
-python tools/import_waline_leancloud.py \
-  --export-dir /path/to/leancloud-export \
-  --db /opt/waline/data/waline.sqlite
-cd /opt/waline
-docker compose up -d waline
-```
-
-### 9.4 导入后校验
-
-```bash
-python - <<'PY'
-import sqlite3
-conn = sqlite3.connect('/opt/waline/data/waline.sqlite')
-cur = conn.cursor()
-print('users', cur.execute('SELECT COUNT(*) FROM wl_Users').fetchone()[0])
-print('comments', cur.execute('SELECT COUNT(*) FROM wl_Comment').fetchone()[0])
-print('counters', cur.execute('SELECT COUNT(*) FROM wl_Counter').fetchone()[0])
-PY
-```
-
-说明：
-
-- 当前导出脚本不会自动恢复 `wl_Counter` 历史统计
-- 页面 PV/UV 会从新的站点运行状态重新累计
-
----
-
-## 10. 常见问题
-
-### 10.1 `SQLITE_ERROR: no such table`
-
-原因：`waline.sqlite` 是空文件或初始化方式错误。  
-处理：
-
-```bash
-curl -L https://raw.githubusercontent.com/walinejs/waline/main/assets/waline.sqlite -o /opt/waline/data/waline.sqlite
-docker compose up -d waline
-```
-
-### 10.2 GitHub Actions 绿了但页面没更新
-
-先确认：
-
-```bash
-ssh root@your-server "ls -la /var/www/blog/current"
-```
-
-再检查是否有 CDN 缓存：
-
-- Cloudflare 可先执行 `Purge Cache`
-- 浏览器强制刷新 `Ctrl + F5`
-
-如果本次核验和你看到的现象一致，还应检查一件更直接的事：
-
-- 最近一次成功部署是否已经是很久之前的旧 run
-- 当前仓库是否根本还没有新的 `main` 分支推送
-
-### 10.3 Waline 邮件模板中文乱码
-
-建议：
-
-- 使用 `UTF-8` 保存 `.env`
-- 尽量用支持 UTF-8 的编辑器远程修改
-- 修改后执行：
-
-```bash
-cd /opt/waline
-docker compose up -d waline
-```

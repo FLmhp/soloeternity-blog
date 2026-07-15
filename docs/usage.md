@@ -1,465 +1,671 @@
-# 使用文档
+# 博客使用手册
 
-## 1. 开发环境
+本文面向博客作者和日常维护者，覆盖本地写作、Decap CMS、媒体上传、动态服务、评论、统计和故障处理。
 
-当前项目使用：
+最后核验：`2026-07-15`。
 
-- Node.js `20.x`
-- `pnpm@9.15.9`
-- Hexo `7.3.0`
+## 1. 日常内容类型
 
-## 1.1 当前线上使用状态（2026-07-08）
+| 内容 | 数据源 | 页面 | 发布方式 |
+| --- | --- | --- | --- |
+| 正式文章 | `source/_posts/*.md` | 首页、归档、分类、标签、文章页 | Git 或 Decap CMS |
+| 随笔 | Memos `#essay` | `/essays/` | Memos |
+| 动态 | Memos `#moment` | `/moments/` | Memos |
+| 语录 | Hitokoto + 本地 fallback | `/quotes/` | 自动接口/代码配置 |
+| 相册 | Chevereto 公开相册 | `/gallery/` | Chevereto 后台 |
+| 看番记录 | Bangumi 用户 `soloeternity` | `/anime/` | Bangumi |
+| 友链 | Fluid links 配置 | `/links/` | 修改仓库配置 |
+| 留言 | Waline | `/message/` | 访客评论 |
 
-为了避免“文档和线上不一致”，这里补一份当前实际状态：
+正式文章属于 Git 真源；Memos、Waline、Chevereto 和 Umami 是独立数据库服务，不会被 Hexo 构建写入。
 
-- 主站地址：`https://soloeternity.me`
-- 评论服务：`https://waline.soloeternity.me`
-- 评论后台：`https://waline.soloeternity.me/ui`
-- 当前统计来源：`busuanzi`
-- 当前评论服务版本：`Waline 1.40.3`
-- 当前线上首页静态文件最近发布时间：`2026-06-08`
+## 2. 本地写作
 
-如果你只是想确认“我改完内容为什么线上没变”，优先看：
+### 2.1 环境
 
-1. 本地 `pnpm build` 是否成功
-2. `git push origin main` 是否已完成
-3. GitHub Actions 是否产生了新的成功 run
-4. `/var/www/blog/current/index.html` 的时间是否更新
+- Node.js `20`
+- pnpm `9.15.9`
+- Git
+- 可选 rclone `1.74.4`
 
-建议先安装：
+安装：
 
-```bash
-node -v
-pnpm -v
+```powershell
+corepack enable
+pnpm install --frozen-lockfile
 ```
 
-首次拉取仓库后执行：
+### 2.2 新建文章
 
-```bash
-pnpm install
+```powershell
+pnpm exec hexo new post "文章标题"
 ```
 
+或者直接在 `source/_posts/` 创建 Markdown。
+
+推荐 front matter：
+
+```yaml
 ---
+title: 文章标题
+date: 2026-07-15 12:00:00
+categories:
+  - 法律与社会
+  - 知识产权
+tags:
+  - LV
+  - 茉莉奶白
+  - 商标法
+index_img: https://assets.soloeternity.me/images/posts/covers/article-slug.webp
+banner_img: https://assets.soloeternity.me/images/posts/covers/article-slug.webp
+excerpt: 一段用于首页卡片和 SEO 的简短摘要。
+---
+```
 
-## 2. 本地预览
+多级分类是顺序数组。上例表示：
 
-### 2.1 启动开发服务器
+```text
+法律与社会 > 知识产权
+```
 
-```bash
+标签是平级数组，没有父子关系。
+
+### 2.3 更新时间
+
+项目设置：
+
+```yaml
+updated_option: empty
+```
+
+并通过 Git 历史脚本计算文章最后修改时间。这样部署配置、主题样式或其他文章变化不会批量刷新所有文章的更新时间。
+
+真正修改文章正文并提交后，该文章更新时间才会变化。要获得正确结果，文章必须已纳入 Git。
+
+### 2.4 本地预览
+
+```powershell
+pnpm clean
+pnpm build
 pnpm server
 ```
 
-默认会启动 Hexo 本地服务，一般访问：
+访问：
 
 ```text
 http://localhost:4000
 ```
 
-### 2.2 重新生成静态文件
+动态页面仍会请求生产 Memos、Chevereto、Bangumi 和 Hitokoto。若本地 Origin 未被 CORS 允许，动态内容可能无法读取；这不代表静态构建失败。
 
-```bash
+## 3. Decap CMS 在线写作
+
+### 3.1 入口和链路
+
+入口：
+
+```text
+https://soloeternity.me/admin/
+```
+
+链路：
+
+```text
+Decap CMS
+  -> cms-auth.soloeternity.me/auth
+  -> GitHub OAuth
+  -> FLmhp/soloeternity-blog
+  -> editorial_workflow
+  -> GitHub PR/merge
+  -> Actions 发布
+```
+
+在线写作不会直接修改服务器文件。
+
+### 3.2 分类字段
+
+Decap 中分类是列表字段。多个项目使用英文逗号 `,` 分隔：
+
+```text
+法律与社会, 知识产权
+```
+
+生成结果等价于：
+
+```yaml
+categories:
+  - 法律与社会
+  - 知识产权
+```
+
+顺序就是层级顺序。不要使用空格、中文顿号或斜杠作为分隔符。
+
+错误示例：
+
+```text
+法律与社会 知识产权
+法律与社会、知识产权
+法律与社会/知识产权
+```
+
+这些通常会被当成一个分类名称。
+
+### 3.3 标签字段
+
+标签也是列表，使用英文逗号：
+
+```text
+LV, 茉莉奶白, 商标侵权, 商标法, 四叶花
+```
+
+生成：
+
+```yaml
+tags:
+  - LV
+  - 茉莉奶白
+  - 商标侵权
+  - 商标法
+  - 四叶花
+```
+
+不要为了搜索而堆积大量近义标签。建议每篇 `3-8` 个，最多不超过 `12` 个。
+
+### 3.4 日期
+
+Decap 日期按浏览器当前时区录入。项目业务时区为 `Asia/Shanghai`。发布前确认日期没有被设到未来，否则 Hexo 可能不在当前构建显示文章。
+
+### 3.5 封面和正文图片
+
+Decap 内置媒体库当前仍指向仓库的 `source/uploads`，适合小图或临时附件。正式文章大图推荐：
+
+1. 本地转为 WebP。
+2. 上传 R2。
+3. 验证公开 URL。
+4. 把 URL 填入封面和 Markdown。
+
+封面：
+
+```text
+https://assets.soloeternity.me/images/posts/covers/<slug>.webp
+```
+
+正文：
+
+```text
+https://assets.soloeternity.me/images/posts/<slug>/01.webp
+```
+
+Markdown：
+
+```markdown
+![图片说明](https://assets.soloeternity.me/images/posts/<slug>/01.webp)
+```
+
+### 3.6 编辑工作流
+
+Decap 使用 `editorial_workflow`：
+
+1. 保存草稿。
+2. 设置为待审核。
+3. 预览生成内容。
+4. 发布并合并到 `main`。
+5. 等待 Actions 成功。
+6. 打开线上文章检查封面、目录、分类、标签和评论区。
+
+如果“已发布”后网站未出现：
+
+1. 查看文章日期是否在未来。
+2. 查看 GitHub 是否真的合并到 `main`。
+3. 查看 Actions 是否成功。
+4. 查看 Markdown front matter 是否有效。
+5. 查看 Cloudflare 是否仍缓存旧 HTML。
+
+## 4. R2 媒体工作流
+
+### 4.1 目录约定
+
+```text
+images/
+  avatars/
+  backgrounds/
+  branding/
+  link/
+  posts/
+    covers/
+    <article-slug>/
+  social/
+live2d/
+  models/
+music/
+  covers/
+  lyrics/
+  tracks/
+```
+
+友链头像统一在 `images/link/`。
+
+### 4.2 文件格式
+
+- 照片、文章配图、封面：WebP。
+- 需要透明且 Live2D/工具链要求的贴图：PNG。
+- 图标：优先 SVG/WebP，按来源格式决定。
+- 音频：MP3。
+- 歌词：UTF-8 LRC。
+- 不把 PSD、ZIP、PNG 原稿和无损音频作为公开站点资源。
+
+PNG 原稿应保存在本地归档或离线备份，不必重复上传到 R2。四叶花文章只需要 8 张 WebP，不上传 8 张 PNG 原稿。
+
+### 4.3 rclone
+
+rclone 路径：
+
+```text
+C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe
+```
+
+列目录：
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' lsd r2:soloeternity-assets
+```
+
+上传单文件：
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' copyto `
+  '.\cover.webp' `
+  'r2:soloeternity-assets/images/posts/covers/article-slug.webp' `
+  --progress
+```
+
+上传正文目录：
+
+```powershell
+& 'C:\Program Files\rclone-v1.74.4-windows-amd64\rclone.exe' copy `
+  '.\article-slug' `
+  'r2:soloeternity-assets/images/posts/article-slug' `
+  --include '*.webp' `
+  --progress
+```
+
+默认用 `copy`，不要随意使用 `sync`。`sync` 会删除远端多余文件，路径写错可能造成批量删除。
+
+### 4.4 上传后检查
+
+```powershell
+curl.exe -I 'https://assets.soloeternity.me/images/posts/covers/article-slug.webp'
+```
+
+预期：
+
+- HTTP `200`
+- `Content-Type: image/webp`
+- 文件大小合理
+- 浏览器能直接显示
+
+如果首页封面破图，优先检查 front matter 的完整 URL 和 R2 对象实际路径是否一致。文件名大小写敏感。
+
+## 5. 随笔和动态
+
+### 5.1 发布规则
+
+在 Memos 创建公开内容：
+
+- 随笔：包含 `#essay`
+- 动态：包含 `#moment`
+
+同一条内容可以同时包含两个标签，此时会在两个页面出现。
+
+### 5.2 支持内容
+
+博客页面支持：
+
+- Memos Markdown 正文
+- 标题、列表、引用、代码、链接
+- 图片和其他附件
+- 引用与被引用内容
+- 地点
+- 标签
+- 本地时区日期
+
+附件文件名不单独显示；图片直接预览。引用样式只显示纯文本摘要，但整块具有隐式超链接，可跳转到对应 Memos。
+
+### 5.3 页面空白
+
+检查：
+
+```text
+https://memos.soloeternity.me/api/v1/memos?filter=visibility=="PUBLIC"&pageSize=20
+```
+
+依次确认：
+
+1. Memo 是 PUBLIC。
+2. 标签拼写为英文 `#essay` 或 `#moment`。
+3. API 能匿名返回。
+4. 浏览器请求 Origin 为 `https://soloeternity.me`。
+5. Caddy CORS 没有报错。
+6. `memos-feed-v5.js?v=7` 没有被旧缓存覆盖。
+
+Memos 使用 WAL，备份必须包含整个数据目录或使用 SQLite 一致性备份。
+
+## 6. Gallery
+
+### 6.1 管理相册
+
+后台：
+
+```text
+https://gallery.soloeternity.me
+```
+
+操作：
+
+1. 创建相册。
+2. 填写相册标题、简述和标签。
+3. 上传图片。
+4. 将相册设为公开。
+5. 匿名访问 `/explore/albums` 验证。
+
+博客不显示 Chevereto 管理入口，只读取公开相册信息。
+
+### 6.2 不显示相册
+
+- 相册不是公开状态。
+- Chevereto 登录 Cookie 掩盖了匿名权限问题。
+- CORS 未允许博客主域。
+- Chevereto 升级后 HTML 结构变化。
+- Cloudflare 返回旧页面。
+
+使用无痕窗口检查公开可见性。
+
+## 7. Anime
+
+数据源：
+
+```text
+https://bgm.tv/user/soloeternity
+```
+
+页面读取 Bangumi API 的动画收藏状态：
+
+- 想看
+- 看过
+- 在看
+- 搁置
+- 抛弃
+
+页面默认优先显示“在看”，浏览器 sessionStorage 缓存约 30 分钟。卡片包含封面、右上角评分、进度、标题、标签和简介，点击跳转 Bangumi 条目。
+
+Bangumi 是外部依赖。服务器核验曾出现一次 API 超时；页面不能因此影响其他导航或全站构建。
+
+## 8. Quotes
+
+一言请求：
+
+```text
+https://v1.hitokoto.cn/?encode=json&c=a&c=b&c=c&c=d&c=h&c=j&c=k
+```
+
+类型：
+
+- `a` 动画
+- `b` 漫画
+- `c` 游戏
+- `d` 文学
+- `h` 影视
+- `j` 网易云
+- `k` 哲学
+
+交互：
+
+- 初次加载显示动画。
+- 点击句子请求下一条。
+- 刷新后 3 秒内禁用再次点击，避免快速请求竞争。
+- 请求失败使用本地 fallback。
+- 正文与来源使用不同书法字体。
+
+## 9. 音乐播放器
+
+播放器在所有普通博客页面加载，默认不自动播放。
+
+当前曲目来自 R2：
+
+- 音频：`music/tracks/*.mp3`
+- 封面：`music/covers/*.webp`
+- R2 备份歌词：`music/lyrics/*.lrc`
+- 站点运行时歌词：`/music/lyrics/*.lrc`
+
+功能：
+
+- 播放/暂停
+- 上一首/下一首
+- 进度拖动
+- 音量调整
+- 歌单展开/收起
+- 播放模式切换
+- 滚动歌词
+- 整体隐藏
+
+播放器在 `window.load` 后懒初始化，音频 `preload: none`，避免与首屏背景竞争。
+
+若封面或歌词不显示：
+
+1. 检查 R2 URL `200` 和 MIME。
+2. 检查 LRC 是 UTF-8。
+3. 检查曲目配置中的文件名完全一致。
+4. 清除 localStorage 中旧播放器状态。
+5. 检查控制台 CORS/404。
+
+## 10. Live2D
+
+Live2D 第一次访问默认隐藏，用户主动打开后记忆状态。当前默认模型为 IceGirl，另有四个替代模型。
+
+状态使用 localStorage 跨页面同步：
+
+- 显示/隐藏
+- 当前模型
+- 用户切换状态
+
+资源：
+
+- 站点同源 `/live2d-models/` 用于运行，避免 WebGL 跨域问题。
+- R2 `live2d/models/` 保存镜像备份。
+
+模型资源较大，初始化应晚于首屏。不要把所有模型一次性预加载。
+
+## 11. Waline 评论与留言板
+
+### 11.1 入口
+
+- 文章页底部评论。
+- `/message/` 留言板。
+- 管理：`https://waline.soloeternity.me/ui`
+
+### 11.2 预设文案
+
+文章：
+
+```text
+欢迎大家来评论区灌水喵~
+```
+
+留言板：
+
+```text
+写下此刻的心跳，它便不再只是你的。每一行字，都会在风里找到归宿。
+```
+
+### 11.3 邮件
+
+生产 SMTP 位于 `/opt/waline/.env`，使用 QQ 邮箱授权码。邮件应区分：
+
+- 留言板：主题“你的博客网站收到了新的留言”。
+- 文章：主题中包含文章标题或至少页面路径。
+
+管理员本人发表评论可能不触发给自己的通知。测试步骤：
+
+1. 退出 Waline 管理员登录。
+2. 使用另一邮箱匿名评论。
+3. 查看页面是否写入。
+4. 查看 `docker logs waline`。
+5. 检查收件箱和垃圾箱。
+
+### 11.4 地理位置
+
+Waline 根据服务端看到的访客公网 IP 解析位置。使用 Clash、VPN、代理或 Cloudflare 时，结果通常对应出口节点，而不是电脑物理位置。
+
+例如代理出口 IP 位于约翰内斯堡，评论就可能显示约翰内斯堡。关闭代理或为博客域名配置 DIRECT 后重新评论，才能让服务器看到本地运营商出口 IP。
+
+Caddy 必须保留 Cloudflare 真实 IP 头链路。不要信任访客可以自行伪造的任意 `X-Forwarded-For`；应只信任 Cloudflare 源地址或由 Caddy覆盖的头。
+
+## 12. 统计
+
+### 12.1 Busuanzi
+
+用于页脚显示：
+
+- 总访问量
+- 总访客数
+
+这是公开装饰统计，不用于详细分析。
+
+### 12.2 Umami
+
+后台：
+
+```text
+https://umami.soloeternity.me
+```
+
+可按具体页面查看：
+
+- 浏览量、访客、会话
+- 来源、设备、浏览器、系统、国家/地区
+- 单页路径
+- 实时用户
+- Web Vitals：LCP、INP、CLS、FCP、TTFB
+- 自定义事件和属性
+
+自定义事件：
+
+| 事件 | 关键属性 |
+| --- | --- |
+| `nav-click` | 导航目标 |
+| `search-open` | 页面路径 |
+| `theme-toggle` | 明暗主题 |
+| `quote-refresh` | 页面 |
+| `music-*` | 动作、曲目 |
+| `live2d-open` | 页面 |
+| `anime-filter` | 收藏状态 |
+| `anime-subject-open` | 条目 ID |
+| `outbound-link` | 目标 host |
+| `download` | 文件名 |
+| `friend-link` | 目标 host |
+| `comment-start` | 页面路径 |
+| `content-copy` | 页面类型 |
+| `scroll-depth` | 50/90 |
+| `engaged-time` | 30/120 秒 |
+
+统计为 0 时检查：
+
+1. 浏览器是否拦截 Umami。
+2. `script.js` 是否返回 `200`。
+3. website ID 是否匹配。
+4. `data-domains` 是否允许 `soloeternity.me`。
+5. Cloudflare CSP/WAF 是否拦截。
+6. 隐私插件是否阻止分析脚本。
+
+## 13. 发布
+
+### 13.1 Git 发布
+
+```powershell
+git status
 pnpm clean
 pnpm build
-```
-
-生成产物位于：
-
-```text
-public/
-```
-
----
-
-## 3. 写文章
-
-### 3.1 新建文章
-
-```bash
-npx hexo new post "文章标题"
-```
-
-生成文件通常位于：
-
-```text
-source/_posts/文章标题.md
-```
-
-### 3.2 常用 Front Matter
-
-```yaml
----
-title: Ubuntu 安装记录
-date: 2026-06-08 20:00:00
-updated: 2026-06-08 20:00:00
-tags:
-  - Ubuntu
-  - Linux
-categories:
-  - 运维
-index_img: /img/cover/ubuntu.png
-banner_img: /img/post_banner.png
-comments: true
----
-```
-
-说明：
-
-- `tags` 用于标签页聚合
-- `categories` 用于分类页聚合
-- `index_img` 控制首页卡片封面
-- `banner_img` 控制文章顶部横幅
-- `comments: true` 表示允许评论
-
-### 3.3 插入图片
-
-如果图片和文章放在同名目录下，例如：
-
-```text
-source/_posts/Java开发环境配置.md
-source/_posts/Java开发环境配置/079130c9fab5ff317529c7cdeb24313a.png
-```
-
-可以在 Markdown 中直接写：
-
-```md
-![安装截图](./Java开发环境配置/079130c9fab5ff317529c7cdeb24313a.png)
-```
-
----
-
-## 4. 页面管理
-
-### 4.1 新建普通页面
-
-```bash
-npx hexo new page about
-```
-
-页面文件一般位于：
-
-```text
-source/about/index.md
-```
-
-### 4.2 About 页面启用评论
-
-```yaml
----
-title: 关于
-comments: true
----
-```
-
-Fluid 的 `about.ejs` 会在 `page.comments` 为 `true` 时挂载评论组件。
-
----
-
-## 5. 配置文件分工
-
-### 5.1 `_config.yml`
-
-Hexo 主配置，重点关注：
-
-- `title`
-- `subtitle`
-- `url`
-- `permalink`
-- `language`
-
-当前站点 URL：
-
-```yaml
-url: https://soloeternity.me
-```
-
-### 5.2 `_config.fluid.yml`
-
-主题配置，重点关注：
-
-- `navbar`
-- `index.slogan`
-- `fun_features.typing`
-- `custom_js`
-- `custom_css`
-- `footer`
-- `waline`
-- `web_analytics`
-
-例如评论服务地址：
-
-```yaml
-waline:
-  serverURL: 'https://waline.soloeternity.me/'
-```
-
----
-
-## 6. 自定义样式与脚本
-
-当前主题自定义入口主要有三种：
-
-### 6.1 `custom_js`
-
-在 `_config.fluid.yml` 中注册：
-
-```yaml
-custom_js:
-  - /js/anime.min.js
-  - /js/custom.js
-  - /js/duration.js
-  - /js/fireworks.js
-  - /js/fishes.js
-  - /js/loader.js
-  - /js/scrollanimation.js
-  - /js/stars.js
-  - /js/title.js
-  - /js/typing-effect.js
-```
-
-这些文件实际存放在：
-
-```text
-source/js/
-```
-
-### 6.2 `custom_css`
-
-在 `_config.fluid.yml` 中注册：
-
-```yaml
-custom_css:
-  - /css/custom.css
-  - /css/fish.css
-  - /css/glassbackground.css
-  - /css/gradient.css
-  - /css/indexing-hover.css
-  - /css/loader.css
-  - /css/macpanel
-  - /css/scrollanimation.css
-  - /css/scrollbar.css
-  - /css/selection.css
-  - /css/svg-neon.css
-```
-
-这些文件实际存放在：
-
-```text
-source/css/
-```
-
-### 6.3 `scripts/injects.js`
-
-如果某个效果需要往页面结构里注入 HTML 或脚本，可以走 Hexo injector：
-
-```js
-hexo.extend.injector.register("body_begin", '<div id="web_bg"></div>');
-hexo.extend.injector.register('body_end', '<script src="/js/sakura.js"></script>', 'home');
-hexo.extend.injector.register('head_end', '<script src="/live2d-widget/dist/autoload.js"></script>');
-```
-
-这种方式适合：
-
-- 全局背景节点
-- 首页专属特效
-- 全局预加载层
-- 第三方小部件
-
----
-
-## 7. 评论系统使用
-
-### 7.1 访问后台
-
-```text
-https://waline.soloeternity.me/ui
-```
-
-后台可执行：
-
-- 审核评论
-- 删除评论
-- 管理用户
-- 查看评论状态
-
-当前线上库核验结果：
-
-- 用户数：`1`
-- 评论数：`3`
-- 计数表：`0`
-- 当前管理员邮箱：`2122283196@qq.com`
-
-### 7.2 评论前端配置
-
-当前 Waline 前端配置位于 `_config.fluid.yml`：
-
-```yaml
-waline:
-  serverURL: 'https://waline.soloeternity.me/'
-  path: window.location.pathname
-  meta: ['nick', 'mail', 'link']
-  requiredMeta: ['nick']
-  lang: 'zh-CN'
-  pageSize: 10
-  commentSorting: 'latest'
-```
-
-### 7.3 邮件通知修改
-
-Waline 邮件通知在服务器 `/opt/waline/.env` 中维护。  
-修改后需要重启：
-
-```bash
-cd /opt/waline
-docker compose up -d waline
-```
-
-当前线上已确认的 SMTP 基本配置为：
-
-- `SMTP_HOST=smtp.qq.com`
-- `SMTP_PORT=465`
-- `SMTP_USER=fl-mhp@qq.com`
-- `SENDER_NAME=SoloEternity`
-- `AUTHOR_EMAIL=fl-mhp@qq.com`
-
-说明：
-
-- QQ 邮箱授权码只保留在服务器 `.env`，不要写回仓库
-- 中文模板建议继续使用 `UTF-8` 保存
-
----
-
-## 8. 网站统计
-
-当前站点统计来源是 `busuanzi`，配置位于 `_config.fluid.yml`：
-
-```yaml
-footer:
-  statistics:
-    enable: true
-    source: "busuanzi"
-```
-
-文章页阅读量同样使用 `busuanzi`：
-
-```yaml
-post:
-  meta:
-    views:
-      enable: true
-      source: "busuanzi"
-```
-
-说明：
-
-- 本地预览时访问量可能异常偏大，这是正常现象
-- 正式部署后会按真实访问逐步恢复正常
-- 当前线上首页 HTML 已确认输出 `busuanzi.min.js` 和 `/js/busuanzi-compat.js`
-- footer 中 `#busuanzi_container_site_pv` / `#busuanzi_container_site_uv` 默认先隐藏，等待脚本返回后再显示
-
----
-
-## 9. 发布流程
-
-### 9.1 日常发布命令
-
-```bash
-git add .
-git commit -m "Add new post"
+git diff --check
+git add <files>
+git commit -m "docs: update blog documentation"
 git push origin main
 ```
 
-### 9.2 实际自动化动作
+不要使用 `git add .` 盲目提交本地临时文件、原图、数据库或 `.env`。
 
-推送到 `main` 后，GitHub Actions 会自动：
+### 13.2 Actions
 
-1. 安装依赖
-2. 构建 Hexo
-3. 同步 `public/` 到服务器
-4. 修正远程目录权限
+发布成功标准：
 
-### 9.3 查看部署状态
+- Build 成功。
+- rsync 成功。
+- 权限修正成功。
+- 工作流绿色完成。
+- 线上首页显示新提交。
 
-```bash
-gh run list -R FLmhp/soloeternity-blog --workflow deploy.yml
-gh run watch <run-id> -R FLmhp/soloeternity-blog
-```
+再次发布会使用 `--delete` 清理旧页面。
 
-当前可作为参考的最近成功 run：
+## 14. 常见故障
 
-```text
-27130282506
-```
+### 构建失败
 
----
-
-## 10. 常用运维命令
-
-### 10.1 检查 Caddy
-
-```bash
-ssh root@your-server "cd /root/docker/caddy && docker compose run --rm --no-deps --entrypoint caddy caddy2 validate --config /etc/caddy/Caddyfile && docker ps --filter name=caddy"
-```
-
-### 10.2 检查 Waline
-
-```bash
-ssh root@your-server "cd /opt/waline && docker compose ps"
-ssh root@your-server "cd /opt/waline && docker compose logs -f waline"
-```
-
-### 10.3 检查线上文件
-
-```bash
-ssh root@your-server "ls -la /var/www/blog/current | head"
-```
-
-### 10.4 手动回滚静态站
-
-当前工作流是覆盖式发布，所以静态站回滚建议通过：
-
-- 回退 Git 提交重新触发部署
-- 或从服务器备份目录恢复
-
----
-
-## 11. 排障建议
-
-### 11.1 本地页面正常，线上页面异常
-
-优先排查：
-
-1. `pnpm build` 是否报错
-2. GitHub Actions 是否成功
-3. `/var/www/blog/current` 是否已更新
-4. Cloudflare 是否缓存旧页面
-
-### 11.2 评论区不显示
-
-优先排查：
-
-```bash
-curl -I https://waline.soloeternity.me
-curl -I https://soloeternity.me
-```
-
-然后确认：
-
-- `_config.fluid.yml` 的 `waline.serverURL`
-- Waline 容器状态
-- Caddy 反向代理是否正常
-
-### 11.3 页面样式失效
-
-一般是以下原因：
-
-- `custom_css` 路径写错
-- `custom_js` 路径写错
-- 文件不在 `source/` 下
-- 浏览器缓存旧静态资源
-
-建议先：
-
-```bash
+```powershell
+pnpm install --frozen-lockfile
 pnpm clean
 pnpm build
 ```
+
+检查 YAML 缩进、Markdown front matter、重复路径和 Node 版本。
+
+### 首页封面破图
+
+- R2 对象不存在。
+- URL 路径错误。
+- `covers` 目录漏写。
+- 大小写不同。
+- MIME 错误。
+- Cloudflare 缓存了旧 404。
+
+### Actions 成功但页面没更新
+
+- 请求命中 Cloudflare 旧缓存。
+- 浏览器缓存。
+- 提交没有进入 `main`。
+- 文章日期在未来。
+- 实际域名打开的是其他环境。
+
+### Waline 500
+
+- SQLite 表未初始化或数据库损坏。
+- 数据目录无写权限。
+- 容器版本和旧数据库结构不匹配。
+- `.env` 配置错误。
+
+先备份，再执行完整性检查，不要直接删除数据库。
+
+### Umami 性能数值很差
+
+先按页面、设备和样本量筛选。当前曾观察到 P95 LCP/FCP 约 22 秒、TTFB 约 6.7 秒，但样本可能包含代理网络、首次加载大背景、外部 API 或低速设备。优化应优先：
+
+1. 首屏背景尺寸和格式。
+2. R2/Cloudflare 缓存命中。
+3. Live2D 和音乐延迟加载。
+4. Anime/Memos/Gallery 请求不阻塞首屏。
+5. 字体改为本地托管或减少 Google Fonts 阻塞。
+6. 用页面级和国家/设备筛选验证改动，不只看全站 P95。
+
+## 15. 发布后人工检查
+
+1. 首页文章卡片封面。
+2. 文章目录和多级分类。
+3. 归档、分类、标签导航一致。
+4. Essays/Moments 的 Markdown、附件、引用和地点。
+5. Quotes 点击刷新和 3 秒冷却。
+6. Gallery 相册和图片。
+7. Anime 筛选、评分和跳转。
+8. 文章评论与留言板。
+9. 音乐播放、进度、音量、歌词和隐藏。
+10. Live2D 默认隐藏、模型状态跨页同步。
+11. Umami 实时访问和自定义事件。
+12. 桌面、手机、明暗主题。
+

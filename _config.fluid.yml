@@ -18,11 +18,11 @@
 
 # 用于浏览器标签的图标
 # Icon for browser tab
-favicon: /img/logo.png
+favicon: /img/branding/logo.png
 
 # 用于苹果设备的图标
 # Icon for Apple touch
-apple_touch_icon: /img/logo.png
+apple_touch_icon: /img/branding/logo.png
 
 # 浏览器标签页中的标题分隔符，效果：文章名 - 站点名
 # Title separator in browser tab, eg: article - site
@@ -236,7 +236,7 @@ font:
 # 指定自定义 .js 文件路径，支持列表；路径是相对 source 目录，如 /js/custom.js 对应存放目录 source/js/custom.js
 # Specify the path of your custom js file, support list. The path is relative to the source directory, such as `/js/custom.js` corresponding to the directory `source/js/custom.js`
 custom_js:
-  - /js/site-config-v3.js
+  - /js/site-config-v3.js?v=4
   - /js/anime.min.js
   - /js/custom.js
   - /js/duration.js
@@ -248,15 +248,20 @@ custom_js:
   - /js/title.js
   - /js/typing-effect.js
   - /js/hitokoto-cooldown.js
-  - /js/memos-feed-v5.js
-  - /js/music-dock-v3.js
+  - /js/memos-feed-v5.js?v=7
+  - /js/gallery-feed-v1.js
+  - /js/anime-feed-v4.js
+  - /js/aplayer-1.10.1.min.js
+  - /js/music-dock-v6.js?v=7
+  - /js/analytics-v2.js
   # - /js/live2d.js
 
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v4.css
+  - /css/pages-glass-v9.css?v=14
+  - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css
   - /css/gradient.css
@@ -266,7 +271,7 @@ custom_css:
   - /css/scrollanimation.css
   - /css/scrollbar.css
   - /css/selection.css
-  - /css/svg-neon.css
+  - /css/svg-neon.css?v=2
 
 # 自定义 <head> 节点中的 HTML 内容
 # Customize <head> HTML content
@@ -337,6 +342,9 @@ web_analytics:
     # If you only want to tracker to specific domains you can fill in this field, multiple domain names are separated by commas, which can avoid tracker localhost
     domains: soloeternity.me
 
+    # 收集 LCP、INP、CLS、FCP 和 TTFB 等真实用户性能数据
+    performance: true
+
     # 用于统计 PV UV 的开始时间，格式为 "YYYY-MM-DD"
     # statistics on the start time, the format is "YYYY-MM-DD"
     start_time: 2024-01-01
@@ -358,7 +366,7 @@ canonical:
 # 对页面中的图片和评论插件进行懒加载处理，可见范围外的元素不会提前加载
 # Lazy loading of images and comment plugin on the page
 lazyload:
-  enable: false
+  enable: true
 
   # 加载时的占位图片
   # The placeholder image when loading
@@ -366,7 +374,7 @@ lazyload:
 
   # 开启后懒加载仅在文章页生效，如果自定义页面需要使用，可以在 Front-matter 里指定 `lazyload: true`
   # If true, only enable lazyload on the post page. For custom pages, you can set 'lazyload: true' in front-matter
-  onlypost: false
+  onlypost: true
 
   # 触发加载的偏移倍数，基数是视窗高度，可根据部署环境的请求速度调节
   # The factor of viewport height that triggers loading
@@ -425,7 +433,8 @@ navbar:
           { key: "essays", name: "Essays", link: "/essays/", icon: "fa-solid fa-pen-nib" },
           { key: "moments", name: "Moments", link: "/moments/", icon: "fa-solid fa-bolt" },
           { key: "quotes", name: "Quotes", link: "/quotes/", icon: "fa-solid fa-quote-left" },
-          { key: "gallery", name: "Gallery", link: "/gallery/", icon: "fa-solid fa-images" }
+          { key: "gallery", name: "Gallery", link: "/gallery/", icon: "fa-solid fa-images" },
+          { key: "anime", name: "Anime", link: "/anime/", icon: "fa-solid fa-tv" }
         ]
     }
     - { key: "links", name: "Friends", link: "/links/", icon: "iconfont icon-link-fill" }
@@ -545,7 +554,7 @@ footer:
 index:
   # 首页 Banner 头图，可以是相对路径或绝对路径，以下相同
   # Path of Banner image, can be a relative path or an absolute path, the same on other pages
-  banner_img: https://assets.soloeternity.me/images/backgrounds/banner.png
+  banner_img: https://assets.soloeternity.me/images/backgrounds/banner.webp
 
   # 头图高度，屏幕百分比
   # Height ratio of banner image
@@ -617,7 +626,7 @@ index:
 # Post Page
 #---------------------------
 post:
-  banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.png
+  banner_img: https://assets.soloeternity.me/images/backgrounds/post_banner.webp
   banner_img_height: 80
   banner_mask_alpha: 0.3
 
@@ -987,7 +996,7 @@ discuss:
 # Archive Page
 #---------------------------
 archive:
-  banner_img: https://assets.soloeternity.me/images/backgrounds/archive_banner.png
+  banner_img: https://assets.soloeternity.me/images/backgrounds/archive_banner.webp
   banner_img_height: 80
   banner_mask_alpha: 0.3
 
@@ -998,7 +1007,7 @@ archive:
 #---------------------------
 category:
   enable: true
-  banner_img: https://assets.soloeternity.me/images/backgrounds/category_banner.png
+  banner_img: https://assets.soloeternity.me/images/backgrounds/category_banner.webp
   banner_img_height: 80
   banner_mask_alpha: 0.3
 
@@ -1027,7 +1036,7 @@ category:
 #---------------------------
 tag:
   enable: true
-  banner_img: https://assets.soloeternity.me/images/backgrounds/tag_banner.png
+  banner_img: https://assets.soloeternity.me/images/backgrounds/tag_banner.webp
   banner_img_height: 80
   banner_mask_alpha: 0.3
   tagcloud:
@@ -1044,12 +1053,12 @@ tag:
 #---------------------------
 about:
   enable: true
-  banner_img: https://assets.soloeternity.me/images/backgrounds/about_banner.png
+  banner_img: https://assets.soloeternity.me/images/backgrounds/about_banner.webp
   banner_img_height: 80
   banner_mask_alpha: 0.3
-  avatar: https://assets.soloeternity.me/images/avatars/nightmare.png
+  avatar: https://assets.soloeternity.me/images/avatars/nightmare.webp
   name: "SoloEternity"
-  intro: "电子科技大学软件工程在读，写代码，也认真生活。"
+  intro: "按自己的节奏生活，把好奇心留给世界。"
   # 更多图标可从 https://hexo.fluid-dev.com/docs/icon/ 查找，`class` 代表图标的 css class，添加 `qrcode` 后，图标不再是链接而是悬浮二维码
   # More icons can be found from https://hexo.fluid-dev.com/docs/en/icon/  `class` is the css class of the icon. If adding `qrcode`, the icon is no longer a link, but a hovering QR code
   icons:
@@ -1073,7 +1082,7 @@ about:
 #---------------------------
 page:
   banner_img: /img/default.png
-  banner_img_height: 60
+  banner_img_height: 80
   banner_mask_alpha: 0.3
 
 
@@ -1098,8 +1107,8 @@ page404:
 links:
   enable: true
   title: 友链
-  subtitle: 星河中的相邻航标
-  banner_img: https://assets.soloeternity.me/images/backgrounds/friend_banner.jpg
+  subtitle: 散落星河的站点，是我珍视的人间坐标。
+  banner_img: https://assets.soloeternity.me/images/backgrounds/friend_banner.webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
   # 友链的成员项
@@ -1107,21 +1116,21 @@ links:
   items:
     - {
       title: "澪依",
-      intro: "全能开发者 & 电子科技大学在读学生（能力碾压同龄人的佬！）",
+      intro: "全能开发者 & 电子科技大学在读学生（能力全面碾压同龄人的大佬！）",
       link: "https://www.mioyi.net/zh-cn/",
-      avatar: "https://assets.soloeternity.me/avatars/mioyi.webp"
+      avatar: "https://assets.soloeternity.me/images/link/mioyi.webp"
     }
     - {
       title: "Loch",
-      intro: "一名开发者、写作者和终身学习者。（硬件之神）",
+      intro: "一名开发者、写作者和终身学习者（审美在线的硬件之王！）",
       link: "https://www.blog.locx-loch.top/zh",
-      avatar: "https://assets.soloeternity.me/avatars/loch.jpg"
+      avatar: "https://assets.soloeternity.me/images/link/loch.jpg"
     }
     - {
       title: "OrbisLumen",
-      intro: "一名软件工程在读本科生（把前浪拍死在沙滩上的后浪）",
+      intro: "一名软件工程在读本科生（ML佬&ACGN重度爱好者！）",
       link: "https://orbislumen.pages.dev/",
-      avatar: "https://assets.soloeternity.me/avatars/orbislumen.webp"
+      avatar: "https://assets.soloeternity.me/images/link/orbislumen.webp"
     }
 
   # 当成员头像加载失败时，替换为指定图片

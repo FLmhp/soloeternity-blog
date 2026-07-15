@@ -11,6 +11,9 @@
             path: <%= theme.waline.path %>
           }
         )
+        options.locale = Object.assign({}, options.locale, {
+          placeholder: <%- JSON.stringify(page.waline_placeholder || theme.waline.locale.placeholder) %>
+        });
         Waline.init(options);
         Fluid.utils.waitElementVisible('#waline .vcontent', () => {
           var imgSelector = '#waline .vcontent img:not(.vemoji)';

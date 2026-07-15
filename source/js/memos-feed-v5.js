@@ -46,6 +46,78 @@
       .replace(/'/g, "&#39;");
   }
 
+  function loadMarkdownParser() {
+    if (window.marked) return Promise.resolve();
+
+    return new Promise(function (resolve, reject) {
+      var script = document.createElement("script");
+      script.src = "/js/vendor/marked-15.0.12.min.js";
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  function safeUrl(value, allowMail) {
+    try {
+      var protocol = new URL(value, window.location.href).protocol;
+      return protocol === "http:" || protocol === "https:" || (allowMail && protocol === "mailto:");
+    } catch (_) {
+      return false;
+    }
+  }
+
+  function renderMarkdown(value) {
+    if (!window.marked) return escapeHtml(value).replace(/\n/g, "<br>");
+
+    var template = document.createElement("template");
+    template.innerHTML = window.marked.parse(value, { breaks: true, gfm: true });
+
+    var allowedTags = new Set([
+      "A", "BLOCKQUOTE", "BR", "CODE", "DEL", "EM", "H1", "H2", "H3", "H4", "H5", "H6",
+      "HR", "IMG", "LI", "OL", "P", "PRE", "STRONG", "TABLE", "TBODY", "TD", "TH", "THEAD", "TR", "UL"
+    ]);
+    var blockedTags = new Set([
+      "BASE", "BUTTON", "EMBED", "FORM", "IFRAME", "INPUT", "LINK", "MATH", "META", "OBJECT",
+      "OPTION", "SCRIPT", "SELECT", "STYLE", "SVG", "TEXTAREA"
+    ]);
+
+    template.content.querySelectorAll("*").forEach(function (element) {
+      if (blockedTags.has(element.tagName)) {
+        element.remove();
+      } else if (!allowedTags.has(element.tagName)) {
+        element.replaceWith.apply(element, Array.from(element.childNodes));
+      }
+    });
+
+    var allowedAttributes = {
+      A: ["href", "title"],
+      CODE: ["class"],
+      IMG: ["alt", "src", "title"],
+      OL: ["start"],
+      TD: ["align"],
+      TH: ["align"]
+    };
+    template.content.querySelectorAll("*").forEach(function (element) {
+      var attributes = allowedAttributes[element.tagName] || [];
+      Array.from(element.attributes).forEach(function (attribute) {
+        if (!attributes.includes(attribute.name)) element.removeAttribute(attribute.name);
+      });
+    });
+    template.content.querySelectorAll("a[href]").forEach(function (link) {
+      if (!safeUrl(link.getAttribute("href"), true)) link.removeAttribute("href");
+      else if (link.origin !== window.location.origin) {
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+      }
+    });
+    template.content.querySelectorAll("img[src]").forEach(function (image) {
+      if (!safeUrl(image.getAttribute("src"), false)) image.remove();
+      else image.loading = "lazy";
+    });
+    return template.innerHTML;
+  }
+
   function escapeRegExp(value) {
     return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
@@ -123,11 +195,9 @@
     }
 
     container.innerHTML = moments.map(function (item) {
-      var content = escapeHtml(contentOf(item))
-        .replace(/\n/g, "<br>")
-        .replace(/#([A-Za-z0-9_-]+)/g, '<span class="solo-tag">#$1</span>');
+      var content = renderMarkdown(contentOf(item));
       var date = formatDate(dateOf(item));
-      return '<article class="solo-memo-item"><time>' + date + '</time><p>' + content + "</p>" +
+      return '<article class="solo-memo-item"><time>' + date + '</time><div class="solo-memo-markdown">' + content + "</div>" +
         renderAttachments(base, item) + renderRelations(item, byName, base) + renderLocation(item) + "</article>";
     }).join("");
   }
@@ -139,6 +209,7 @@
     var config = window.SoloEternity || {};
     var base = (config.memosBase || "").replace(/\/$/, "");
     var tag = container.getAttribute("data-memos-tag") || config.memosTag || "moment";
+    var markdownReady = loadMarkdownParser();
     var endpoints = [
       base + '/api/v1/memos?filter=visibility%3D%3D%22PUBLIC%22&pageSize=20',
       base + "/api/v1/memos?pageSize=20",
@@ -157,7 +228,11 @@
           return response.json();
         })
         .then(function (payload) {
-          render(container, normalizeItems(payload), tag, base);
+          markdownReady.then(function () {
+            render(container, normalizeItems(payload), tag, base);
+          }, function () {
+            render(container, normalizeItems(payload), tag, base);
+          });
         })
         .catch(function () {
           tryEndpoint(index + 1);

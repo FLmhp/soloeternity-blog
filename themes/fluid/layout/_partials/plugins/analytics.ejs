@@ -39,6 +39,9 @@
         umami.src = "<%= theme.web_analytics.umami.src %>";
         umami.setAttribute("data-website-id", "<%= theme.web_analytics.umami.website_id %>");
         umami.setAttribute("data-domains", "<%= theme.web_analytics.umami.domains %>");
+        <% if(theme.web_analytics.umami.performance) { %>
+        umami.setAttribute("data-performance", "true");
+        <% } %>
         document.head.appendChild(umami);
       }
     </script>

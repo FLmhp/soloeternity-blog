@@ -4,30 +4,26 @@ date: 2025-07-25 14:32:51
 layout: about
 comments: false
 ---
+## 关于我
 
-## 我是谁
+你好，我是 SoloEternity，电子科技大学软件工程在读。代码是我日常的一部分，但不是全部。这里更像一间深夜不熄灯的小屋，随手搁着读过的书、拍下的照片、循环过很多遍的旋律，以及一些不知从哪冒出来的念头。
 
-你好，这里是 SoloEternity，目前是电子科技大学软件工程专业的大二学生。
+MBTI 测出来是 ENTJ-T，俗称指挥官。我确实喜欢拆解问题，也总想找点不一样的路子，习惯按自己的刻度过日子。但放下待办清单之后，我也挺享受漫无目的地走一段路，或者盯着窗外发会呆。
 
-我喜欢把想法落到真正能运行的东西里：浏览器扩展、自动化脚本、桌面工具、移动端应用、自托管服务，或者只是这座可以长期维护的个人博客。兴趣也比较杂，锻炼、追番、写代码都会占掉不少时间。
+---
 
-## 现在在折腾什么
+## 兴趣所向
 
-- 个人博客：Hexo、Fluid、GitHub Actions、Caddy、Waline、Memos、Cloudflare R2
-- 浏览器扩展：TransFlow，面向网页、PDF 与视频字幕的沉浸式双语翻译扩展
-- 桌面应用：VaporGit、SkillNexus、EchoText，主要用 Tauri、Rust、SolidJS、Python 等技术做跨端工具
-- 自动化工具：RPA、NetAcad Autopilot、英语词汇测试辅助，偏向把重复流程变成可维护的脚本或插件
-- 业务系统练习：SmartLogisticsTracker、Xiaoban、银龄通，覆盖后端 API、移动端、小程序、遥测、告警和健康陪护场景
-- AI 与视觉方向：better-mvdust3r、Pulse 等项目里尝试过低显存推理、事件简报和工程化封装
+- **听歌**：民谣、古风、古典、后朋，跨度很大，看心情切换。
+- **追番**：最爱青春校园恋爱，热血战斗和悬疑推理也来者不拒。
+- **运动**：长跑、骑行、自重训练、乒乓球、羽毛球，换着花样动。
+- **游戏**：最近常玩《三角洲行动》《卡拉彼丘》《王者荣耀》，偶尔也推 GalGame。
+- **中医**：纯属好奇。经脉、穴位，还有古人理解身体的那套逻辑，越琢磨越有意思。
 
-## GitHub
+---
 
-我的 GitHub 会放一些课程之外的工具项目、自动化尝试和博客源码：
+## 琐碎日常
 
-- GitHub：<https://github.com/FLmhp>
-- 博客源码：<https://github.com/FLmhp/soloeternity-blog>
-- TransFlow：<https://github.com/FLmhp/TransFlow>
-- SmartLogisticsTracker：<https://github.com/FLmhp/SmartLogisticsTracker>
-- RPA：<https://github.com/FLmhp/RPA>
-- NetAcad Autopilot：<https://github.com/FLmhp/netacad-autopilot>
-- EchoText：<https://github.com/FLmhp/EchoText>
+空闲时我喜欢一个人 Citywalk。不一定是景点，博物馆、图书馆、商场，甚至路边随便一条巷子都行。碰到好看的光影、老建筑，或者某个路人刚好被夕阳勾出轮廓，就随手拍下来。镜头不必对准大事，日常里的一瞬，有时候更耐看。
+
+我喜欢在长夜里胡思乱想，也擅长把乱麻一样的问题拆出个解法。目标可以很远，但步子不必和别人对齐——保持好奇，认真体验，然后按自己的节奏走下去。

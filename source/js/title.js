@@ -7,7 +7,7 @@ document.addEventListener('visibilitychange', function() {
 		document.title = '╭(°A°`)╮ 页面崩溃啦 ~';
 		clearTimeout(titleTime);
 	} else {
-		$('[rel="icon"]').attr('href', "/img/newtubiao.png");
+    $('[rel="icon"]').attr('href', "/img/branding/logo.png");
 		document.title = '(ฅ>ω<*ฅ) 噫又好啦 ~' + OriginTitle;
 		titleTime = setTimeout(function() {
 			document.title = OriginTitle;
