@@ -10,3 +10,5 @@ banner_img: https://assets.soloeternity.me/images/backgrounds/quote_banner.webp
   <p id="hitokoto-text">正在加载一言...</p>
   <small id="hitokoto-from">单击切换下一条</small>
 </section>
+
+<script src="/js/hitokoto-cooldown.js" defer></script>

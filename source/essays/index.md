@@ -7,3 +7,5 @@ banner_img: https://assets.soloeternity.me/images/backgrounds/essay_banner.webp
 ---
 
 <div class="solo-memos-feed" data-memos-feed data-memos-tag="essay"></div>
+
+<script src="/js/memos-feed-v5.js?v=7" defer></script>
