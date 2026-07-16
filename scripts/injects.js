@@ -1,5 +1,10 @@
 const js = hexo.extend.helper.get('js').bind(hexo);
 
+hexo.extend.filter.register('after_render:html', (html) => html.replace(
+    /<img\b(?![^>]*\bloading=)[^>]*>/gi,
+    (tag) => tag.replace('<img', '<img loading="lazy" decoding="async"')
+));
+
 hexo.extend.injector.register('head_begin', '<link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.7.2/css/all.min.css" integrity="sha384-nRgPTkuX86pH8yjPJUAFuASXQSSl2/bBUiNV47vSYpKFxHJhbcrGnmlYpYJMeD7a" crossorigin="anonymous">');
 
 hexo.extend.injector.register('head_end', '<link rel="stylesheet" href="/css/loader.css"><link rel="stylesheet" href="/css/scrollanimation.css">', 'home');

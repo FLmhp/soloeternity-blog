@@ -356,7 +356,7 @@ canonical:
 # 对页面中的图片和评论插件进行懒加载处理，可见范围外的元素不会提前加载
 # Lazy loading of images and comment plugin on the page
 lazyload:
-  enable: true
+  enable: false
 
   # 加载时的占位图片
   # The placeholder image when loading
@@ -1108,19 +1108,19 @@ links:
       title: "澪依",
       intro: "全能开发者 & 电子科技大学在读学生（能力全面碾压同龄人的大佬！）",
       link: "https://www.mioyi.net/zh-cn/",
-      avatar: "https://assets.soloeternity.me/images/link/mioyi.webp"
+      avatar: "/img/link/mioyi.webp"
     }
     - {
       title: "Loch",
       intro: "一名开发者、写作者和终身学习者（审美在线的硬件之王！）",
       link: "https://www.blog.locx-loch.top/zh",
-      avatar: "https://assets.soloeternity.me/images/link/loch.jpg"
+      avatar: "/img/link/loch.jpg"
     }
     - {
       title: "OrbisLumen",
       intro: "一名软件工程在读本科生（ML佬&ACGN重度爱好者！）",
       link: "https://orbislumen.pages.dev/",
-      avatar: "https://assets.soloeternity.me/images/link/orbislumen.webp"
+      avatar: "/img/link/orbislumen.webp"
     }
 
   # 当成员头像加载失败时，替换为指定图片
