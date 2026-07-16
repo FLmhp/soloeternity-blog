@@ -9,3 +9,5 @@ banner_img: https://assets.soloeternity.me/images/backgrounds/anime_banner.webp
 <div class="solo-anime" data-anime-collection>
   <p class="solo-muted">正在读取 Bangumi 收藏...</p>
 </div>
+
+<script src="/js/anime-feed-v4.js" defer></script>
