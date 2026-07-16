@@ -350,4 +350,5 @@ FISH.prototype = {
 };
 $(function(){
     RENDERER.init();
+    document.dispatchEvent(new Event('solo:fish-ready'));
 });

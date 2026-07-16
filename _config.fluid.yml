@@ -236,47 +236,37 @@ font:
 # 指定自定义 .js 文件路径，支持列表；路径是相对 source 目录，如 /js/custom.js 对应存放目录 source/js/custom.js
 # Specify the path of your custom js file, support list. The path is relative to the source directory, such as `/js/custom.js` corresponding to the directory `source/js/custom.js`
 custom_js:
-  - /js/site-config-v3.js?v=4
-  - /js/anime.min.js
-  - /js/custom.js
-  - /js/duration.js
-  - /js/fireworks.js
-  - /js/fishes.js
-  - /js/loader.js
-  - /js/scrollanimation.js
-  - /js/stars.js
-  - /js/title.js
-  - /js/typing-effect.js
-  - /js/hitokoto-cooldown.js
-  - /js/memos-feed-v5.js?v=7
-  - /js/gallery-feed-v1.js
-  - /js/anime-feed-v4.js
-  - /js/aplayer-1.10.1.min.js
-  - /js/music-dock-v6.js?v=7
-  - /js/analytics-v2.js
+  - { src: "/js/site-config-v3.js", defer: true }
+  - { src: "/js/custom.js", defer: true }
+  - { src: "/js/title.js", defer: true }
+  - { src: "/js/analytics-v2.js", defer: true }
+  - { src: "/js/backgroundize.js", defer: true }
   # - /js/live2d.js
 
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
 custom_css:
   - /css/custom.css
-  - /css/pages-glass-v9.css?v=14
+  - /css/pages-glass-v9.css
   - /css/aplayer-1.10.1.min.css
   - /css/fish.css
   - /css/glassbackground.css
   - /css/gradient.css
   - /css/indexing-hover.css
-  - /css/loader.css
   - /css/macpanel
-  - /css/scrollanimation.css
   - /css/scrollbar.css
   - /css/selection.css
-  - /css/svg-neon.css?v=2
+  - /css/svg-neon.css
 
 # 自定义 <head> 节点中的 HTML 内容
 # Customize <head> HTML content
 #思源宋体
-custom_head: '<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Roboto:ital,wdth,wght@0,75..100,100..900;1,75..100,100..900&display=swap" rel="stylesheet">'
+custom_head: >-
+  <link rel="preload" href="https://assets.soloeternity.me/images/backgrounds/banner.webp" as="image" fetchpriority="high">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://assets.soloeternity.me" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100..900&family=Roboto:ital,wdth,wght@0,75..100,100..900;1,75..100,100..900&display=swap" rel="stylesheet">
 
 # 自定义底部 HTML 内容（位于 footer 上方），注意不要和 `post: custom` 配置冲突
 # Customize the HTML content at the bottom (located above the footer), be careful not to conflict with `post: custom`
@@ -374,11 +364,11 @@ lazyload:
 
   # 开启后懒加载仅在文章页生效，如果自定义页面需要使用，可以在 Front-matter 里指定 `lazyload: true`
   # If true, only enable lazyload on the post page. For custom pages, you can set 'lazyload: true' in front-matter
-  onlypost: true
+  onlypost: false
 
   # 触发加载的偏移倍数，基数是视窗高度，可根据部署环境的请求速度调节
   # The factor of viewport height that triggers loading
-  offset_factor: 2
+  offset_factor: 1
 
 # 图标库，包含了大量社交类图标，主题依赖的不包含在内，因此可自行修改，详见 https://hexo.fluid-dev.com/docs/icon/
 # Icon library, which includes many social icons, does not include those theme dependent, so your can modify link by yourself. See: https://hexo.fluid-dev.com/docs/en/icon/

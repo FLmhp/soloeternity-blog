@@ -4,12 +4,12 @@
   "private": true,
   "packageManager": "pnpm@9.15.9",
   "scripts": {
-    "build": "npx hexo generate",
-    "clean": "npx hexo clean",
-    "server": "npx hexo server"
+    "build": "hexo generate",
+    "clean": "hexo clean",
+    "server": "hexo server"
   },
   "hexo": {
-    "version": "7.3.0"
+    "version": "8.1.2"
   },
   "dependencies": {
     "@adobe/css-tools": "^4.5.0",

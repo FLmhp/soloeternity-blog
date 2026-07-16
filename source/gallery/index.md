@@ -9,3 +9,5 @@ banner_img: https://assets.soloeternity.me/images/backgrounds/gallery_banner.web
 <div class="solo-gallery-albums" data-gallery-albums>
   <p class="solo-muted">正在读取相册...</p>
 </div>
+
+<script src="/js/gallery-feed-v1.js" defer></script>

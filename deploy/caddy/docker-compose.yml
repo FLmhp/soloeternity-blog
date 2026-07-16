@@ -5,8 +5,14 @@ services:
     container_name: caddy
     restart: unless-stopped
     env_file: .env
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     cap_add:
       - NET_ADMIN
+      - NET_BIND_SERVICE
     networks:
       - seaweedfs
       - openlist
@@ -22,10 +28,12 @@ services:
       - 443:443/udp
       - 7000:7000
     volumes:
-      - ./conf:/etc/caddy
-      - /var/www:/var/www
+      - ./conf:/etc/caddy:ro
+      - /var/www:/var/www:ro
       - data:/data
       - config:/config
+    tmpfs:
+      - /tmp:size=16m,mode=1777
 
 networks:
   seaweedfs:
