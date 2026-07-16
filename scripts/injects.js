@@ -41,7 +41,10 @@ hexo.extend.injector.register('body_end', () => js([
 ]), 'home');
 
 hexo.extend.injector.register('body_end', `<script>(function(){
-    if(!localStorage.getItem("waifu-display")) localStorage.setItem("waifu-display",Date.now());
+    if(!localStorage.getItem("live2d-auto-show")){
+        localStorage.removeItem("waifu-display");
+        localStorage.setItem("live2d-auto-show","1");
+    }
     if(!localStorage.getItem("live2d-default-icegirl")){
         localStorage.setItem("modelId","0");
         localStorage.setItem("modelTexturesId","0");
