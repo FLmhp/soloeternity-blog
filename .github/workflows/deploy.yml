@@ -114,12 +114,12 @@ jobs:
           if ! curl --fail --silent --show-error --retry 5 --retry-all-errors \
             "https://soloeternity.me/?deploy=${GITHUB_SHA}" >/dev/null; then
             ssh blog-origin sh -s -- "$REMOTE_ROOT" <<'REMOTE'
-            set -eu
-            root=$1
-            previous=$(readlink "$root/previous")
-            ln -sfn "$previous" "$root/current.next"
-            mv -Tf "$root/current.next" "$root/current"
-            REMOTE
+          set -eu
+          root=$1
+          previous=$(readlink "$root/previous")
+          ln -sfn "$previous" "$root/current.next"
+          mv -Tf "$root/current.next" "$root/current"
+          REMOTE
             exit 1
           fi
 
