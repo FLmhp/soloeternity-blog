@@ -230,6 +230,10 @@
   object-fit: cover;
 }
 
+.solo-memos-feed[data-memos-tag="moment"] .solo-memo-attachments img {
+  object-fit: contain;
+}
+
 .solo-memo-meta {
   margin-top: 0.55rem;
   color: #718096;
