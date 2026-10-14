@@ -239,6 +239,7 @@ custom_js:
   - { src: "/js/site-config-v3.js", defer: true }
   - { src: "/js/custom.js", defer: true }
   - { src: "/js/title.js", defer: true }
+  - { src: "/js/svg-neon.js?v=3", defer: true }
   - { src: "/js/analytics-v2.js", defer: true }
   - { src: "/js/backgroundize.js", defer: true }
   # - /js/live2d.js
@@ -256,7 +257,7 @@ custom_css:
   - /css/macpanel
   - /css/scrollbar.css
   - /css/selection.css
-  - /css/svg-neon.css
+  - /css/svg-neon.css?v=3
 
 # 自定义 <head> 节点中的 HTML 内容
 # Customize <head> HTML content

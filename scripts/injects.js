@@ -59,7 +59,7 @@ hexo.extend.injector.register('body_end', `<script>(function(){
                 document.head.appendChild(script);
             }
             load("/js/anime.min.js",function(){load("/js/fireworks.js")});
-            ["/js/fishes.js","/js/stars.js","/js/typing-effect.js","/js/svg-neon.js?v=2"].forEach(function(src){load(src)});
+            ["/js/fishes.js","/js/stars.js","/js/typing-effect.js"].forEach(function(src){load(src)});
             load("/js/aplayer-1.10.1.min.js",function(){load("/js/music-dock-v6.js?v=7")});
             load("/live2d-widget/dist/autoload.js");
         },{timeout:3000});

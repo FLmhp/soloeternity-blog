@@ -13,7 +13,7 @@
 }
 
 .svg-animated-text {
-  animation: navbarSvgDraw 16s ease-in-out 0s forwards, navbarSvgFade 2s 4s forwards;
+  animation: navbarSvgDraw 4s ease-in-out forwards, navbarSvgFade 1s 4s forwards;
 }
 
 @keyframes navbarSvgDraw {
@@ -35,7 +35,7 @@
   outline: none;
   --c: lightseagreen;
   text-shadow: 0 0 10px var(--c),0 0 20px var(--c),0 0 40px var(--c),0 0 80px var(--c),0 0 160px var(--c);
-  animation: neoneffect 5s linear infinite;
+  animation: navbarTextFadeIn 1s 4s forwards, neoneffect 5s linear 4s infinite;
 }
 
 .navbar-brand .navbar-title-static {
@@ -51,5 +51,16 @@
 @keyframes navbarTextFadeIn {
   to {
     opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-title-svg {
+    display: none;
+  }
+
+  .navbar-brand .navbar-title {
+    opacity: 1;
+    animation: none;
   }
 }

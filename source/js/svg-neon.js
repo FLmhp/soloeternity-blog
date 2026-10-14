@@ -1,12 +1,9 @@
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
+  function initNavbarTitle() {
   const navbarBrand = document.querySelector('.navbar-brand');
   if (navbarBrand) {
     const strongEl = navbarBrand.querySelector('strong');
     if (strongEl) {
-      if (location.pathname !== '/') {
-        strongEl.classList.add('navbar-title', 'navbar-title-static');
-        return;
-      }
       const titleText = strongEl.textContent;
       const navbarTitle = document.createElement('span');
       navbarTitle.className = 'navbar-title';
@@ -55,12 +52,13 @@ document.addEventListener('DOMContentLoaded', function() {
       strongEl.parentNode.replaceChild(container, strongEl);
       
       // 开始SVG动画
-      path.style.animation = 'navbarSvgDraw 16s ease-in-out 0s forwards, navbarSvgFade 2s 4s forwards';
-      
-      // 显示霓虹灯效果并开始循环
-      setTimeout(() => {
-        navbarTitle.style.animation = 'navbarTextFadeIn 2s 0s forwards';
-      }, 5000);
     }
   }
-})
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initNavbarTitle, { once: true });
+  } else {
+    initNavbarTitle();
+  }
+})();
