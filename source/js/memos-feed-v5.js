@@ -213,8 +213,24 @@
     var endpoints = [
       base + '/api/v1/memos?filter=visibility%3D%3D%22PUBLIC%22&pageSize=20',
       base + "/api/v1/memos?pageSize=20",
-      base + "/api/v1/memo?rowStatus=NORMAL&limit=20"
+      base + "/api/v1/memo?rowStatus=NORMAL&limit=1000"
     ];
+
+    function fetchAllPages(endpoint, pageToken) {
+      var url = endpoint + (pageToken ? "&pageToken=" + encodeURIComponent(pageToken) : "");
+      return fetch(url, { cache: "no-store" })
+        .then(function (response) {
+          if (!response.ok) throw new Error("memos request failed");
+          return response.json();
+        })
+        .then(function (payload) {
+          var items = normalizeItems(payload);
+          if (!payload.nextPageToken) return items;
+          return fetchAllPages(endpoint, payload.nextPageToken).then(function (nextItems) {
+            return items.concat(nextItems);
+          });
+        });
+    }
 
     function tryEndpoint(index) {
       if (!endpoints[index]) {
@@ -222,16 +238,12 @@
         return;
       }
 
-      fetch(endpoints[index], { cache: "no-store" })
-        .then(function (response) {
-          if (!response.ok) throw new Error("memos request failed");
-          return response.json();
-        })
-        .then(function (payload) {
+      fetchAllPages(endpoints[index])
+        .then(function (items) {
           markdownReady.then(function () {
-            render(container, normalizeItems(payload), tag, base);
+            render(container, items, tag, base);
           }, function () {
-            render(container, normalizeItems(payload), tag, base);
+            render(container, items, tag, base);
           });
         })
         .catch(function () {

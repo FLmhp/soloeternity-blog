@@ -20,4 +20,4 @@ Memos 用来保存更轻的日常记录。
 
 <iframe class="solo-service-frame" src="https://memos.soloeternity.me/" title="Memos"></iframe>
 
-<script src="/js/memos-feed-v5.js?v=7" defer></script>
+<script src="/js/memos-feed-v5.js?v=8" defer></script>
