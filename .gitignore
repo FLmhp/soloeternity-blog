@@ -6,10 +6,9 @@ node_modules/
 public/
 .deploy*/
 _multiconfig.yml
-deploy/waline/.env
+/deploy/**/.env
 .tmp/
 __pycache__/
 Users/
 .vscode/
 .codebase-memory/
--C
